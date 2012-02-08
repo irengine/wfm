@@ -14,8 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.kwchina.wfm.infrastructure.persistence.DummyObject;
 
-@ContextConfiguration(locations={"/context-infrastructure-persistence.xml"})
 @RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration({"/context-test.xml"})
 public class DummyObjectTests {
 	
 	@PersistenceContext
