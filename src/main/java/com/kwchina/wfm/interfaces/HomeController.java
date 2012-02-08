@@ -1,4 +1,4 @@
-package com.kwchina.wfm;
+package com.kwchina.wfm.interfaces;
 
 import java.text.DateFormat;
 import java.util.Date;
