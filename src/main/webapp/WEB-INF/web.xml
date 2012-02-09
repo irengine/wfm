@@ -58,4 +58,9 @@
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 
+	<listener>
+		<listener-class>com.kwchina.wfm.application.utility.SampleDataGenerator</listener-class>
+	</listener>
+
+
 </web-app>
