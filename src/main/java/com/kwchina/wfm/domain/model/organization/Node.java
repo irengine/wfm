@@ -15,6 +15,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 @Entity
 @Table(name="T_NODES")
 @DiscriminatorColumn(name="NODE_TYPE")
@@ -53,6 +55,7 @@ public abstract class Node {
 		this.children = children;
 	}
 
+	@JsonIgnore
 	public Node getParent() {
 		return parent;
 	}
