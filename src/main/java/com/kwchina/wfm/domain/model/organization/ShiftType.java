@@ -1,17 +1,14 @@
 package com.kwchina.wfm.domain.model.organization;
 
-import java.util.Collection;
-import java.util.LinkedHashSet;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 @Entity
+@Table(name="T_SHIFTTYPES")
 public class ShiftType implements com.kwchina.wfm.domain.common.Entity<ShiftType> {
 
 	@Id
@@ -27,14 +24,14 @@ public class ShiftType implements com.kwchina.wfm.domain.common.Entity<ShiftType
 	@Column(nullable=false)
 	private Long displayIndex = 0L;
 	
+	@Column
 	private String displayName;
 	
 	@Column(nullable=false)
 	private String strategyClassName;
 	
-	@OneToMany
-	@JoinColumn(name = "shiftTypeId")
-	private Collection<Unit> units = new LinkedHashSet<Unit>();
+//	@OneToMany
+//	private Collection<Unit> units = new LinkedHashSet<Unit>();
 	
 	public ShiftType() {
 
@@ -96,13 +93,13 @@ public class ShiftType implements com.kwchina.wfm.domain.common.Entity<ShiftType
 		this.strategyClassName = strategyClassName;
 	}
 
-	public Collection<Unit> getUnits() {
-		return units;
-	}
-
-	public void setUnits(Collection<Unit> units) {
-		this.units = units;
-	}
+//	public Collection<Unit> getUnits() {
+//		return units;
+//	}
+//
+//	public void setUnits(Collection<Unit> units) {
+//		this.units = units;
+//	}
 
 	@Override
 	public boolean sameIdentityAs(ShiftType other) {

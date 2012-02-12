@@ -100,6 +100,7 @@ public class Unit implements com.kwchina.wfm.domain.common.Entity<Unit> {
 	private String name;
 	
 	@ManyToOne
+	@JoinColumn(name="shiftTypeId")
 	private ShiftType shiftType;
 
 	public Unit() {
