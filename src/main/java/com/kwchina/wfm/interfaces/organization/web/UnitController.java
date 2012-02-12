@@ -1,16 +1,18 @@
 package com.kwchina.wfm.interfaces.organization.web;
 
+import java.io.IOException;
+
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.map.JsonMappingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.kwchina.wfm.domain.model.organization.Unit;
-import com.kwchina.wfm.domain.model.organization.UnitRepository;
+import com.kwchina.wfm.interfaces.organization.facade.UnitServiceFacade;
 
 /**
  * Handles requests for the application home page.
@@ -19,39 +21,22 @@ import com.kwchina.wfm.domain.model.organization.UnitRepository;
 public class UnitController {
 	
 	@Autowired
-	UnitRepository unitRepository;
+	UnitServiceFacade unitServiceFacade;
 	
 	private static final Logger logger = LoggerFactory.getLogger(UnitController.class);
 	
 	@RequestMapping(value = "/getUnits", method = RequestMethod.GET)
-	@Transactional
-	public @ResponseBody Unit getUnits() {
+	public @ResponseBody String getUnits() throws JsonGenerationException, JsonMappingException, IOException {
 		logger.info("get all units");
 		
-		Unit root = unitRepository.getRoot("S");
+		return unitServiceFacade.getUnitsWithJson();
+	}
+	
+	@RequestMapping(value = "/loadUnits", method = RequestMethod.GET)
+	public void loadUnits() throws JsonGenerationException, JsonMappingException, IOException {
+		logger.info("load units");
 		
-		Unit l1 = new Unit("L1");
-		unitRepository.addChild(root, l1);
-		
-		Unit l11 = new Unit("L11");
-		unitRepository.addChild(l1, l11);
-
-		Unit l12 = new Unit("L12");
-		unitRepository.addChild(l1, l12);
-
-		Unit l2 = new Unit("L2");
-		unitRepository.addChild(root, l2);
-		
-		Unit l21 = new Unit("L21");
-		unitRepository.addChild(l2, l21);
-
-		Unit l22 = new Unit("L22");
-		unitRepository.addChild(l2, l22);
-
-		Unit l23 = new Unit("L23");
-		unitRepository.addChild(l2, l23);
-
-		return root;
+		unitServiceFacade.loadSampleData();
 	}
 
 }
