@@ -1,13 +1,19 @@
 package com.kwchina.wfm.application.utility;
 
+import java.util.UUID;
+
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import javax.sql.DataSource;
 
-//import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-//import org.springframework.context.support.GenericApplicationContext;
-//
-//import com.kwchina.wfm.domain.model.organization.Unit;
-//import com.kwchina.wfm.domain.model.organization.UnitRepository;
+import org.springframework.beans.factory.BeanFactoryUtils;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallbackWithoutResult;
+import org.springframework.transaction.support.TransactionTemplate;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 public class SampleDataGenerator implements ServletContextListener {
 
@@ -19,38 +25,36 @@ public class SampleDataGenerator implements ServletContextListener {
 	@Override
 	public void contextInitialized(ServletContextEvent event) {
 		System.out.println("*** Loading data ***");
-		loadData();
+	    WebApplicationContext context = WebApplicationContextUtils.getRequiredWebApplicationContext(event.getServletContext());
+	    DataSource dataSource = (DataSource) BeanFactoryUtils.beanOfType(context, DataSource.class);
+	    PlatformTransactionManager transactionManager = (PlatformTransactionManager) BeanFactoryUtils.beanOfType(context, PlatformTransactionManager.class);
+	    TransactionTemplate tt = new TransactionTemplate(transactionManager);
+	    loadSampleData(new JdbcTemplate(dataSource), tt);
+	}
+	
+	private static void executeUpdate(JdbcTemplate jdbcTemplate, String sql, Object[][] args) {
+		for (Object[] arg : args) {
+			jdbcTemplate.update(sql, arg);
+		}
 	}
 
-	private void loadData() {
-//        GenericApplicationContext context = 
-//                new AnnotationConfigApplicationContext( 
-//                        "com.kwchina.wfm.infrastructure.persistence");
-//        
-//        UnitRepository unitRepository = context.getBean(UnitRepository.class);
-//        
-//		Unit root = unitRepository.getRoot("S");
-//		
-//		Unit l1 = new Unit("L1");
-//		unitRepository.addChild(root, l1);
-//		
-//		Unit l11 = new Unit("L11");
-//		unitRepository.addChild(l1, l11);
-//
-//		Unit l12 = new Unit("L12");
-//		unitRepository.addChild(l1, l12);
-//
-//		Unit l2 = new Unit("L2");
-//		unitRepository.addChild(root, l2);
-//		
-//		Unit l21 = new Unit("L21");
-//		unitRepository.addChild(l2, l21);
-//
-//		Unit l22 = new Unit("L22");
-//		unitRepository.addChild(l2, l22);
-//
-//		Unit l23 = new Unit("L23");
-//		unitRepository.addChild(l2, l23);
+	public static void loadSampleData(final JdbcTemplate jdbcTemplate, TransactionTemplate transactionTemplate) {
+		transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+			protected void doInTransactionWithoutResult(TransactionStatus status) {
+
+				loadDummyObjects(jdbcTemplate);
+			}
+		});
+	}
+	
+	private static void loadDummyObjects(final JdbcTemplate jdbcTemplate) {
+		// dummy object
+		String sql = "insert into dummyobject(uuid) values(?)";
+		Object[][] args = { { UUID.randomUUID().toString() },
+							{ UUID.randomUUID().toString() },
+							{ UUID.randomUUID().toString() } };
+
+		executeUpdate(jdbcTemplate, sql, args);
 	}
 
 }
