@@ -16,5 +16,5 @@ public interface UnitRepository {
 	Unit findByName(String name);
 	List<Unit> findAll();
 	
-	public void printTree(Node root);
+	public void printTree(Unit root);
 }

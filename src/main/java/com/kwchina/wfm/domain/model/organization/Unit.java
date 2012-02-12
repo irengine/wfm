@@ -1,10 +1,19 @@
 package com.kwchina.wfm.domain.model.organization;
 
+import java.util.Collection;
+import java.util.LinkedHashSet;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -16,8 +25,77 @@ import javax.persistence.Table;
 	@NamedQuery(name = "unit.findAllChildren", query = "SELECT u FROM Unit u WHERE u.left > :parentLeft and u.left < :parentRight order by u.left"),
 	@NamedQuery(name = "unit.findAllAncestor", query = "SELECT u FROM Unit u WHERE u.left < :leafLeft and u.right > :leafRight order by u.left")
 })
-public class Unit extends Node  implements com.kwchina.wfm.domain.common.Entity<Unit> {
+public class Unit implements com.kwchina.wfm.domain.common.Entity<Unit> {
 
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	private Long id;
+	
+	@OneToMany(targetEntity=Unit.class, cascade=CascadeType.ALL, mappedBy="parent")
+	private Collection<Unit> children = new LinkedHashSet<Unit>();
+	
+	@ManyToOne
+	@JoinColumn(name="parentId")
+	private Unit parent;
+
+	@Column(name="leftId", nullable=false)
+	private Long left = 0L;
+	
+	@Column(name="rightId", nullable=false)
+	private Long right = 0L;
+
+	public Long getId() {
+		return id;
+	}
+	
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Collection<Unit> getChildren() {
+		return children;
+	}
+
+	public void setChildren(Collection<Unit> children) {
+		this.children = children;
+	}
+
+	public Unit getParent() {
+		return parent;
+	}
+
+	public void setParent(Unit parent) {
+		this.parent = parent;
+	}
+
+	public Long getLeft() {
+		return left;
+	}
+
+	public void setLeft(Long left) {
+		this.left = left;
+	}
+
+	public Long getRight() {
+		return right;
+	}
+
+	public void setRight(Long right) {
+		this.right = right;
+	}
+	
+	public void addChild(Unit unit)
+	{
+		this.children.add(unit);
+		unit.setParent(this);
+	}
+	
+	public void removeChild(Unit unit)
+	{
+		this.children.remove(unit);
+		unit.setParent(null);
+	}
+	
 	@Column(unique = true)
 	private String name;
 	

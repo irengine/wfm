@@ -5,7 +5,6 @@ import java.util.LinkedHashSet;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,11 +14,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-
 @Entity
 @Table(name="T_NODES")
-@DiscriminatorColumn(name="NODE_TYPE")
 public abstract class Node {
 	
 	@Id
@@ -55,7 +51,6 @@ public abstract class Node {
 		this.children = children;
 	}
 
-	@JsonIgnore
 	public Node getParent() {
 		return parent;
 	}

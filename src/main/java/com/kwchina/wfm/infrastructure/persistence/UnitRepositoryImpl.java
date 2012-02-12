@@ -10,7 +10,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Repository;
 
-import com.kwchina.wfm.domain.model.organization.Node;
 import com.kwchina.wfm.domain.model.organization.Unit;
 import com.kwchina.wfm.domain.model.organization.UnitRepository;
 
@@ -22,15 +21,15 @@ public class UnitRepositoryImpl implements UnitRepository {
 	@PersistenceContext
 	private EntityManager entityManager;
 	
-	public void printTree(Node root)
+	public void printTree(Unit root)
 	{
-		log.debug("--" + ((Unit)root).getName());
+		log.debug("--" + root.getName());
 		log.debug("n = " + root.getId());
 		log.debug("left = " + root.getLeft());
 		log.debug("right = " + root.getRight());
 		log.debug("parent = " + (null == root.getParent() ? 0 : root.getParent().getId()));
 		
-		for(Node n : root.getChildren())
+		for(Unit n : root.getChildren())
 		{
 			printTree(n);
 		}

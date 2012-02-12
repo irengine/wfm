@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 
-import com.kwchina.wfm.domain.model.organization.Node;
 import com.kwchina.wfm.domain.model.organization.Unit;
 
 public class UnitDTO {
@@ -59,7 +58,7 @@ public class UnitDTO {
 	{
 		setId(unit.getId().toString());
 		setData(unit.getName());
-		for(Node child : unit.getChildren()) {
+		for(Unit child : unit.getChildren()) {
 			UnitDTO unitDTO = new UnitDTO((Unit)child);
 //			unitDTO.copy((Unit)child);
 			addChild(unitDTO);
