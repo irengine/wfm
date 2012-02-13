@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -146,5 +147,34 @@ public class UnitRepositoryImpl implements UnitRepository {
 								.setParameter("leafRight", unit.getRight())
 								.getResultList();
 		return units;
+	}
+	
+	public Long getRowsCount(String whereClause) {
+		
+		String syntax = "";
+		
+		if (whereClause.isEmpty())
+			syntax = "SELECT COUNT(*) FROM Unit";
+		else
+			syntax = String.format("SELECT COUNT(*) FROM Unit WHERE %s", whereClause);
+		
+		Long rowsCount = (Long)entityManager.createQuery(syntax).getSingleResult(); 
+		return rowsCount;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Unit> getRows(String whereClause, String orderByClause, int start, int limit) {
+		String syntax = "";
+		
+		if (whereClause.isEmpty())
+			syntax = String.format("FROM Unit %s", orderByClause);
+		else
+			syntax = String.format("FROM Unit WHERE %s %s", whereClause, orderByClause);
+			
+		
+		Query query = entityManager.createQuery(syntax);
+		query.setMaxResults(limit);
+		query.setFirstResult(start);
+		return query.getResultList();
 	}
 }

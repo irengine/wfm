@@ -5,4 +5,5 @@ public interface UnitServiceFacade {
 
 	void loadSampleData();
 	String getUnitsWithJson();
+	String queryUnitsWithJson();
 }

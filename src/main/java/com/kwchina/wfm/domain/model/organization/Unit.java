@@ -16,6 +16,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 @Entity
 @Table(name="T_UNITS")
 @NamedQueries({
@@ -60,6 +62,7 @@ public class Unit implements com.kwchina.wfm.domain.common.Entity<Unit> {
 		this.children = children;
 	}
 
+	@JsonIgnore
 	public Unit getParent() {
 		return parent;
 	}

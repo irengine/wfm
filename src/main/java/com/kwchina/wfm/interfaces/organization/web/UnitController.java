@@ -1,9 +1,5 @@
 package com.kwchina.wfm.interfaces.organization.web;
 
-import java.io.IOException;
-
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,14 +22,21 @@ public class UnitController {
 	private static final Logger logger = LoggerFactory.getLogger(UnitController.class);
 	
 	@RequestMapping(value = "/getUnits", method = RequestMethod.GET)
-	public @ResponseBody String getUnits() throws JsonGenerationException, JsonMappingException, IOException {
+	public @ResponseBody String getUnits() {
 		logger.info("get all units");
 		
 		return unitServiceFacade.getUnitsWithJson();
 	}
 	
+	@RequestMapping(value = "/queryUnits", method = RequestMethod.GET)
+	public @ResponseBody String queryUnits() {
+		logger.info("get json units");
+		
+		return unitServiceFacade.queryUnitsWithJson();
+	}
+	
 	@RequestMapping(value = "/loadUnits", method = RequestMethod.GET)
-	public void loadUnits() throws JsonGenerationException, JsonMappingException, IOException {
+	public void loadUnits() {
 		logger.info("load units");
 		
 		unitServiceFacade.loadSampleData();

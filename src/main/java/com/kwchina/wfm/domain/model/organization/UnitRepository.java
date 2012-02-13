@@ -17,4 +17,7 @@ public interface UnitRepository {
 	List<Unit> findAll();
 	
 	public void printTree(Unit root);
+	
+	Long getRowsCount(String whereClause);
+	List<Unit> getRows(String whereClause, String orderByClause, int start, int limit);
 }
