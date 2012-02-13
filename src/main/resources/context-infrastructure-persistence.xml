@@ -11,18 +11,20 @@
 
 	<context:component-scan base-package="com.kwchina.wfm.infrastructure.persistence" />
 	
-	<!-- H2 database for test environment -->
-	<!-- 
+	<!-- To be removed
 	<jdbc:embedded-database id="testDataSource" type="H2" />
 	
 	<jdbc:initialize-database data-source="testDataSource" ignore-failures="DROPS">
 		<jdbc:script location="/h2-schema.sql" />
 		<jdbc:script location="/h2-seed-data.sql" />
 	</jdbc:initialize-database>
-	
+	-->
+
+	<!-- H2 database for test environment -->
+	<!-- 	
 	<context:property-placeholder location="classpath:h2.properties" />
 	-->
-	
+
 	<!-- MySQL database for product environment -->
 	<context:property-placeholder location="classpath:mysql.properties" />
 	
