@@ -1,5 +1,7 @@
 package com.kwchina.wfm.domain.model.organization;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -8,6 +10,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 @Entity
 @Table(name="T_EMPLOYEES")
@@ -23,9 +30,24 @@ public class Employee implements com.kwchina.wfm.domain.common.Entity<Employee> 
 	@Column(nullable=false)
 	private String name;
 	
+	@Column(nullable=false)
+	@Temporal(TemporalType.DATE)
+	@DateTimeFormat(iso=ISO.DATE)
+	private Date birthday;
+	
 	@ManyToOne
 	@JoinColumn(name="unitId")
 	private Unit unit;
+	
+	public Employee() {
+		
+	}
+	
+	public Employee(String code, String name, Date birthday) {
+		this.code = code;
+		this.name = name;
+		this.birthday = birthday;
+	}
 	
 	public Long getId() {
 		return id;
@@ -51,6 +73,14 @@ public class Employee implements com.kwchina.wfm.domain.common.Entity<Employee> 
 		this.name = name;
 	}
 	
+	public Date getBirthday() {
+		return birthday;
+	}
+
+	public void setBirthday(Date birthday) {
+		this.birthday = birthday;
+	}
+
 	public Unit getUnit() {
 		return unit;
 	}
