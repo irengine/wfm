@@ -1,10 +1,17 @@
 package com.kwchina.wfm.domain.model.organization;
 
+import java.util.Collection;
+import java.util.LinkedHashSet;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -34,6 +41,17 @@ public class User implements com.kwchina.wfm.domain.common.Entity<User> {
 
 	@Column
 	private String email;
+	
+    @ManyToMany(
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+            targetEntity = Unit.class
+        )
+    @JoinTable(
+            name="T_USER_UNIT",
+            joinColumns=@JoinColumn(name="userId"),
+            inverseJoinColumns=@JoinColumn(name="unitId")
+        )
+	private Collection<Unit> units = new LinkedHashSet<Unit>();
 	
 	@Column(nullable=false)
 	private boolean enable;
@@ -121,6 +139,20 @@ public class User implements com.kwchina.wfm.domain.common.Entity<User> {
 	 */
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	/**
+	 * @return the units
+	 */
+	public Collection<Unit> getUnits() {
+		return units;
+	}
+
+	/**
+	 * @param units the units to set
+	 */
+	public void setUnits(Collection<Unit> units) {
+		this.units = units;
 	}
 
 	/**

@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -46,6 +47,13 @@ public class Unit implements com.kwchina.wfm.domain.common.Entity<Unit> {
 	
 	@Column(unique = true)
 	private String name;
+	
+    @ManyToMany(
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+            mappedBy = "units",
+            targetEntity = User.class
+        )
+	private Collection<User> users = new LinkedHashSet<User>();;
 	
 	@ManyToOne
 	@JoinColumn(name="shiftTypeId")
@@ -110,6 +118,20 @@ public class Unit implements com.kwchina.wfm.domain.common.Entity<Unit> {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	/**
+	 * @return the users
+	 */
+	public Collection<User> getUsers() {
+		return users;
+	}
+
+	/**
+	 * @param users the users to set
+	 */
+	public void setUsers(Collection<User> users) {
+		this.users = users;
 	}
 
 	public ShiftType getShiftType() {
