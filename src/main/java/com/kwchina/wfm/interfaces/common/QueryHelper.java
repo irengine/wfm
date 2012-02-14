@@ -42,7 +42,7 @@ public class QueryHelper {
 	
 	private static String getCondition(String field, String op, String data){
 		
-		if (!data.isEmpty()) {
+		if (!StringUtils.isEmpty(data)) {
 			String result = "";
 			if(op.trim().equals("eq")) {
 				//等于
@@ -112,7 +112,7 @@ public class QueryHelper {
 	public static String getWhereClause(String filters) {
 		
 		try {
-			if (!filters.isEmpty()) {
+			if (!StringUtils.isEmpty(filters)) {
 				ObjectMapper objectMapper = new ObjectMapper();
 				Map<String, Map<String, Object>> maps = objectMapper.readValue(filters, Map.class);
 				
