@@ -2,7 +2,7 @@ package com.kwchina.wfm.domain.model.organization;
 
 import java.util.List;
 
-public interface UnitRepository {
+public interface UnitRepository extends BaseRepository<Unit> {
 	Unit getRoot(String name);
 	Unit findRoot();
 	

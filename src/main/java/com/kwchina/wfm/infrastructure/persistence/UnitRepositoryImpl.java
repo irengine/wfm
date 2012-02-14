@@ -5,7 +5,6 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,12 +14,17 @@ import com.kwchina.wfm.domain.model.organization.Unit;
 import com.kwchina.wfm.domain.model.organization.UnitRepository;
 
 @Repository
-public class UnitRepositoryImpl implements UnitRepository {
+public class UnitRepositoryImpl extends BaseRepositoryImpl<Unit> implements UnitRepository {
 	
 	private static final Logger logger = LoggerFactory.getLogger(UnitRepository.class);
 
 	@PersistenceContext
 	private EntityManager entityManager;
+
+	@Override
+	public String getEntityName() {
+		return "Unit";
+	}
 	
 	public void printTree(Unit root)
 	{
@@ -147,34 +151,5 @@ public class UnitRepositoryImpl implements UnitRepository {
 								.setParameter("leafRight", unit.getRight())
 								.getResultList();
 		return units;
-	}
-	
-	public Long getRowsCount(String whereClause) {
-		
-		String syntax = "";
-		
-		if (whereClause.isEmpty())
-			syntax = "SELECT COUNT(*) FROM Unit";
-		else
-			syntax = String.format("SELECT COUNT(*) FROM Unit WHERE %s", whereClause);
-		
-		Long rowsCount = (Long)entityManager.createQuery(syntax).getSingleResult(); 
-		return rowsCount;
-	}
-	
-	@SuppressWarnings("unchecked")
-	public List<Unit> getRows(String whereClause, String orderByClause, int start, int limit) {
-		String syntax = "";
-		
-		if (whereClause.isEmpty())
-			syntax = String.format("FROM Unit %s", orderByClause);
-		else
-			syntax = String.format("FROM Unit WHERE %s %s", whereClause, orderByClause);
-			
-		
-		Query query = entityManager.createQuery(syntax);
-		query.setMaxResults(limit);
-		query.setFirstResult(start);
-		return query.getResultList();
 	}
 }
