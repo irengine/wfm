@@ -1,7 +1,6 @@
 package com.kwchina.wfm.infrastructure.persistence;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 import java.text.ParseException;
 import java.util.Date;
@@ -32,9 +31,24 @@ public class EmployeeRepositoryTests {
 
 		assertNull(employee.getId());
 
-		employeeRepository.saveEmployee(employee);
+		employeeRepository.save(employee);
 		
 		assertNotNull(employee.getId());
+	}
+	
+	@Test
+	@Transactional
+	public void testDisableEmployee() throws ParseException {
+		Date date = DateUtils.parseDate("2012-02-14",new String[]{"yyyy-MM-dd"});
+		Employee employee = new Employee("0001", "Alex Tang", date, date, date);
+
+		employeeRepository.save(employee);
+
+		Long rowsBefore = employeeRepository.getRowsCount("");
+		employeeRepository.disable(employee);
+		Long rowsAfter = employeeRepository.getRowsCount("");
+		
+		assertEquals(rowsBefore, (Long)(rowsAfter + 1));
 	}
 
 }

@@ -12,7 +12,6 @@ public interface UnitRepository extends BaseRepository<Unit> {
 	void addChild(Unit parentUnit, Unit unit);
 	void removeChild(Unit parentUnit, Unit unit);
 
-	Unit findById(Long id);
 	Unit findByName(String name);
 	List<Unit> findAll();
 	

@@ -18,14 +18,7 @@ public class EmployeeRepositoryImpl extends BaseRepositoryImpl<Employee> impleme
 	@PersistenceContext
 	private EntityManager entityManager;
 	
-	public Employee saveEmployee(Employee employee) {
-		entityManager.persist(employee);
-		entityManager.flush();
-		
-		return employee;
-	}
-	
-	public Employee disableEmployee(Employee employee) {
+	public Employee disable(Employee employee) {
 		logger.info("delete/disable employee");
 		
 		employee.setEnable(false);
