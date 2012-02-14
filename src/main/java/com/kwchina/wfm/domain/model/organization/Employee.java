@@ -35,18 +35,34 @@ public class Employee implements com.kwchina.wfm.domain.common.Entity<Employee> 
 	@DateTimeFormat(iso=ISO.DATE)
 	private Date birthday;
 	
+	@Column(nullable=false)
+	@Temporal(TemporalType.DATE)
+	@DateTimeFormat(iso=ISO.DATE)
+	private Date beginDateOfWork;
+
+	@Column(nullable=false)
+	@Temporal(TemporalType.DATE)
+	@DateTimeFormat(iso=ISO.DATE)
+	private Date beginDateOfJob;
+
 	@ManyToOne
 	@JoinColumn(name="unitId")
 	private Unit unit;
 	
+	@Column(nullable=false)
+	private boolean enable;
+	
 	public Employee() {
-		
+		this.enable = true;
 	}
 	
-	public Employee(String code, String name, Date birthday) {
+	public Employee(String code, String name, Date birthday, Date beginDateOfWork, Date beginDateOfJob) {
 		this.code = code;
 		this.name = name;
 		this.birthday = birthday;
+		this.beginDateOfWork = beginDateOfWork;
+		this.beginDateOfJob = beginDateOfJob;
+		this.enable = true;
 	}
 	
 	public Long getId() {
@@ -81,6 +97,30 @@ public class Employee implements com.kwchina.wfm.domain.common.Entity<Employee> 
 		this.birthday = birthday;
 	}
 
+	public Date getBeginDateOfWork() {
+		return beginDateOfWork;
+	}
+
+	public void setBeginDateOfWork(Date beginDateOfWork) {
+		this.beginDateOfWork = beginDateOfWork;
+	}
+
+	public Date getBeginDateOfJob() {
+		return beginDateOfJob;
+	}
+
+	public void setBeginDateOfJob(Date beginDateOfJob) {
+		this.beginDateOfJob = beginDateOfJob;
+	}
+
+	public boolean isEnable() {
+		return enable;
+	}
+
+	public void setEnable(boolean enable) {
+		this.enable = enable;
+	}
+	
 	public Unit getUnit() {
 		return unit;
 	}
