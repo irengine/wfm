@@ -57,11 +57,6 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 
 	}
 
-	@Transactional(propagation=Propagation.SUPPORTS)
-	public Employee getEmployee() {
-		return null;
-	}
-
 	@Transactional(propagation=Propagation.REQUIRED)
 	public void saveEmployee(Employee employee) {
 		employeeRepository.save(employee);
