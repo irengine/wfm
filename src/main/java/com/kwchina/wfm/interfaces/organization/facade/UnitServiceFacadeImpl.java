@@ -1,6 +1,7 @@
 package com.kwchina.wfm.interfaces.organization.facade;
 
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +17,7 @@ import com.kwchina.wfm.domain.model.organization.UnitRepository;
 import com.kwchina.wfm.interfaces.common.Page;
 import com.kwchina.wfm.interfaces.common.PageHelper;
 import com.kwchina.wfm.interfaces.common.QueryHelper;
-import com.kwchina.wfm.interfaces.organization.dto.UnitDTOs;
+import com.kwchina.wfm.interfaces.organization.dto.UnitDTO;
 
 @Component
 public class UnitServiceFacadeImpl implements UnitServiceFacade {
@@ -54,8 +55,9 @@ public class UnitServiceFacadeImpl implements UnitServiceFacade {
 	public String getUnitsWithJson() {
 		Unit root = unitRepository.findRoot();
 		
-		UnitDTOs uos = new UnitDTOs();
-		uos.add(root);
+		UnitDTO uo = new UnitDTO(root);
+		List<UnitDTO> uos = new ArrayList<UnitDTO>();
+		uos.add(uo); 
 		
 		StringWriter sw = new StringWriter();
 

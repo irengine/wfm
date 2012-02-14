@@ -4,6 +4,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
@@ -50,8 +52,9 @@ public class UnitDTOTests {
 			root = unitRepository.findRoot();
 		}
 		
-		UnitDTOs uos = new UnitDTOs();
-		uos.add(root);
+		UnitDTO uo = new UnitDTO(root);
+		List<UnitDTO> uos = new ArrayList<UnitDTO>();
+		uos.add(uo); 
 		
 		StringWriter sw = new StringWriter();
 
