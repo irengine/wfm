@@ -44,11 +44,14 @@ public class EmployeeRepositoryTests {
 
 		employeeRepository.save(employee);
 
-		Long rowsBefore = employeeRepository.getRowsCount("");
+		Long rowsBefore1 = employeeRepository.getRowsCount("");
+		Long rowsBefore2 = employeeRepository.getRowsCount("", true);
 		employeeRepository.disable(employee);
-		Long rowsAfter = employeeRepository.getRowsCount("");
+		Long rowsAfter1 = employeeRepository.getRowsCount("");
+		Long rowsAfter2 = employeeRepository.getRowsCount("", true);
 		
-		assertEquals(rowsBefore, (Long)(rowsAfter + 1));
+		assertEquals(rowsBefore1, (Long)(rowsAfter1 + 1));
+		assertEquals(rowsBefore2, rowsAfter2);
 	}
 
 }

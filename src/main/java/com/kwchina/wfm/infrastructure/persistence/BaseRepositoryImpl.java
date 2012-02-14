@@ -6,6 +6,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.kwchina.wfm.domain.model.organization.BaseRepository;
 import com.kwchina.wfm.infrastructure.common.ReflectHelper;
 
@@ -35,33 +37,63 @@ public abstract class BaseRepositoryImpl<T> implements BaseRepository<T> {
 	private String getEntityName() {
 		return entityClass.getSimpleName();
 	}
+
+	public List<T> getRows(String whereClause, String orderByClause, int start, int limit) {
+		return getRows(whereClause, orderByClause, start, limit, false);
+	}
+	
+	private String getRowsSyntax(String whereClause, String orderByClause, boolean hasDisabled) {
+		String syntax = "";
+		
+		if(hasDisabled) {
+			if (StringUtils.isEmpty(whereClause))
+				syntax = String.format("FROM %s %s", getEntityName(), orderByClause);
+			else
+				syntax = String.format("FROM %s WHERE %s %s", getEntityName(), whereClause, orderByClause);
+		}
+		else {
+			if (StringUtils.isEmpty(whereClause))
+				syntax = String.format("FROM %s WHERE enable=true %s", getEntityName(), orderByClause);
+			else
+				syntax = String.format("FROM %s WHERE enable=true AND %s %s", getEntityName(), whereClause, orderByClause);
+		}
+		return syntax;
+	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<T> getRows(String whereClause, String orderByClause, int start, int limit) {
-		String syntax = "";
-		
-		if (whereClause.isEmpty())
-			syntax = String.format("FROM %s %s", getEntityName(), orderByClause);
-		else
-			syntax = String.format("FROM %s WHERE %s %s", getEntityName(), whereClause, orderByClause);
-			
-		
-		Query query = entityManager.createQuery(syntax);
+	public List<T> getRows(String whereClause, String orderByClause, int start, int limit, boolean hasDisabled) {
+		Query query = entityManager.createQuery(getRowsSyntax(whereClause, orderByClause, hasDisabled));
 		query.setMaxResults(limit);
 		query.setFirstResult(start);
-		return query.getResultList();	}
-
-	@Override
+		return query.getResultList();
+	}
+	
 	public Long getRowsCount(String whereClause) {
+		return getRowsCount(whereClause, false);
+	}
+	
+	private String getRowsCountSyntax(String whereClause, boolean hasDisabled) {
 		String syntax = "";
 		
-		if (whereClause.isEmpty())
-			syntax = String.format("SELECT COUNT(*) FROM %s", getEntityName());
-		else
-			syntax = String.format("SELECT COUNT(*) FROM %s WHERE %s", getEntityName(), whereClause);
-		
-		Long rowsCount = (Long)entityManager.createQuery(syntax).getSingleResult(); 
+		if(hasDisabled) {
+			if (StringUtils.isEmpty(whereClause))
+				syntax = String.format("SELECT COUNT(*) FROM %s", getEntityName());
+			else
+				syntax = String.format("SELECT COUNT(*) FROM %s WHERE %s", getEntityName(), whereClause);
+		}
+		else {
+			if (StringUtils.isEmpty(whereClause))
+				syntax = String.format("SELECT COUNT(*) FROM %s WHERE enable=true", getEntityName());
+			else
+				syntax = String.format("SELECT COUNT(*) FROM %s WHERE enable=true AND %s", getEntityName(), whereClause);
+		}
+		return syntax;
+	}
+
+	@Override
+	public Long getRowsCount(String whereClause, boolean hasDisabled) {
+		Long rowsCount = (Long)entityManager.createQuery(getRowsCountSyntax(whereClause, hasDisabled)).getSingleResult(); 
 		return rowsCount;
 	}
 }
