@@ -11,12 +11,6 @@ public interface UnitRepository extends BaseRepository<Unit> {
 	
 	void addChild(Unit parentUnit, Unit unit);
 	void removeChild(Unit parentUnit, Unit unit);
-
-	Unit findByName(String name);
-	List<Unit> findAll();
 	
-	public void printTree(Unit root);
-	
-	Long getRowsCount(String whereClause);
-	List<Unit> getRows(String whereClause, String orderByClause, int start, int limit);
+	void printTree(Unit root);
 }

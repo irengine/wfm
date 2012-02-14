@@ -112,14 +112,6 @@ public class Employee implements com.kwchina.wfm.domain.common.Entity<Employee> 
 	public void setBeginDateOfJob(Date beginDateOfJob) {
 		this.beginDateOfJob = beginDateOfJob;
 	}
-
-	public boolean isEnable() {
-		return enable;
-	}
-
-	public void setEnable(boolean enable) {
-		this.enable = enable;
-	}
 	
 	public Unit getUnit() {
 		return unit;
@@ -129,6 +121,14 @@ public class Employee implements com.kwchina.wfm.domain.common.Entity<Employee> 
 		this.unit = unit;
 	}
 
+	public boolean isEnable() {
+		return enable;
+	}
+
+	public void setEnable(boolean enable) {
+		this.enable = enable;
+	}
+	
 	@Override
 	public boolean sameIdentityAs(Employee other) {
 		return other != null && code.equals(other.code);

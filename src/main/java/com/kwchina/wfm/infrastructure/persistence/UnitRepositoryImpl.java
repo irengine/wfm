@@ -112,20 +112,6 @@ public class UnitRepositoryImpl extends BaseRepositoryImpl<Unit> implements Unit
 		entityManager.refresh(root);
 	}
 	
-	public Unit findByName(String name) {
-		Unit unit = (Unit) entityManager.createNamedQuery("unit.findByName")
-								.setParameter("name", name)
-								.getSingleResult();
-		return unit;
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<Unit> findAll() {
-		List<Unit> units = entityManager.createNamedQuery("unit.findAll")
-								.getResultList();
-		return units;
-	}
-
 	@SuppressWarnings("unchecked")
 	public List<Unit> findAllChildren(Unit unit) {
 		List<Unit> units = entityManager.createNamedQuery("unit.findAllChildren")

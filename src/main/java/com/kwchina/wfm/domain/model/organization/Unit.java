@@ -21,8 +21,6 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 @Entity
 @Table(name="T_UNITS")
 @NamedQueries({
-	@NamedQuery(name = "unit.findAll", query = "SELECT u FROM Unit u"),
-	@NamedQuery(name = "unit.findByName", query = "SELECT u FROM Unit u WHERE u.name = :name"),
 	@NamedQuery(name = "unit.findRoot", query = "SELECT u FROM Unit u WHERE u.parent = null"),
 	@NamedQuery(name = "unit.findAllChildren", query = "SELECT u FROM Unit u WHERE u.left > :parentLeft and u.left < :parentRight order by u.left"),
 	@NamedQuery(name = "unit.findAllAncestor", query = "SELECT u FROM Unit u WHERE u.left < :leafLeft and u.right > :leafRight order by u.left")
@@ -45,6 +43,20 @@ public class Unit implements com.kwchina.wfm.domain.common.Entity<Unit> {
 	
 	@Column(name="rightId", nullable=false)
 	private Long right = 0L;
+	
+	@Column(unique = true)
+	private String name;
+	
+	@ManyToOne
+	@JoinColumn(name="shiftTypeId")
+	private ShiftType shiftType;
+	
+	@Column(nullable=false)
+	private boolean enable;
+	
+	public Unit() {
+		this.enable = true;
+	}
 
 	public Long getId() {
 		return id;
@@ -87,29 +99,6 @@ public class Unit implements com.kwchina.wfm.domain.common.Entity<Unit> {
 		this.right = right;
 	}
 	
-	public void addChild(Unit unit)
-	{
-		this.children.add(unit);
-		unit.setParent(this);
-	}
-	
-	public void removeChild(Unit unit)
-	{
-		this.children.remove(unit);
-		unit.setParent(null);
-	}
-	
-	@Column(unique = true)
-	private String name;
-	
-	@ManyToOne
-	@JoinColumn(name="shiftTypeId")
-	private ShiftType shiftType;
-
-	public Unit() {
-		
-	}
-	
 	public Unit(String name) {
 		this.name = name;
 	}
@@ -138,6 +127,26 @@ public class Unit implements com.kwchina.wfm.domain.common.Entity<Unit> {
 		this.shiftType = shiftType;
 	}
 
+	public boolean isEnable() {
+		return enable;
+	}
+
+	public void setEnable(boolean enable) {
+		this.enable = enable;
+	}
+	
+	public void addChild(Unit unit)
+	{
+		this.children.add(unit);
+		unit.setParent(this);
+	}
+	
+	public void removeChild(Unit unit)
+	{
+		this.children.remove(unit);
+		unit.setParent(null);
+	}
+
 	@Override
 	public boolean sameIdentityAs(final Unit other) {
 		return other != null && name.equals(other.name);
@@ -161,5 +170,4 @@ public class Unit implements com.kwchina.wfm.domain.common.Entity<Unit> {
 	public int hashCode() {
 		return name.hashCode();
 	}
-
 }
