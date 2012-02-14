@@ -20,11 +20,6 @@ public class UnitRepositoryImpl extends BaseRepositoryImpl<Unit> implements Unit
 
 	@PersistenceContext
 	private EntityManager entityManager;
-
-	@Override
-	public String getEntityName() {
-		return "Unit";
-	}
 	
 	public void printTree(Unit root)
 	{
@@ -115,10 +110,6 @@ public class UnitRepositoryImpl extends BaseRepositoryImpl<Unit> implements Unit
 		// refresh root
 		Unit root = findRoot();
 		entityManager.refresh(root);
-	}
-	
-	public Unit findById(Long id) {
-		return entityManager.find(Unit.class, id);
 	}
 	
 	public Unit findByName(String name) {

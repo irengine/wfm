@@ -1,13 +1,18 @@
 package com.kwchina.wfm.interfaces.organization.web;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.kwchina.wfm.domain.model.organization.Unit;
 import com.kwchina.wfm.interfaces.organization.facade.UnitServiceFacade;
 
 /**
@@ -40,6 +45,30 @@ public class UnitController {
 		logger.info("load units");
 		
 		unitServiceFacade.loadSampleData();
+	}
+	
+	@RequestMapping(value = "/getUnit", method = RequestMethod.GET)
+	public void getUnit(HttpServletRequest request, Model model) {
+		logger.info("get unit");
+		
+		String id = request.getParameter("id");
+		
+		Unit unit;
+		
+		if (id.isEmpty())
+			unit = new Unit();
+		else
+			unit =unitServiceFacade.findById(Long.parseLong(id));
+
+		model.addAttribute(unit);
+	}
+	
+	@RequestMapping(value = "/saveUnit", method = RequestMethod.POST)
+	public void saveUnit(@ModelAttribute Unit unit, Model model) {
+		logger.info("save employee");
+	
+		//TODO: make unit
+//		unitServiceFacade.createChild(unit);
 	}
 
 }

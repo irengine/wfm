@@ -104,5 +104,10 @@ public class UnitServiceFacadeImpl implements UnitServiceFacade {
 		
 		return sw.toString();
 	}
+
+	@Transactional(propagation=Propagation.SUPPORTS)
+	public Unit findById(Long id) {
+		return unitRepository.findById(id);
+	}
 	
 }

@@ -1,5 +1,7 @@
 package com.kwchina.wfm.interfaces.organization.web;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,10 +34,19 @@ public class EmployeeController {
 	}
 	
 	@RequestMapping(value = "/getEmployee", method = RequestMethod.GET)
-	public void getEmployee(Model model) {
+	public void getEmployee(HttpServletRequest request, Model model) {
 		logger.info("get employee");
-
-		model.addAttribute(new Employee());
+		
+		String id = request.getParameter("id");
+		
+		Employee employee;
+		
+		if (id.isEmpty())
+			employee = new Employee();
+		else
+			employee =employeeServiceFacade.findById(Long.parseLong(id));
+		
+		model.addAttribute(employee);
 	}
 	
 	@RequestMapping(value = "/saveEmployee", method = RequestMethod.POST)

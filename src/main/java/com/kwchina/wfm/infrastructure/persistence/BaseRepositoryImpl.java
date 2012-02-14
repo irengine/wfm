@@ -7,11 +7,27 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import com.kwchina.wfm.domain.model.organization.BaseRepository;
+import com.kwchina.wfm.infrastructure.common.ReflectHelper;
 
 public abstract class BaseRepositoryImpl<T> implements BaseRepository<T> {
 
 	@PersistenceContext
 	private EntityManager entityManager;
+
+	private Class<T> entityClass;
+	
+	@SuppressWarnings("unchecked")
+	public BaseRepositoryImpl() {
+		this.entityClass = ReflectHelper.getSuperClassGenricType(this.getClass());
+	}
+	
+	public T findById(Long id) {
+		return entityManager.find(entityClass, id);
+	}
+	
+	private String getEntityName() {
+		return entityClass.getSimpleName();
+	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -41,7 +57,4 @@ public abstract class BaseRepositoryImpl<T> implements BaseRepository<T> {
 		Long rowsCount = (Long)entityManager.createQuery(syntax).getSingleResult(); 
 		return rowsCount;
 	}
-	
-	public abstract String getEntityName();
-
 }

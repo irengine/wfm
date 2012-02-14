@@ -66,5 +66,10 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 	public void saveEmployee(Employee employee) {
 		employeeRepository.saveEmployee(employee);
 	}
+	
+	@Transactional(propagation=Propagation.SUPPORTS)
+	public Employee findById(Long id) {
+		return employeeRepository.findById(id);
+	}
 
 }

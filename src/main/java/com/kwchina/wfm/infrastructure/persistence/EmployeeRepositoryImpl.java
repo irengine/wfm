@@ -18,11 +18,6 @@ public class EmployeeRepositoryImpl extends BaseRepositoryImpl<Employee> impleme
 	@PersistenceContext
 	private EntityManager entityManager;
 	
-	@Override
-	public String getEntityName() {
-		return "Employee";
-	}
-	
 	public Employee saveEmployee(Employee employee) {
 		entityManager.persist(employee);
 		entityManager.flush();
