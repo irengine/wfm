@@ -8,7 +8,7 @@ import javax.persistence.Query;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.kwchina.wfm.domain.model.organization.BaseRepository;
+import com.kwchina.wfm.domain.common.BaseRepository;
 import com.kwchina.wfm.infrastructure.common.ReflectHelper;
 
 public abstract class BaseRepositoryImpl<T> implements BaseRepository<T> {

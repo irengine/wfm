@@ -1,4 +1,4 @@
-package com.kwchina.wfm.domain.model.organization;
+package com.kwchina.wfm.domain.common;
 
 import java.util.List;
 
