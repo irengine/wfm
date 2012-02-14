@@ -22,7 +22,8 @@ public class UserRepositoryTests {
 	@Test
 	@Transactional
 	public void testValidatePassword() {
-		User u = new User("xyz", "XuYuZu", "123456", "xyz@kwchina.com");
+		User u = new User("xyz", "XuYuZu", "xyz@kwchina.com");
+		u.setPassword("123456");
 		assertTrue(u.validatePassword("123456"));
 		
 		userRepository.save(u);

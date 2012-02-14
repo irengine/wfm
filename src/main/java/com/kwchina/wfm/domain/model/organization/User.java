@@ -39,15 +39,14 @@ public class User implements com.kwchina.wfm.domain.common.Entity<User> {
 	private boolean enable;
 	
 	public User() {
-		this.setEnable(true);
+		this.enable = true;
 	}
 	
-	public User(String code, String name, String password, String email) {
-		this.setCode(code);
-		this.setName(name);
-		this.setPassword(password);
-		this.setEmail(email);
-		this.setEnable(true);
+	public User(String code, String name, String email) {
+		this.code = code;
+		this.name = name;
+		this.email = email;
+		this.enable = true;
 	}
 	
 	public Long getId() {

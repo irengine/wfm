@@ -57,6 +57,11 @@ public class Unit implements com.kwchina.wfm.domain.common.Entity<Unit> {
 	public Unit() {
 		this.enable = true;
 	}
+	
+	public Unit(String name) {
+		this.name = name;
+		this.enable = true;
+	}
 
 	public Long getId() {
 		return id;
@@ -97,10 +102,6 @@ public class Unit implements com.kwchina.wfm.domain.common.Entity<Unit> {
 
 	public void setRight(Long right) {
 		this.right = right;
-	}
-	
-	public Unit(String name) {
-		this.name = name;
 	}
 
 	public String getName() {
