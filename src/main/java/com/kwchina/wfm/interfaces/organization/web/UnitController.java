@@ -65,11 +65,16 @@ public class UnitController {
 	}
 	
 	@RequestMapping(value = "/saveUnit", method = RequestMethod.POST)
-	public void saveUnit(@ModelAttribute Unit unit, Model model) {
+	public void saveUnit(@ModelAttribute Unit unit, HttpServletRequest request, Model model) {
 		logger.info("save unit");
 	
-		//TODO: make unit
-//		unitServiceFacade.createChild(unit);
+		if (StringUtils.isEmpty(request.getParameter("parentUnitId"))) {
+			unitServiceFacade.saveUnit(unit, null);
+		}
+		else {
+			Long parentUnitId = Long.parseLong(request.getParameter("parentUnitId"));
+			unitServiceFacade.saveUnit(unit, parentUnitId);
+		}
 	}
 
 }

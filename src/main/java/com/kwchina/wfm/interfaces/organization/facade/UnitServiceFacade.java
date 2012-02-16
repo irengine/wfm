@@ -8,5 +8,6 @@ public interface UnitServiceFacade {
 	void loadSampleData();
 	String getUnitsWithJson();
 	
+	void saveUnit(Unit unit, Long parentUnitId);
 	Unit findById(Long id);
 }

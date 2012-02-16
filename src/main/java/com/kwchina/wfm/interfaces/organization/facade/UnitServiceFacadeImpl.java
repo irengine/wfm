@@ -66,6 +66,17 @@ public class UnitServiceFacadeImpl implements UnitServiceFacade {
 		
 		return sw.toString();
 	}
+	
+	@Transactional(propagation=Propagation.REQUIRED)
+	public void saveUnit(Unit unit, Long parentUnitId) {
+		if (null == parentUnitId || parentUnitId.equals(0)) {
+			unitRepository.getRoot(unit.getName());
+		}
+		else {
+			Unit parentUnit = unitRepository.findById(parentUnitId);
+			unitRepository.addChild(parentUnit, unit);
+		}
+	}
 
 	@Transactional(propagation=Propagation.SUPPORTS)
 	public Unit findById(Long id) {
