@@ -36,6 +36,9 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 		if (Boolean.parseBoolean(parameters.get(QueryHelper.IS_INCLUDE_CONDITION))) {
 			whereClause = QueryHelper.getWhereClause(parameters.get(QueryHelper.FILTERS), conditions);
 		}
+		else {
+			whereClause = QueryHelper.getWhereClause("", conditions);
+		}
 		
 		int rowsCount = employeeRepository.getRowsCount(whereClause).intValue();
 		
