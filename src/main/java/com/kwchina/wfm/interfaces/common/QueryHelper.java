@@ -109,17 +109,18 @@ public class QueryHelper {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static String getWhereClause(String filters) {
+	public static String getWhereClause(String filters, List<String> conditions) {
 		
 		try {
 			if (!StringUtils.isEmpty(filters)) {
 				ObjectMapper objectMapper = new ObjectMapper();
 				Map<String, Map<String, Object>> maps = objectMapper.readValue(filters, Map.class);
 				
-				String groupOp = maps.get("groupOp").toString();
+				String groupOp = " " + maps.get("groupOp").toString() + " ";
 			
 				ArrayList<Map<String, Object>> rules = (ArrayList<Map<String, Object>>)maps.get("rules");
-				List<String> conditions = new ArrayList<String>();
+				if (null == conditions)
+					conditions = new ArrayList<String>();
 				
 				for(Map<String, Object> rule:rules) {
 					String condition = getCondition(rule.get("field").toString(), rule.get("op").toString(), rule.get("data").toString());

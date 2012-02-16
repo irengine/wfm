@@ -1,7 +1,6 @@
 package com.kwchina.wfm.interfaces.organization.facade;
 
 import java.io.StringWriter;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,26 +22,21 @@ import com.kwchina.wfm.interfaces.common.QueryHelper;
 public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 
 	@Autowired
-	EmployeeRepository employeeRepository;
-	
-	@Autowired
 	UnitRepository unitRepository;
 	
+	@Autowired
+	EmployeeRepository employeeRepository;
+	
 	@Transactional(propagation=Propagation.SUPPORTS)
-	public String queryEmployeesWithJson() {
-		Map<String, String> parameters = new HashMap<String, String>();
-		parameters.put(QueryHelper.SORT_FIELD, "id");
-		parameters.put(QueryHelper.SORT_DIRECTION, "");
-		parameters.put(QueryHelper.IS_INCLUDE_CONDITION, "false");
-		parameters.put(QueryHelper.FILTERS, "");
-		
-		String whereClause = QueryHelper.getWhereClause(parameters.get(QueryHelper.FILTERS));
+	public String queryEmployeesWithJson(Map<String, String> parameters, int currentPage, int pageSize, List<String> conditions) {
+	
+		String whereClause = QueryHelper.getWhereClause(parameters.get(QueryHelper.FILTERS), conditions);
 		String orderByClause = String.format(" ORDER BY %s %s ", parameters.get(QueryHelper.SORT_FIELD), parameters.get(QueryHelper.SORT_DIRECTION));
 		
 		int rowsCount = employeeRepository.getRowsCount(whereClause).intValue();
 		
-		PageHelper pageHelper = new PageHelper(rowsCount, 5);
-		pageHelper.setCurrentPage(0);
+		PageHelper pageHelper = new PageHelper(rowsCount, pageSize);
+		pageHelper.setCurrentPage(currentPage);
 		
 		List<Employee> rows = employeeRepository.getRows(whereClause, orderByClause, pageHelper.getStart(), pageHelper.getPageSize());
 		

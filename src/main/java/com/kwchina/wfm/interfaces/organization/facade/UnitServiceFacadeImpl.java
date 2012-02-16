@@ -80,7 +80,7 @@ public class UnitServiceFacadeImpl implements UnitServiceFacade {
 		parameters.put(QueryHelper.IS_INCLUDE_CONDITION, "false");
 		parameters.put(QueryHelper.FILTERS, "");
 		
-		String whereClause = QueryHelper.getWhereClause(parameters.get(QueryHelper.FILTERS));
+		String whereClause = QueryHelper.getWhereClause(parameters.get(QueryHelper.FILTERS), null);
 		String orderByClause = String.format(" ORDER BY %s %s ", parameters.get(QueryHelper.SORT_FIELD), parameters.get(QueryHelper.SORT_DIRECTION));
 		
 		int rowsCount = unitRepository.getRowsCount(whereClause).intValue();
