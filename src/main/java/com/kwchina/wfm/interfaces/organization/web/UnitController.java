@@ -1,6 +1,9 @@
 package com.kwchina.wfm.interfaces.organization.web;
 
+import java.io.IOException;
+
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -11,7 +14,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kwchina.wfm.domain.model.organization.Unit;
 import com.kwchina.wfm.interfaces.organization.facade.UnitServiceFacade;
@@ -27,18 +29,16 @@ public class UnitController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(UnitController.class);
 	
+	/*
+	 * for internet explorer issue, should not use @ResponseBody to return json, instead of use response.write
+	 */
 	@RequestMapping(value = "/getUnits", method = RequestMethod.GET)
-	public @ResponseBody String getUnits() {
+	public void getUnits(HttpServletResponse response) throws IOException {
 		logger.info("get all units");
 		
-		return unitServiceFacade.getUnitsWithJson();
-	}
-	
-	@RequestMapping(value = "/queryUnits", method = RequestMethod.GET)
-	public @ResponseBody String queryUnits() {
-		logger.info("get json units");
-		
-		return unitServiceFacade.queryUnitsWithJson();
+		response.setContentType("text/html;charset=utf-8");
+		response.getWriter().print(unitServiceFacade.getUnitsWithJson());
+		response.flushBuffer();
 	}
 	
 	@RequestMapping(value = "/loadUnits", method = RequestMethod.GET)
@@ -66,7 +66,7 @@ public class UnitController {
 	
 	@RequestMapping(value = "/saveUnit", method = RequestMethod.POST)
 	public void saveUnit(@ModelAttribute Unit unit, Model model) {
-		logger.info("save employee");
+		logger.info("save unit");
 	
 		//TODO: make unit
 //		unitServiceFacade.createChild(unit);

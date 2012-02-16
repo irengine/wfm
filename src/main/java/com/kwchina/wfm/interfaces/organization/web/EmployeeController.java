@@ -1,10 +1,12 @@
 package com.kwchina.wfm.interfaces.organization.web;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -15,7 +17,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kwchina.wfm.domain.model.organization.Employee;
 import com.kwchina.wfm.interfaces.common.QueryHelper;
@@ -32,8 +33,11 @@ public class EmployeeController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(EmployeeController.class);
 	
+	/*
+	 * for internet explorer issue, should not use @ResponseBody to return json, instead of use response.write
+	 */
 	@RequestMapping(value = "/queryEmployees", method = RequestMethod.GET)
-	public @ResponseBody String queryEmployees(HttpServletRequest request) {
+	public void queryEmployees(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		logger.info("get json employees");
 		
 		Map<String, String> parameters = QueryHelper.getQueryParameters(request);
@@ -56,7 +60,9 @@ public class EmployeeController {
 			conditions.add(condition);
 		}
 		
-		return employeeServiceFacade.queryEmployeesWithJson(parameters, currentPage, pageSize, conditions);
+		response.setContentType("text/html;charset=utf-8");
+		response.getWriter().print(employeeServiceFacade.queryEmployeesWithJson(parameters, currentPage, pageSize, conditions));
+		response.flushBuffer();
 	}
 	
 	@RequestMapping(value = "/getEmployee", method = RequestMethod.GET)

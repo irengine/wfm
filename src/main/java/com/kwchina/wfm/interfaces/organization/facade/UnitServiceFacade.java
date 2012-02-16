@@ -7,7 +7,6 @@ public interface UnitServiceFacade {
 
 	void loadSampleData();
 	String getUnitsWithJson();
-	String queryUnitsWithJson();
 	
 	Unit findById(Long id);
 }
