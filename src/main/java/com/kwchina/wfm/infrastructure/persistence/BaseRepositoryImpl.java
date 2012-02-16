@@ -42,10 +42,10 @@ public abstract class BaseRepositoryImpl<T> implements BaseRepository<T> {
 		return getRows(whereClause, orderByClause, start, limit, false);
 	}
 	
-	private String getRowsSyntax(String whereClause, String orderByClause, boolean hasDisabled) {
+	private String getRowsSyntax(String whereClause, String orderByClause, boolean includeDisabled) {
 		String syntax = "";
 		
-		if(hasDisabled) {
+		if(includeDisabled) {
 			if (StringUtils.isEmpty(whereClause))
 				syntax = String.format("FROM %s %s", getEntityName(), orderByClause);
 			else
@@ -62,8 +62,8 @@ public abstract class BaseRepositoryImpl<T> implements BaseRepository<T> {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<T> getRows(String whereClause, String orderByClause, int start, int limit, boolean hasDisabled) {
-		Query query = entityManager.createQuery(getRowsSyntax(whereClause, orderByClause, hasDisabled));
+	public List<T> getRows(String whereClause, String orderByClause, int start, int limit, boolean includeDisabled) {
+		Query query = entityManager.createQuery(getRowsSyntax(whereClause, orderByClause, includeDisabled));
 		query.setMaxResults(limit);
 		query.setFirstResult(start);
 		return query.getResultList();
@@ -73,10 +73,10 @@ public abstract class BaseRepositoryImpl<T> implements BaseRepository<T> {
 		return getRowsCount(whereClause, false);
 	}
 	
-	private String getRowsCountSyntax(String whereClause, boolean hasDisabled) {
+	private String getRowsCountSyntax(String whereClause, boolean includeDisabled) {
 		String syntax = "";
 		
-		if(hasDisabled) {
+		if(includeDisabled) {
 			if (StringUtils.isEmpty(whereClause))
 				syntax = String.format("SELECT COUNT(*) FROM %s", getEntityName());
 			else
@@ -92,8 +92,8 @@ public abstract class BaseRepositoryImpl<T> implements BaseRepository<T> {
 	}
 
 	@Override
-	public Long getRowsCount(String whereClause, boolean hasDisabled) {
-		Long rowsCount = (Long)entityManager.createQuery(getRowsCountSyntax(whereClause, hasDisabled)).getSingleResult(); 
+	public Long getRowsCount(String whereClause, boolean includeDisabled) {
+		Long rowsCount = (Long)entityManager.createQuery(getRowsCountSyntax(whereClause, includeDisabled)).getSingleResult(); 
 		return rowsCount;
 	}
 }
