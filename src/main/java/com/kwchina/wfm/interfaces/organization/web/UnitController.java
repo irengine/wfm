@@ -5,7 +5,6 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.kwchina.wfm.domain.model.organization.Unit;
+import com.kwchina.wfm.interfaces.common.QueryHelper;
 import com.kwchina.wfm.interfaces.organization.facade.UnitServiceFacade;
 
 /**
@@ -51,15 +51,12 @@ public class UnitController {
 	@RequestMapping(value = "/getUnit", method = RequestMethod.GET)
 	public void getUnit(HttpServletRequest request, Model model) {
 		logger.info("get unit");
-		
-		String id = request.getParameter("id");
-		
+
 		Unit unit;
-		
-		if (StringUtils.isEmpty(id))
+		if (QueryHelper.isEmpty(request, "id"))
 			unit = new Unit();
 		else
-			unit =unitServiceFacade.findById(Long.parseLong(id));
+			unit =unitServiceFacade.findById(Long.parseLong(request.getParameter("id")));
 
 		model.addAttribute(unit);
 	}
@@ -68,12 +65,11 @@ public class UnitController {
 	public void saveUnit(@ModelAttribute Unit unit, HttpServletRequest request, Model model) {
 		logger.info("save unit");
 	
-		if (StringUtils.isEmpty(request.getParameter("parentUnitId"))) {
+		if (QueryHelper.isEmpty(request, "parentUnitId")) {
 			unitServiceFacade.saveUnit(unit, null);
 		}
 		else {
-			Long parentUnitId = Long.parseLong(request.getParameter("parentUnitId"));
-			unitServiceFacade.saveUnit(unit, parentUnitId);
+			unitServiceFacade.saveUnit(unit, Long.parseLong(request.getParameter("parentUnitId")));
 		}
 	}
 

@@ -8,7 +8,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,19 +42,19 @@ public class EmployeeController {
 		Map<String, String> parameters = QueryHelper.getQueryParameters(request);
 		
 		int currentPage = 0;
-		if (StringUtils.isEmpty(request.getParameter("page")))
+		if (QueryHelper.isEmpty(request, "page"))
 			currentPage = 0;
 		else
 			currentPage = Integer.parseInt(request.getParameter("page"));
 		
 		int pageSize = 10;
-		if (StringUtils.isEmpty(request.getParameter("rows")))
+		if (QueryHelper.isEmpty(request, "rows"))
 			pageSize = 0;
 		else
 			pageSize = Integer.parseInt(request.getParameter("rows"));
 		
 		List<String> conditions = new ArrayList<String>();
-		if (!StringUtils.isEmpty(request.getParameter("unitId"))) {
+		if (QueryHelper.isEmpty(request, "unitId")) {
 			String condition = String.format("unit.id = %s", request.getParameter("unitId"));
 			conditions.add(condition);
 		}
@@ -69,14 +68,11 @@ public class EmployeeController {
 	public void getEmployee(HttpServletRequest request, Model model) {
 		logger.info("get employee");
 		
-		String id = request.getParameter("id");
-		
 		Employee employee;
-		
-		if (StringUtils.isEmpty(id))
+		if (QueryHelper.isEmpty(request, "id"))
 			employee = new Employee();
 		else
-			employee =employeeServiceFacade.findById(Long.parseLong(id));
+			employee =employeeServiceFacade.findById(Long.parseLong(request.getParameter("id")));
 		
 		model.addAttribute(employee);
 	}
@@ -85,12 +81,11 @@ public class EmployeeController {
 	public void saveEmployee(@ModelAttribute Employee employee, HttpServletRequest request, Model model) {
 		logger.info("save employee");
 		
-		if (StringUtils.isEmpty(request.getParameter("unitId"))) {
+		if (QueryHelper.isEmpty(request, "unitId")) {
 			employeeServiceFacade.saveEmployee(employee);
 		}
 		else {
-			Long unitId = Long.parseLong(request.getParameter("unitId"));
-			employeeServiceFacade.saveEmployeeWithUnit(employee, unitId);
+			employeeServiceFacade.saveEmployeeWithUnit(employee, Long.parseLong(request.getParameter("unitId")));
 		}
 	}
 

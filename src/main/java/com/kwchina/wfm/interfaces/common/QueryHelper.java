@@ -137,5 +137,12 @@ public class QueryHelper {
 		
 		return "";
 	}
+	
+	/*
+	 * null, empty string and -1 should return true
+	 */
+	public static boolean isEmpty(HttpServletRequest request, String key) {
+		return StringUtils.isEmpty(request.getParameter(key)) || request.getParameter(key).equals("-1");
+	}
 
 }

@@ -2,7 +2,6 @@ package com.kwchina.wfm.interfaces.organization.web;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.kwchina.wfm.domain.model.organization.User;
+import com.kwchina.wfm.interfaces.common.QueryHelper;
 import com.kwchina.wfm.interfaces.organization.facade.UserServiceFacade;
 
 /**
@@ -30,14 +30,11 @@ public class UserController {
 	public void getUser(HttpServletRequest request, Model model) {
 		logger.info("get user");
 		
-		String id = request.getParameter("id");
-		
 		User user;
-		
-		if (StringUtils.isEmpty(id))
+		if (QueryHelper.isEmpty(request, "id"))
 			user = new User();
 		else
-			user =userServiceFacade.findById(Long.parseLong(id));
+			user =userServiceFacade.findById(Long.parseLong(request.getParameter("id")));
 		
 		model.addAttribute(user);
 	}
