@@ -13,6 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.kwchina.wfm.domain.model.organization.Employee;
 import com.kwchina.wfm.domain.model.organization.EmployeeRepository;
+import com.kwchina.wfm.domain.model.organization.Unit;
+import com.kwchina.wfm.domain.model.organization.UnitRepository;
 import com.kwchina.wfm.interfaces.common.Page;
 import com.kwchina.wfm.interfaces.common.PageHelper;
 import com.kwchina.wfm.interfaces.common.QueryHelper;
@@ -22,6 +24,9 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 
 	@Autowired
 	EmployeeRepository employeeRepository;
+	
+	@Autowired
+	UnitRepository unitRepository;
 	
 	@Transactional(propagation=Propagation.SUPPORTS)
 	public String queryEmployeesWithJson() {
@@ -59,6 +64,13 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 
 	@Transactional(propagation=Propagation.REQUIRED)
 	public void saveEmployee(Employee employee) {
+		employeeRepository.save(employee);
+	}
+	
+	@Transactional(propagation=Propagation.REQUIRED)
+	public void saveEmployeeWithUnit(Employee employee, Long unitId) {
+		Unit unit = unitRepository.findById(unitId);
+		employee.setUnit(unit);
 		employeeRepository.save(employee);
 	}
 	

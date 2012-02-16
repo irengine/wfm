@@ -1,6 +1,8 @@
 package com.kwchina.wfm.infrastructure.persistence;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.text.ParseException;
 import java.util.Date;
@@ -15,25 +17,36 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.kwchina.wfm.domain.model.organization.Employee;
 import com.kwchina.wfm.domain.model.organization.EmployeeRepository;
+import com.kwchina.wfm.domain.model.organization.Unit;
+import com.kwchina.wfm.domain.model.organization.UnitRepository;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({"/context-test.xml"})
 public class EmployeeRepositoryTests {
+	// set @Rollback(false) to see if data exists
 
 	@Autowired
 	private EmployeeRepository employeeRepository;
 	
+	@Autowired
+	private UnitRepository unitRepository;
+	
 	@Test
 	@Transactional
 	public void testSaveEmployee() throws ParseException {
+		Unit unit = new Unit("X");
+		unitRepository.save(unit);
+		
 		Date date = DateUtils.parseDate("2012-02-14",new String[]{"yyyy-MM-dd"});
 		Employee employee = new Employee("0001", "Alex Tang", date, date, date);
 
 		assertNull(employee.getId());
-
+		
+		employee.setUnit(unit);
 		employeeRepository.save(employee);
 		
 		assertNotNull(employee.getId());
+		assertNotNull(employee.getUnit());
 	}
 	
 	@Test

@@ -6,6 +6,7 @@ public interface EmployeeServiceFacade {
 
 	String queryEmployeesWithJson();
 	void saveEmployee(Employee employee);
+	void saveEmployeeWithUnit(Employee employee, Long unitId);
 	
 	Employee findById(Long id);
 }

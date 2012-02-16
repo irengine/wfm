@@ -51,10 +51,16 @@ public class EmployeeController {
 	}
 	
 	@RequestMapping(value = "/saveEmployee", method = RequestMethod.POST)
-	public void saveEmployee(@ModelAttribute Employee employee, Model model) {
+	public void saveEmployee(@ModelAttribute Employee employee, HttpServletRequest request, Model model) {
 		logger.info("save employee");
 		
-		employeeServiceFacade.saveEmployee(employee);
+		if (StringUtils.isEmpty(request.getParameter("unitId"))) {
+			employeeServiceFacade.saveEmployee(employee);
+		}
+		else {
+			Long unitId = Long.parseLong(request.getParameter("unitId"));
+			employeeServiceFacade.saveEmployeeWithUnit(employee, unitId);
+		}
 	}
 
 }
