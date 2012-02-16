@@ -114,7 +114,7 @@ public class QueryHelper {
 		try {
 			if (!StringUtils.isEmpty(filters)) {
 				ObjectMapper objectMapper = new ObjectMapper();
-				Map<String, Map<String, Object>> maps = objectMapper.readValue(filters, Map.class);
+				Map<String, Object> maps = objectMapper.readValue(filters, Map.class);
 				
 				String groupOp = " " + maps.get("groupOp").toString() + " ";
 			
@@ -129,6 +129,8 @@ public class QueryHelper {
 				
 				return StringUtils.join(conditions, groupOp);
 			}
+			else
+				return StringUtils.join(conditions, " AND ");
 		}
 		catch(Exception e) {
 		}

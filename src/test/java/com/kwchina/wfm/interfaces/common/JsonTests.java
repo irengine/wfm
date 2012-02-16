@@ -78,7 +78,7 @@ public class JsonTests {
 	{
 		String json = "{\"groupOp\":\"AND\",\"rules\":[{\"field\":\"gender\",\"op\":\"eq\",\"data\":\"1\"}, {\"field\":\"age\",\"op\":\"eq\",\"data\":\"20\"}]}";
 		ObjectMapper objectMapper = new ObjectMapper();
-		Map<String, Map<String, Object>> maps = objectMapper.readValue(json, Map.class);
+		Map<String, Object> maps = objectMapper.readValue(json, Map.class);
 		
 		assertEquals("AND", maps.get("groupOp"));
 		
