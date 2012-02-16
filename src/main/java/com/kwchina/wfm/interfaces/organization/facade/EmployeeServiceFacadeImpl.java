@@ -30,8 +30,12 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 	@Transactional(propagation=Propagation.SUPPORTS)
 	public String queryEmployeesWithJson(Map<String, String> parameters, int currentPage, int pageSize, List<String> conditions) {
 	
-		String whereClause = QueryHelper.getWhereClause(parameters.get(QueryHelper.FILTERS), conditions);
+		String whereClause = "";
 		String orderByClause = String.format(" ORDER BY %s %s ", parameters.get(QueryHelper.SORT_FIELD), parameters.get(QueryHelper.SORT_DIRECTION));
+		
+		if (Boolean.parseBoolean(parameters.get(QueryHelper.IS_INCLUDE_CONDITION))) {
+			whereClause = QueryHelper.getWhereClause(parameters.get(QueryHelper.FILTERS), conditions);
+		}
 		
 		int rowsCount = employeeRepository.getRowsCount(whereClause).intValue();
 		
