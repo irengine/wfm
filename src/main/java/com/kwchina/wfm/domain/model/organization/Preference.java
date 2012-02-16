@@ -1,22 +1,15 @@
 package com.kwchina.wfm.domain.model.organization;
 
-public class Perference {
+import javax.persistence.Embeddable;
 
-	private Long id;
+@Embeddable
+public class Preference {
 	
 	private String key;
 	
 	private String value;
 	
-	private String Scope;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
+	private String scope;
 
 	public String getKey() {
 		return key;
@@ -35,10 +28,10 @@ public class Perference {
 	}
 
 	public String getScope() {
-		return Scope;
+		return scope;
 	}
 
 	public void setScope(String scope) {
-		Scope = scope;
+		this.scope = scope;
 	}
 }

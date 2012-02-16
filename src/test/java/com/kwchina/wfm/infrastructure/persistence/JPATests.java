@@ -2,6 +2,9 @@ package com.kwchina.wfm.infrastructure.persistence;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -19,7 +22,9 @@ import org.springframework.test.context.transaction.BeforeTransaction;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.kwchina.wfm.domain.model.organization.Preference;
 import com.kwchina.wfm.domain.model.organization.Unit;
+import com.kwchina.wfm.domain.model.organization.User;
 
 /*
  * Sample test
@@ -84,11 +89,28 @@ public class JPATests {
     	assertEquals(new Long(100), unit.getLeft());
     }
 
+//    @Test
+//    // overrides the class-level defaultRollback setting
+//    @Rollback(true)
+//    public void modifyDatabaseWithinTransaction() {
+//    	logger.info("logic which uses the test data and modifies database state");
+//    }
+    
     @Test
-    // overrides the class-level defaultRollback setting
     @Rollback(true)
-    public void modifyDatabaseWithinTransaction() {
-    	logger.info("logic which uses the test data and modifies database state");
+    public void testElementCollections() {
+    	User u = new User("aka", "Alex Tang", "alex.tang@taoware.com");
+    	
+    	Set<Preference> ps = new HashSet<Preference>();
+    	Preference p = new Preference();
+    	p.setKey("K");
+    	p.setValue("V");
+    	ps.add(p);
+    	
+    	u.setPassword("123456");
+    	u.setPreferences(ps);
+    	
+    	entityManager.persist(u);
     }
 
     @After

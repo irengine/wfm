@@ -1,10 +1,16 @@
 package com.kwchina.wfm.domain.model.organization;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.Set;
 
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -52,7 +58,15 @@ public class User implements com.kwchina.wfm.domain.common.Entity<User> {
             inverseJoinColumns=@JoinColumn(name="unitId")
         )
 	private Collection<Unit> units = new LinkedHashSet<Unit>();
-	
+    
+	@ElementCollection
+	@CollectionTable(name="T_USER_PREFERENCES", joinColumns=@JoinColumn(name="userId"))
+	@AttributeOverrides({
+		@AttributeOverride(name="key", column=@Column(name="xkey")),
+		@AttributeOverride(name="value", column=@Column(name="xvalue"))
+	})
+    private Set<Preference> preferences = new HashSet<Preference>();
+
 	@Column(nullable=false)
 	private boolean enable;
 	
@@ -153,6 +167,20 @@ public class User implements com.kwchina.wfm.domain.common.Entity<User> {
 	 */
 	public void setUnits(Collection<Unit> units) {
 		this.units = units;
+	}
+
+	/**
+	 * @return the preferences
+	 */
+	public Set<Preference> getPreferences() {
+		return preferences;
+	}
+
+	/**
+	 * @param preferences the preferences to set
+	 */
+	public void setPreferences(Set<Preference> preferences) {
+		this.preferences = preferences;
 	}
 
 	/**
