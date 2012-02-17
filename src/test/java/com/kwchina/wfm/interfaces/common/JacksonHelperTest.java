@@ -21,7 +21,7 @@ import org.junit.Test;
 import com.kwchina.wfm.domain.model.organization.Employee;
 import com.kwchina.wfm.domain.model.organization.Unit;
 
-public class JacksonHelperTests {
+public class JacksonHelperTest {
 	
 	private Unit unit;
 	private Employee employee;

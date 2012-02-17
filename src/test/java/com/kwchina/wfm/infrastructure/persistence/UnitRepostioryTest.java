@@ -18,7 +18,7 @@ import com.kwchina.wfm.interfaces.common.PageHelper;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({"/context-test.xml"})
-public class UnitRepostioryTests {
+public class UnitRepostioryTest {
 
 	@Autowired
 	private UnitRepository unitRepository;

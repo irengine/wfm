@@ -33,9 +33,9 @@ import com.kwchina.wfm.domain.model.organization.User;
 @ContextConfiguration({"/context-test.xml"})
 @TransactionConfiguration(defaultRollback=false)
 @Transactional
-public class JPATests {
+public class JPATest {
 	
-	private static final Logger logger = LoggerFactory.getLogger(DummyObjectTests.class);
+	private static final Logger logger = LoggerFactory.getLogger(DummyObjectTest.class);
 
 	@PersistenceContext
 	private EntityManager entityManager;

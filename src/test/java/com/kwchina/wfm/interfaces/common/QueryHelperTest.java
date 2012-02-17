@@ -12,7 +12,7 @@ import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Test;
 
-public class QueryHelperTests {
+public class QueryHelperTest {
 	
 	@Test
 	@SuppressWarnings({ "unchecked" })

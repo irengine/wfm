@@ -21,7 +21,7 @@ import com.kwchina.wfm.domain.model.organization.UserRepository;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({"/context-test.xml"})
-public class UserRepositoryTests {
+public class UserRepositoryTest {
 
 	@Autowired
 	private UserRepository userRepository;

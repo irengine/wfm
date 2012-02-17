@@ -16,7 +16,7 @@ import org.codehaus.jackson.map.annotate.JsonView;
 import org.junit.Test;
 
 
-public class JacksonCapabilityTests {
+public class JacksonCapabilityTest {
     
     @JsonIgnoreProperties({"bar3", "bytes"})
     @JsonPropertyOrder(value={"bar", "bar2", "bar3"})

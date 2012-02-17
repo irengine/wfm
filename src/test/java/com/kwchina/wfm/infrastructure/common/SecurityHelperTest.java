@@ -6,7 +6,7 @@ import org.junit.Test;
 
 
 
-public class SecurityHelperTests {
+public class SecurityHelperTest {
 
 	@Test
 	public void testSHA1() throws Exception {

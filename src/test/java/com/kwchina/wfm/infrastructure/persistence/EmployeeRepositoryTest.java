@@ -22,7 +22,7 @@ import com.kwchina.wfm.domain.model.organization.UnitRepository;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({"/context-test.xml"})
-public class EmployeeRepositoryTests {
+public class EmployeeRepositoryTest {
 	// set @Rollback(false) to see if data exists
 
 	@Autowired

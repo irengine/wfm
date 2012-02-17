@@ -16,7 +16,7 @@ import com.kwchina.wfm.infrastructure.persistence.DummyObject;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({"/context-test.xml"})
-public class DummyObjectTests {
+public class DummyObjectTest {
 	
 	@PersistenceContext
 	private EntityManager entityManager;

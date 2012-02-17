@@ -5,7 +5,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-public class ReflectHelperTests {
+public class ReflectHelperTest {
 
 	@Test
 	public void testTips() {
