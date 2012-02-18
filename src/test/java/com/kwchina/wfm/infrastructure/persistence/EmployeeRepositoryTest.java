@@ -15,8 +15,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.kwchina.wfm.domain.model.organization.Employee;
-import com.kwchina.wfm.domain.model.organization.EmployeeRepository;
+import com.kwchina.wfm.domain.model.employee.Employee;
+import com.kwchina.wfm.domain.model.employee.EmployeeRepository;
 import com.kwchina.wfm.domain.model.organization.Unit;
 import com.kwchina.wfm.domain.model.organization.UnitRepository;
 

@@ -3,7 +3,7 @@ package com.kwchina.wfm.interfaces.organization.facade;
 import java.util.List;
 import java.util.Map;
 
-import com.kwchina.wfm.domain.model.organization.Employee;
+import com.kwchina.wfm.domain.model.employee.Employee;
 
 public interface EmployeeServiceFacade {
 

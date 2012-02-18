@@ -18,7 +18,7 @@ import org.codehaus.jackson.map.ser.impl.SimpleFilterProvider;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.kwchina.wfm.domain.model.organization.Employee;
+import com.kwchina.wfm.domain.model.employee.Employee;
 import com.kwchina.wfm.domain.model.organization.Unit;
 
 public class JacksonHelperTest {

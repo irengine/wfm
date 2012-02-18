@@ -1,4 +1,4 @@
-package com.kwchina.wfm.domain.model.organization;
+package com.kwchina.wfm.domain.model.employee;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

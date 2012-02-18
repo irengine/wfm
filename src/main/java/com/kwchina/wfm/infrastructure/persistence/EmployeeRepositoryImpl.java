@@ -7,8 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
-import com.kwchina.wfm.domain.model.organization.Employee;
-import com.kwchina.wfm.domain.model.organization.EmployeeRepository;
+import com.kwchina.wfm.domain.model.employee.Employee;
+import com.kwchina.wfm.domain.model.employee.EmployeeRepository;
 
 @Repository
 public class EmployeeRepositoryImpl extends BaseRepositoryImpl<Employee> implements EmployeeRepository {

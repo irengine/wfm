@@ -1,4 +1,4 @@
-package com.kwchina.wfm.domain.model.organization;
+package com.kwchina.wfm.domain.model.employee;
 
 import java.util.Date;
 
@@ -15,6 +15,8 @@ import javax.persistence.TemporalType;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
+
+import com.kwchina.wfm.domain.model.organization.Unit;
 
 @Entity
 @Table(name="T_EMPLOYEES")
