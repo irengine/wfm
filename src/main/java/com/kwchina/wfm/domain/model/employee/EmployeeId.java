@@ -19,6 +19,7 @@ public class EmployeeId implements ValueObject<EmployeeId> {
 	
 	public EmployeeId(String id) {
 		Validate.notNull(id);
+		
 		this.id = id;
 	}
 

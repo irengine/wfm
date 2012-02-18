@@ -19,8 +19,6 @@ import com.kwchina.wfm.domain.model.employee.DateHelper;
 import com.kwchina.wfm.domain.model.employee.Employee;
 import com.kwchina.wfm.domain.model.employee.EmployeeId;
 import com.kwchina.wfm.domain.model.employee.EmployeeRepository;
-import com.kwchina.wfm.domain.model.organization.Unit;
-import com.kwchina.wfm.domain.model.organization.UnitRepository;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({"/context-test.xml"})
@@ -30,25 +28,17 @@ public class EmployeeRepositoryTest {
 	@Autowired
 	private EmployeeRepository employeeRepository;
 	
-	@Autowired
-	private UnitRepository unitRepository;
-	
 	@Test
 	@Transactional
 	public void testSaveEmployeeWithSameEmployeeId() throws ParseException {
-		Unit unit = new Unit("X");
-		unitRepository.save(unit);
-		
 		Date date = DateHelper.getDate("2012-02-14");
 		Employee employee = new Employee(new EmployeeId("0001"), "Alex Tang", date, date, date);
 
 		assertNull(employee.getId());
 		
-		employee.setUnit(unit);
 		employeeRepository.save(employee);
 		
 		assertNotNull(employee.getId());
-		assertNotNull(employee.getUnit());
 		
 		try {
 			Employee e =  new Employee(new EmployeeId("0001"), "Alex Tang", date, date, date);
@@ -63,19 +53,14 @@ public class EmployeeRepositoryTest {
 	@Test
 	@Transactional
 	public void testCantChangeEmployeeId() throws ParseException {
-		Unit unit = new Unit("X");
-		unitRepository.save(unit);
-		
 		Date date = DateHelper.getDate("2012-02-14");
 		Employee employee = new Employee(new EmployeeId("0001"), "Alex Tang", date, date, date);
 
 		assertNull(employee.getId());
 		
-		employee.setUnit(unit);
 		employeeRepository.save(employee);
 		
 		assertNotNull(employee.getId());
-		assertNotNull(employee.getUnit());
 		
 		employee.setEmployeeId(new EmployeeId("0002"));
 		employeeRepository.save(employee);

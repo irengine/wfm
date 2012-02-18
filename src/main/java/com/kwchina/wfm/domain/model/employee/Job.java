@@ -1,86 +1,89 @@
 package com.kwchina.wfm.domain.model.employee;
 
 import java.util.Date;
+import java.util.List;
+
+import javax.persistence.CollectionTable;
+import javax.persistence.ElementCollection;
+import javax.persistence.Embeddable;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
+import org.apache.commons.lang.Validate;
 
 import com.kwchina.wfm.domain.model.organization.Unit;
 
+@Embeddable
 public class Job {
 
+	@ManyToOne
+	@JoinColumn(name="unitId")
 	private Unit unit;
-//	private JobTitle title;
-//	private List<JobPosition> positions;
+	
+	@ManyToOne(optional=true)
+	@JoinColumn(name="jobTitleId")
+	private JobTitle title;
+	
+	@ElementCollection
+	@CollectionTable(name="T_EMPLOYEE_JOBPOSITIONS", joinColumns=@JoinColumn(name="employeeId"))
+	private List<JobPosition> positions;
+	
 	private JobStatus status;
+	
 	private Date effectDate;
 	
 	public Job() {
 		
 	}
 	
-	public Job(Unit unit, /*JobTitle title, List<JobPosition> positions, */JobStatus status, Date effectDate) {
+	public Job(Unit unit, JobTitle title, List<JobPosition> positions, JobStatus status, Date effectDate) {
+		Validate.notNull(unit);
+		Validate.notNull(status);
+		Validate.notNull(effectDate);
+		
 		this.unit = unit;
-//		this.title = title;
-//		this.positions = positions;
+		this.title = title;
+		this.positions = positions;
 		this.status = status;
 		this.effectDate = effectDate;
 	}
 	
-	/**
-	 * @return the unit
-	 */
 	public Unit getUnit() {
 		return unit;
 	}
-	/**
-	 * @param unit the unit to set
-	 */
+
 	public void setUnit(Unit unit) {
 		this.unit = unit;
 	}
-//	/**
-//	 * @return the title
-//	 */
-//	public JobTitle getTitle() {
-//		return title;
-//	}
-//	/**
-//	 * @param title the title to set
-//	 */
-//	public void setTitle(JobTitle title) {
-//		this.title = title;
-//	}
-//	/**
-//	 * @return the positionss
-//	 */
-//	public List<JobPosition> getPositions() {
-//		return positions;
-//	}
-//	/**
-//	 * @param positionss the positionss to set
-//	 */
-//	public void setPositions(List<JobPosition> positionss) {
-//		this.positions = positionss;
-//	}
-	/**
-	 * @return the status
-	 */
+
+	public JobTitle getTitle() {
+		return title;
+	}
+
+	public void setTitle(JobTitle title) {
+		this.title = title;
+	}
+
+	public List<JobPosition> getPositions() {
+		return positions;
+	}
+
+	public void setPositions(List<JobPosition> positionss) {
+		this.positions = positionss;
+	}
+
 	public JobStatus getStatus() {
 		return status;
 	}
-	/**
-	 * @param status the status to set
-	 */
+
 	public void setStatus(JobStatus status) {
 		this.status = status;
 	}
-	/**
-	 * @return the effectDate
-	 */
+
 	public Date getEffectDate() {
 		return effectDate;
 	}
-	/**
-	 * @param effectDate the effectDate to set
-	 */
+
 	public void setEffectDate(Date effectDate) {
 		this.effectDate = effectDate;
 	}

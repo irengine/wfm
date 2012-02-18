@@ -7,6 +7,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.apache.commons.lang.Validate;
+
 @Entity
 @Table(name="T_JOBTITLES")
 public class JobTitle implements com.kwchina.wfm.domain.common.Entity<JobTitle> {
@@ -15,27 +17,31 @@ public class JobTitle implements com.kwchina.wfm.domain.common.Entity<JobTitle> 
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 	
-	@Column(nullable=false)
+	@Column(nullable=false, unique=true)
 	private String code;
 	
 	@Column(nullable=false)
 	private String name;
 	
 	@Column(nullable=false)
-	private Long displayIndex = 0L;
+	private Long level = 0L;
 	
-	@Column
-	private String displayName;
+	@Column(nullable=false)
+	private boolean enable;
 
 	public JobTitle() {
-
+		this.enable = true;
 	}
 	
-	public JobTitle(String code, String name, Long displayIndex, String displayName, String strategyClassName) {
+	public JobTitle(String code, String name, Long level) {
+		Validate.notNull(code);
+		Validate.notNull(name);
+		Validate.notNull(level);
+		
 		this.code = code;
 		this.name = name;
-		this.displayIndex = displayIndex;
-		this.displayName = displayName;
+		this.level = level;
+		this.enable = true;
 	}
 
 	public Long getId() {
@@ -62,20 +68,20 @@ public class JobTitle implements com.kwchina.wfm.domain.common.Entity<JobTitle> 
 		this.name = name;
 	}
 
-	public Long getDisplayIndex() {
-		return displayIndex;
+	public Long getLevel() {
+		return level;
 	}
 
-	public void setDisplayIndex(Long displayIndex) {
-		this.displayIndex = displayIndex;
+	public void setLevel(Long level) {
+		this.level = level;
+	}
+	
+	public boolean isEnable() {
+		return enable;
 	}
 
-	public String getDisplayName() {
-		return displayName;
-	}
-
-	public void setDisplayName(String displayName) {
-		this.displayName = displayName;
+	public void setEnable(boolean enable) {
+		this.enable = enable;
 	}
 
 	@Override

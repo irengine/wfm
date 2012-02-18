@@ -36,7 +36,6 @@ public class JacksonHelperTest {
 		
 		Date date = DateUtils.parseDate("2012-02-14",new String[]{"yyyy-MM-dd"});
 		employee = new Employee(new EmployeeId("0001"), "Alex Tang", date, date, date);
-		employee.setUnit(unit);
 	}
 	
     @JsonIgnoreProperties({"parent", "children"})

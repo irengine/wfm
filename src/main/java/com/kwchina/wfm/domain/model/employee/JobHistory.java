@@ -21,16 +21,10 @@ public class JobHistory {
 		this.setJobChangeEvents(jobChangeEvents);
 	}
 
-	/**
-	 * @return the jobChangeEvents
-	 */
 	public List<JobChangeEvent> getJobChangeEvents() {
 		return jobChangeEvents;
 	}
 
-	/**
-	 * @param jobChangeEvents the jobChangeEvents to set
-	 */
 	public void setJobChangeEvents(List<JobChangeEvent> jobChangeEvents) {
 		this.jobChangeEvents = jobChangeEvents;
 	}
