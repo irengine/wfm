@@ -27,11 +27,9 @@ public abstract class BaseRepositoryImpl<T> implements BaseRepository<T> {
 		return entityManager.find(entityClass, id);
 	}
 	
-	public T save(T t) {
+	public void save(T t) {
 		entityManager.persist(t);
 		entityManager.flush();
-		
-		return t;
 	}
 	
 	private String getEntityName() {
