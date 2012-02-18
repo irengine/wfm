@@ -2,7 +2,10 @@ package com.kwchina.wfm.domain.model.employee;
 
 import java.util.Date;
 
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -26,8 +29,11 @@ public class Employee implements com.kwchina.wfm.domain.common.Entity<Employee> 
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 	
-	@Column(nullable=false)
-	private String code;
+	@Embedded
+	@AttributeOverrides( {
+		@AttributeOverride(name="id", column = @Column(name="employeeId", nullable=false, unique=true, updatable=false) )
+		} )
+	private EmployeeId employeeId;
 	
 	@Column(nullable=false)
 	private String name;
@@ -58,8 +64,8 @@ public class Employee implements com.kwchina.wfm.domain.common.Entity<Employee> 
 		this.enable = true;
 	}
 	
-	public Employee(String code, String name, Date birthday, Date beginDateOfWork, Date beginDateOfJob) {
-		this.code = code;
+	public Employee(EmployeeId employeeId, String name, Date birthday, Date beginDateOfWork, Date beginDateOfJob) {
+		this.employeeId = employeeId;
 		this.name = name;
 		this.birthday = birthday;
 		this.beginDateOfWork = beginDateOfWork;
@@ -75,12 +81,12 @@ public class Employee implements com.kwchina.wfm.domain.common.Entity<Employee> 
 		this.id = id;
 	}
 
-	public String getCode() {
-		return code;
+	public EmployeeId getEmployeeId() {
+		return employeeId;
 	}
 
-	public void setCode(String code) {
-		this.code = code;
+	public void setEmployeeId(EmployeeId employeeId) {
+		this.employeeId = employeeId;
 	}
 
 	public String getName() {
@@ -133,7 +139,7 @@ public class Employee implements com.kwchina.wfm.domain.common.Entity<Employee> 
 	
 	@Override
 	public boolean sameIdentityAs(Employee other) {
-		return other != null && code.equals(other.code);
+		return other != null && employeeId.equals(other.employeeId);
 	}
 
 	@Override
@@ -152,6 +158,6 @@ public class Employee implements com.kwchina.wfm.domain.common.Entity<Employee> 
 	 */
 	@Override
 	public int hashCode() {
-		return code.hashCode();
+		return employeeId.hashCode();
 	}
 }
