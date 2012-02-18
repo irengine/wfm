@@ -16,7 +16,7 @@ import com.kwchina.wfm.domain.model.organization.Unit;
 @Embeddable
 public class Job {
 
-	@ManyToOne
+	@ManyToOne(optional=true)
 	@JoinColumn(name="unitId")
 	private Unit unit;
 	

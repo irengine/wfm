@@ -15,10 +15,11 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.kwchina.wfm.domain.model.employee.DateHelper;
 import com.kwchina.wfm.domain.model.employee.Employee;
 import com.kwchina.wfm.domain.model.employee.EmployeeId;
 import com.kwchina.wfm.domain.model.employee.EmployeeRepository;
+import com.kwchina.wfm.domain.model.employee.Job;
+import com.kwchina.wfm.infrastructure.common.DateHelper;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({"/context-test.xml"})
@@ -27,6 +28,31 @@ public class EmployeeRepositoryTest {
 
 	@Autowired
 	private EmployeeRepository employeeRepository;
+
+	@Test
+	@Transactional
+	public void testSaveEmployeeWithJob() throws ParseException {
+		Date date = DateHelper.getDate("2012-02-14");
+		Employee employee = new Employee(new EmployeeId("0001"), "Alex Tang", date, date, date);
+		Job job = new Job();
+		
+		employee.setJob(job);
+
+		assertNull(employee.getId());
+		
+		employeeRepository.save(employee);
+		
+		assertNotNull(employee.getId());
+		
+		try {
+			Employee e =  new Employee(new EmployeeId("0001"), "Alex Tang", date, date, date);
+			employeeRepository.save(e);
+			fail("Employee id should not be same.");
+		}
+		catch(Exception expected) {
+			
+		}
+	}
 	
 	@Test
 	@Transactional
