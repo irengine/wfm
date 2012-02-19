@@ -13,6 +13,8 @@ import org.apache.commons.lang.Validate;
 @Table(name="T_JOBTITLES")
 public class JobTitle implements com.kwchina.wfm.domain.common.Entity<JobTitle> {
 
+	// TODO: change from Entity to ValueObject
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
@@ -24,7 +26,7 @@ public class JobTitle implements com.kwchina.wfm.domain.common.Entity<JobTitle> 
 	private String name;
 	
 	@Column(nullable=false)
-	private Long level = 0L;
+	private int level = 0;
 	
 	@Column(nullable=false)
 	private boolean enable;
@@ -33,7 +35,7 @@ public class JobTitle implements com.kwchina.wfm.domain.common.Entity<JobTitle> 
 		this.enable = true;
 	}
 	
-	public JobTitle(String code, String name, Long level) {
+	public JobTitle(String code, String name, int level) {
 		Validate.notNull(code);
 		Validate.notNull(name);
 		Validate.notNull(level);
@@ -68,11 +70,11 @@ public class JobTitle implements com.kwchina.wfm.domain.common.Entity<JobTitle> 
 		this.name = name;
 	}
 
-	public Long getLevel() {
+	public int getLevel() {
 		return level;
 	}
 
-	public void setLevel(Long level) {
+	public void setLevel(int level) {
 		this.level = level;
 	}
 	
