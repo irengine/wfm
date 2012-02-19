@@ -1,6 +1,7 @@
 package com.kwchina.wfm.domain.model.employee;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
@@ -16,6 +17,8 @@ import javax.persistence.TemporalType;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
+
+import com.kwchina.wfm.domain.model.organization.Unit;
 
 @Entity
 @Table(name="T_EMPLOYEES")
@@ -154,5 +157,10 @@ public class Employee implements com.kwchina.wfm.domain.common.Entity<Employee> 
 	@Override
 	public int hashCode() {
 		return employeeId.hashCode();
+	}
+	
+	public void hire(Unit unit, JobTitle title, List<JobPosition> positions, Date effectDate) {
+		Job job = new Job(unit, title, positions, JobStatus.HIRED, effectDate);
+		this.setJob(job);
 	}
 }

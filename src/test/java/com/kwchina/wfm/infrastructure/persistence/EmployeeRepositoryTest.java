@@ -6,11 +6,17 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +25,9 @@ import com.kwchina.wfm.domain.model.employee.Employee;
 import com.kwchina.wfm.domain.model.employee.EmployeeId;
 import com.kwchina.wfm.domain.model.employee.EmployeeRepository;
 import com.kwchina.wfm.domain.model.employee.Job;
+import com.kwchina.wfm.domain.model.employee.JobPosition;
+import com.kwchina.wfm.domain.model.employee.JobTitle;
+import com.kwchina.wfm.domain.model.organization.Unit;
 import com.kwchina.wfm.infrastructure.common.DateHelper;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -42,15 +51,6 @@ public class EmployeeRepositoryTest {
 		employeeRepository.save(employee);
 		
 		assertNotNull(employee.getId());
-		
-		try {
-			Employee e =  new Employee(new EmployeeId("0001"), "Alex Tang", date, date, date);
-			employeeRepository.save(e);
-			fail("Employee id should not be same.");
-		}
-		catch(Exception expected) {
-			
-		}
 	}
 	
 	@Test
@@ -109,5 +109,34 @@ public class EmployeeRepositoryTest {
 		assertEquals(rowsBefore1, (Long)(rowsAfter1 + 1));
 		assertEquals(rowsBefore2, rowsAfter2);
 	}
+	
+	@PersistenceContext
+	private EntityManager entityManager;
+	
+	@Test
+	@Transactional
+	@Rollback(false)
+	public void testHireEmployee() throws ParseException {
+		Date date = DateHelper.getDate("2012-02-14");
+		Employee employee = new Employee(new EmployeeId("0001"), "Alex Tang", date, date, date);
+
+		Unit unit = new Unit("X");
+		JobTitle title = new JobTitle("M", "Manager", 1);
+		List<JobPosition> positions = new ArrayList<JobPosition>();
+		positions.add(new JobPosition("DM"));
+		
+		entityManager.persist(unit);
+		entityManager.persist(title);
+		
+		employee.hire(unit, title, positions, new Date());
+
+		assertNull(employee.getId());
+		
+		employeeRepository.save(employee);
+		
+		assertNotNull(employee.getId());
+		assertNotNull(employee.getJob());
+	}
+
 
 }
