@@ -1,4 +1,4 @@
-package com.kwchina.wfm.domain.model.organization;
+package com.kwchina.wfm.domain.model.shift;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,7 +15,7 @@ public class ShiftType implements com.kwchina.wfm.domain.common.Entity<ShiftType
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 	
-	@Column(nullable=false)
+	@Column(nullable=false, unique=true)
 	private String code;
 	
 	@Column(nullable=false)

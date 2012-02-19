@@ -19,6 +19,8 @@ import javax.persistence.Table;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
+import com.kwchina.wfm.domain.model.shift.ShiftType;
+
 @Entity
 @Table(name="T_UNITS")
 @NamedQueries({

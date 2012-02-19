@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.kwchina.wfm.infrastructure.common.DateHelper;
 
-public class CustomShiftPolicy {
+public class CustomShiftPolicy extends BaseShiftPolicy {
 	
 	private Date startDate;
 	private int offset;
@@ -41,6 +41,7 @@ public class CustomShiftPolicy {
 		this.attendanceTypes = attendanceTypes;
 	}
 	
+	@Override
 	public AttendanceType getAttendanceType(Date date) {
 		int days = DateHelper.daysBetween(startDate, date);
 		int interval = attendanceTypes.size();

@@ -16,7 +16,6 @@ import javax.persistence.PersistenceContext;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -115,7 +114,6 @@ public class EmployeeRepositoryTest {
 	
 	@Test
 	@Transactional
-	@Rollback(false)
 	public void testHireEmployee() throws ParseException {
 		Date date = DateHelper.getDate("2012-02-14");
 		Employee employee = new Employee(new EmployeeId("0001"), "Alex Tang", date, date, date);

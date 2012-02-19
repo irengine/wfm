@@ -11,9 +11,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.kwchina.wfm.domain.model.organization.ShiftType;
 import com.kwchina.wfm.domain.model.organization.Unit;
 import com.kwchina.wfm.domain.model.organization.UnitRepository;
+import com.kwchina.wfm.domain.model.shift.ShiftType;
 import com.kwchina.wfm.interfaces.common.PageHelper;
 
 @RunWith(SpringJUnit4ClassRunner.class)
