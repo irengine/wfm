@@ -1,5 +1,6 @@
 package com.kwchina.wfm.domain.model.employee;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -9,12 +10,16 @@ import javax.persistence.Embeddable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import org.apache.commons.lang.Validate;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 
+import com.kwchina.wfm.domain.common.ValueObject;
 import com.kwchina.wfm.domain.model.organization.Unit;
 
 @Embeddable
-public class Job {
+public class Job implements ValueObject<Job> {
+
+	private static final long serialVersionUID = -1727715418077422312L;
 
 	@ManyToOne(optional=true)
 	@JoinColumn(name="unitId")
@@ -32,15 +37,13 @@ public class Job {
 	
 	private Date effectDate;
 	
+	public static Job UNKNOWN = new Job(null, null, Collections.<JobPosition>emptyList(), JobStatus.UNKNOWN, null);
+	
 	public Job() {
 		
 	}
 	
 	public Job(Unit unit, JobTitle title, List<JobPosition> positions, JobStatus status, Date effectDate) {
-		Validate.notNull(unit);
-		Validate.notNull(status);
-		Validate.notNull(effectDate);
-		
 		this.unit = unit;
 		this.title = title;
 		this.positions = positions;
@@ -86,5 +89,40 @@ public class Job {
 
 	public void setEffectDate(Date effectDate) {
 		this.effectDate = effectDate;
+	}
+	
+	@Override
+	public boolean sameValueAs(final Job other) {
+		return other != null
+				&& new EqualsBuilder()
+					.append(this.unit, other.unit)
+					.append(this.title, other.title)
+					.append(this.positions, other.positions)
+					.append(this.status, other.status)
+					.append(this.effectDate, other.effectDate)
+					.isEquals();
+	}
+
+	@Override
+	public boolean equals(final Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+
+		final Job other = (Job) o;
+
+		return sameValueAs(other);
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder()
+			.append(this.unit)
+			.append(this.title)
+			.append(this.positions)
+			.append(this.status)
+			.append(this.effectDate)
+			.toHashCode();
 	}
 }

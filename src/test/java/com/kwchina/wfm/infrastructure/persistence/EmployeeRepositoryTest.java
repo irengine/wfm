@@ -34,9 +34,8 @@ public class EmployeeRepositoryTest {
 	public void testSaveEmployeeWithJob() throws ParseException {
 		Date date = DateHelper.getDate("2012-02-14");
 		Employee employee = new Employee(new EmployeeId("0001"), "Alex Tang", date, date, date);
-		Job job = new Job();
 		
-		employee.setJob(job);
+		employee.setJob(Job.UNKNOWN);
 
 		assertNull(employee.getId());
 		
