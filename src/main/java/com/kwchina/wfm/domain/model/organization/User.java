@@ -12,6 +12,7 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -50,7 +51,8 @@ public class User implements com.kwchina.wfm.domain.common.Entity<User> {
 	
     @ManyToMany(
             cascade = {CascadeType.PERSIST, CascadeType.MERGE},
-            targetEntity = Unit.class
+            targetEntity = Unit.class,
+            fetch = FetchType.EAGER
         )
     @JoinTable(
             name="T_USER_UNIT",
