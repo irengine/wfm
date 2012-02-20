@@ -72,7 +72,7 @@ public class UserController {
 			user =userServiceFacade.findById(Long.parseLong(request.getParameter("id")));
 		
 		response.setContentType("text/html;charset=utf-8");
-		response.getWriter().print(JacksonHelper.getFilterJson(user));
+		response.getWriter().print(JacksonHelper.getUserJsonWithFilters(user));
 		response.flushBuffer();
 	}
 	
