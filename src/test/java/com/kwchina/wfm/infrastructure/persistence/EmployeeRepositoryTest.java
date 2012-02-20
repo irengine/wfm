@@ -135,6 +135,12 @@ public class EmployeeRepositoryTest {
 		assertNotNull(employee.getId());
 		assertNotNull(employee.getJob());
 	}
+	
+	@Test
+	public void testGetEmployees() {
+		Long cnt = (Long)entityManager.createQuery("SELECT COUNT(*) FROM Employee WHERE enable=true AND job.unit.id = 1").getSingleResult();
+		assertEquals(new Long(0), cnt);
+	}
 
 
 }

@@ -1,6 +1,7 @@
 package com.kwchina.wfm.interfaces.organization.facade;
 
 import java.io.StringWriter;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.kwchina.wfm.domain.model.employee.Employee;
 import com.kwchina.wfm.domain.model.employee.EmployeeRepository;
+import com.kwchina.wfm.domain.model.employee.Job;
+import com.kwchina.wfm.domain.model.employee.JobStatus;
+import com.kwchina.wfm.domain.model.organization.Unit;
 import com.kwchina.wfm.domain.model.organization.UnitRepository;
 import com.kwchina.wfm.interfaces.common.Page;
 import com.kwchina.wfm.interfaces.common.PageHelper;
@@ -69,9 +73,9 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 	
 	@Transactional(propagation=Propagation.REQUIRED)
 	public void saveEmployeeWithUnit(Employee employee, Long unitId) {
-		// TODO: remove unit 
-//		Unit unit = unitRepository.findById(unitId);
-//		employee.setUnit(unit);
+		Unit unit = unitRepository.findById(unitId);
+		Job job = new Job(unit, null, null, JobStatus.UNKNOWN, new Date());
+		employee.setJob(job);
 		employeeRepository.save(employee);
 	}
 	

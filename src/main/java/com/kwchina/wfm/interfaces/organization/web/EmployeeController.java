@@ -54,7 +54,7 @@ public class EmployeeController {
 			pageSize = Integer.parseInt(request.getParameter("rows"));
 		
 		List<String> conditions = new ArrayList<String>();
-		if (QueryHelper.isEmpty(request, "unitId")) {
+		if (!QueryHelper.isEmpty(request, "unitId")) {
 			String condition = String.format("unit.id = %s", request.getParameter("unitId"));
 			conditions.add(condition);
 		}
