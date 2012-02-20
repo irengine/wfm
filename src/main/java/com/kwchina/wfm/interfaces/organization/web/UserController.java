@@ -21,6 +21,7 @@ import com.kwchina.wfm.domain.model.organization.User;
 import com.kwchina.wfm.interfaces.common.QueryHelper;
 import com.kwchina.wfm.interfaces.organization.facade.UserServiceFacade;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryCommand;
+import com.kwchina.wfm.interfaces.organization.web.command.SaveUserCommand;
 
 /**
  * Handles requests for the application home page.
@@ -73,10 +74,10 @@ public class UserController {
 	}
 	
 	@RequestMapping(value = "/saveUser", method = RequestMethod.POST)
-	public void saveUser(@ModelAttribute User user, Model model) {
+	public void saveUser(@ModelAttribute SaveUserCommand command, Model model) {
 		logger.info("save user");
 		
-		userServiceFacade.saveUser(user);
+		userServiceFacade.saveUser(command);
 	}
 
 }
