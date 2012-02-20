@@ -55,7 +55,7 @@ public class EmployeeController {
 		
 		List<String> conditions = new ArrayList<String>();
 		if (!QueryHelper.isEmpty(request, "unitId")) {
-			String condition = String.format("unit.id = %s", request.getParameter("unitId"));
+			String condition = String.format("job.unit.id = %s", request.getParameter("unitId"));
 			conditions.add(condition);
 		}
 		
