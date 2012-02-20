@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.kwchina.wfm.domain.model.employee.Employee;
+import com.kwchina.wfm.domain.model.employee.EmployeeId;
 import com.kwchina.wfm.domain.model.employee.EmployeeRepository;
 import com.kwchina.wfm.domain.model.employee.Job;
 import com.kwchina.wfm.domain.model.employee.JobStatus;
@@ -19,6 +20,7 @@ import com.kwchina.wfm.interfaces.common.JacksonHelper;
 import com.kwchina.wfm.interfaces.common.Page;
 import com.kwchina.wfm.interfaces.common.PageHelper;
 import com.kwchina.wfm.interfaces.common.QueryHelper;
+import com.kwchina.wfm.interfaces.organization.web.command.SaveEmployeeCommand;
 
 @Component
 public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
@@ -54,13 +56,22 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 	}
 
 	@Transactional(propagation=Propagation.REQUIRED)
-	public void saveEmployee(Employee employee) {
-		employeeRepository.save(employee);
-	}
-	
-	@Transactional(propagation=Propagation.REQUIRED)
-	public void saveEmployeeWithUnit(Employee employee, Long unitId) {
-		Unit unit = unitRepository.findById(unitId);
+	public void saveEmployee(SaveEmployeeCommand command) {
+		
+		Employee employee;
+		if (null == command.getId() || command.getId().equals(0))
+			employee = new Employee();
+		else
+			employee = employeeRepository.findById(command.getId());
+		
+		employee.setEmployeeId(new EmployeeId(command.getEmployeeId()));
+		employee.setName(command.getName());
+		employee.setBeginDateOfJob(command.getBeginDateOfJob());
+		employee.setBeginDateOfWork(command.getBeginDateOfWork());
+		employee.setBirthday(command.getBirthday());
+		
+		Unit unit = unitRepository.findById(command.getUnitId());
+		// TODO: add job title and job positions
 		Job job = new Job(unit, null, null, JobStatus.UNKNOWN, new Date());
 		employee.setJob(job);
 		employeeRepository.save(employee);

@@ -21,6 +21,7 @@ import com.kwchina.wfm.domain.model.employee.Employee;
 import com.kwchina.wfm.interfaces.common.JacksonHelper;
 import com.kwchina.wfm.interfaces.common.QueryHelper;
 import com.kwchina.wfm.interfaces.organization.facade.EmployeeServiceFacade;
+import com.kwchina.wfm.interfaces.organization.web.command.SaveEmployeeCommand;
 
 /**
  * Handles requests for the application home page.
@@ -81,15 +82,15 @@ public class EmployeeController {
 	}
 	
 	@RequestMapping(value = "/saveEmployee", method = RequestMethod.POST)
-	public void saveEmployee(@ModelAttribute Employee employee, HttpServletRequest request, Model model) {
+	public void saveEmployee(@ModelAttribute SaveEmployeeCommand command, HttpServletRequest request, Model model) {
 		logger.info("save employee");
 		
-		if (QueryHelper.isEmpty(request, "unitId")) {
-			employeeServiceFacade.saveEmployee(employee);
-		}
-		else {
-			employeeServiceFacade.saveEmployeeWithUnit(employee, Long.parseLong(request.getParameter("unitId")));
-		}
+//		if (QueryHelper.isEmpty(request, "unitId")) {
+//			employeeServiceFacade.saveEmployee(employee);
+//		}
+//		else {
+//			employeeServiceFacade.saveEmployeeWithUnit(employee, Long.parseLong(request.getParameter("unitId")));
+//		}
 	}
 
 }
