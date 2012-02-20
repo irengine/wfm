@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.kwchina.wfm.domain.model.organization.Unit;
+import com.kwchina.wfm.interfaces.common.JacksonHelper;
 import com.kwchina.wfm.interfaces.common.QueryHelper;
 import com.kwchina.wfm.interfaces.organization.facade.UnitServiceFacade;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveUnitCommand;
@@ -50,7 +51,7 @@ public class UnitController {
 	}
 	
 	@RequestMapping(value = "/getUnit", method = RequestMethod.GET)
-	public void getUnit(HttpServletRequest request, Model model) {
+	public void getUnit(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		logger.info("get unit");
 
 		Unit unit;
@@ -59,7 +60,9 @@ public class UnitController {
 		else
 			unit =unitServiceFacade.findById(Long.parseLong(request.getParameter("id")));
 
-		model.addAttribute(unit);
+		response.setContentType("text/html;charset=utf-8");
+		response.getWriter().print(JacksonHelper.getJson(unit));
+		response.flushBuffer();
 	}
 	
 	@RequestMapping(value = "/saveUnit", method = RequestMethod.POST)

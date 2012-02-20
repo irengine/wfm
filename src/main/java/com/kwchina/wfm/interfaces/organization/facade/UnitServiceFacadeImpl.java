@@ -1,10 +1,8 @@
 package com.kwchina.wfm.interfaces.organization.facade;
 
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -12,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.kwchina.wfm.domain.model.organization.Unit;
 import com.kwchina.wfm.domain.model.organization.UnitRepository;
+import com.kwchina.wfm.interfaces.common.JacksonHelper;
 import com.kwchina.wfm.interfaces.organization.dto.UnitDTO;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveUnitCommand;
 
@@ -55,17 +54,7 @@ public class UnitServiceFacadeImpl implements UnitServiceFacade {
 		List<UnitDTO> uos = new ArrayList<UnitDTO>();
 		uos.add(uo); 
 		
-		StringWriter sw = new StringWriter();
-
-		try {
-			ObjectMapper objectMapper = new ObjectMapper();
-			objectMapper.writeValue(sw, uos);
-		}
-		catch(Exception e) {
-			
-		}
-		
-		return sw.toString();
+		return JacksonHelper.getJson(uos);
 	}
 	
 	@Transactional(propagation=Propagation.REQUIRED)

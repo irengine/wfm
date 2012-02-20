@@ -1,11 +1,9 @@
 package com.kwchina.wfm.interfaces.organization.facade;
 
-import java.io.StringWriter;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -17,6 +15,7 @@ import com.kwchina.wfm.domain.model.employee.Job;
 import com.kwchina.wfm.domain.model.employee.JobStatus;
 import com.kwchina.wfm.domain.model.organization.Unit;
 import com.kwchina.wfm.domain.model.organization.UnitRepository;
+import com.kwchina.wfm.interfaces.common.JacksonHelper;
 import com.kwchina.wfm.interfaces.common.Page;
 import com.kwchina.wfm.interfaces.common.PageHelper;
 import com.kwchina.wfm.interfaces.common.QueryHelper;
@@ -51,19 +50,7 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 		List<Employee> rows = employeeRepository.getRows(whereClause, orderByClause, pageHelper.getStart(), pageHelper.getPageSize());
 		
 		Page page = new Page(pageHelper.getCurrentPage(), pageHelper.getPagesCount(), rowsCount, rows);
-		
-		StringWriter sw = new StringWriter();
-
-		try {
-			ObjectMapper objectMapper = new ObjectMapper();
-			objectMapper.writeValue(sw, page);
-		}
-		catch(Exception e) {
-			
-		}
-		
-		return sw.toString();
-
+		return JacksonHelper.getJson(page);
 	}
 
 	@Transactional(propagation=Propagation.REQUIRED)

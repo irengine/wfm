@@ -1,13 +1,11 @@
 package com.kwchina.wfm.interfaces.organization.facade;
 
-import java.io.StringWriter;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -17,6 +15,7 @@ import com.kwchina.wfm.domain.model.organization.Unit;
 import com.kwchina.wfm.domain.model.organization.UnitRepository;
 import com.kwchina.wfm.domain.model.organization.User;
 import com.kwchina.wfm.domain.model.organization.UserRepository;
+import com.kwchina.wfm.interfaces.common.JacksonHelper;
 import com.kwchina.wfm.interfaces.common.Page;
 import com.kwchina.wfm.interfaces.common.PageHelper;
 import com.kwchina.wfm.interfaces.common.QueryHelper;
@@ -82,21 +81,9 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
 		pageHelper.setCurrentPage(currentPage);
 		
 		List<User> rows = userRepository.getRows(whereClause, orderByClause, pageHelper.getStart(), pageHelper.getPageSize());
-		
 		Page page = new Page(pageHelper.getCurrentPage(), pageHelper.getPagesCount(), rowsCount, rows);
 		
-		StringWriter sw = new StringWriter();
-
-		try {
-			ObjectMapper objectMapper = new ObjectMapper();
-			objectMapper.writeValue(sw, page);
-		}
-		catch(Exception e) {
-			
-		}
-		
-		return sw.toString();
-
+		return JacksonHelper.getJson(page);
 	}
 
 }

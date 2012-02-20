@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.kwchina.wfm.domain.model.organization.User;
+import com.kwchina.wfm.interfaces.common.JacksonHelper;
 import com.kwchina.wfm.interfaces.common.QueryHelper;
 import com.kwchina.wfm.interfaces.organization.facade.UserServiceFacade;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryCommand;
@@ -61,7 +62,7 @@ public class UserController {
 	}
 	
 	@RequestMapping(value = "/getUser", method = RequestMethod.GET)
-	public void getUser(HttpServletRequest request, Model model) {
+	public void getUser(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		logger.info("get user");
 		
 		User user;
@@ -70,7 +71,9 @@ public class UserController {
 		else
 			user =userServiceFacade.findById(Long.parseLong(request.getParameter("id")));
 		
-		model.addAttribute(user);
+		response.setContentType("text/html;charset=utf-8");
+		response.getWriter().print(JacksonHelper.getJson(user));
+		response.flushBuffer();
 	}
 	
 	@RequestMapping(value = "/saveUser", method = RequestMethod.POST)

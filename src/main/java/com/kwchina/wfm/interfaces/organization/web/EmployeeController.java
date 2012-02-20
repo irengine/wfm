@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.kwchina.wfm.domain.model.employee.Employee;
+import com.kwchina.wfm.interfaces.common.JacksonHelper;
 import com.kwchina.wfm.interfaces.common.QueryHelper;
 import com.kwchina.wfm.interfaces.organization.facade.EmployeeServiceFacade;
 
@@ -65,7 +66,7 @@ public class EmployeeController {
 	}
 	
 	@RequestMapping(value = "/getEmployee", method = RequestMethod.GET)
-	public void getEmployee(HttpServletRequest request, Model model) {
+	public void getEmployee(HttpServletRequest request,  HttpServletResponse response) throws IOException {
 		logger.info("get employee");
 		
 		Employee employee;
@@ -74,7 +75,9 @@ public class EmployeeController {
 		else
 			employee =employeeServiceFacade.findById(Long.parseLong(request.getParameter("id")));
 		
-		model.addAttribute(employee);
+		response.setContentType("text/html;charset=utf-8");
+		response.getWriter().print(JacksonHelper.getJson(employee));
+		response.flushBuffer();
 	}
 	
 	@RequestMapping(value = "/saveEmployee", method = RequestMethod.POST)
