@@ -7,7 +7,7 @@ public class QueryCommand {
 	private String rows;
 	private String sidx;
 	private String sord;
-	private String _search;
+	private String search;
 	private String filters;
 	
 	public String getUnitId() {
@@ -40,11 +40,11 @@ public class QueryCommand {
 	public void setSord(String sord) {
 		this.sord = sord;
 	}
-	public String get_search() {
-		return _search;
+	public String getSearch() {
+		return search;
 	}
-	public void set_search(String _search) {
-		this._search = _search;
+	public void setSearch(String search) {
+		this.search = search;
 	}
 	public String getFilters() {
 		return filters;
@@ -61,7 +61,7 @@ public class QueryCommand {
 	    	.append("Rows: ").append(this.getRows()).append("\n")
 	    	.append("Index: ").append(this.getSidx()).append("\n")
 	    	.append("Sort: ").append(this.getSord()).append("\n")
-	    	.append("Search: ").append(this.get_search()).append("\n")
+	    	.append("Search: ").append(this.getSearch()).append("\n")
 	    	.append("Filters: ").append(this.getFilters()).append("\n");
 
 	    return builder.toString();

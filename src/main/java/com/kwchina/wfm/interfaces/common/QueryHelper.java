@@ -14,7 +14,7 @@ public class QueryHelper {
 
 	public final static String SORT_FIELD = "sidx";
 	public final static String SORT_DIRECTION = "sord";
-	public final static String IS_INCLUDE_CONDITION = "_search";
+	public final static String IS_INCLUDE_CONDITION = "search";
 	public final static String FILTERS = "filters";
 	
 	public static enum FilterType {
