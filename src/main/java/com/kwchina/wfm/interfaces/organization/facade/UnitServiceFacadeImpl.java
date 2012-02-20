@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.kwchina.wfm.domain.model.organization.Unit;
 import com.kwchina.wfm.domain.model.organization.UnitRepository;
 import com.kwchina.wfm.interfaces.organization.dto.UnitDTO;
+import com.kwchina.wfm.interfaces.organization.web.command.SaveUnitCommand;
 
 @Component
 public class UnitServiceFacadeImpl implements UnitServiceFacade {
@@ -68,14 +69,24 @@ public class UnitServiceFacadeImpl implements UnitServiceFacade {
 	}
 	
 	@Transactional(propagation=Propagation.REQUIRED)
-	public void saveUnit(Unit unit, Long parentUnitId) {
-		if (null == parentUnitId || parentUnitId.equals(0)) {
-			unitRepository.getRoot(unit.getName());
+	public void saveUnit(SaveUnitCommand command) {
+		if (null == command.getId() || command.getId().equals(0))
+		{
+			if (null == command.getParentUnitId() || command.getParentUnitId().equals(0)) {
+				unitRepository.getRoot(command.getName());
+			}
+			else {
+				Unit parentUnit = unitRepository.findById(command.getParentUnitId());
+				unitRepository.addChild(parentUnit, new Unit(command.getName()));
+			}
 		}
-		else {
-			Unit parentUnit = unitRepository.findById(parentUnitId);
-			unitRepository.addChild(parentUnit, unit);
+		else
+		{
+			Unit unit = unitRepository.findById(command.getId());
+			unit.setName(command.getName());
+			unitRepository.save(unit);
 		}
+
 	}
 
 	@Transactional(propagation=Propagation.SUPPORTS)

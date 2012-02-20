@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.kwchina.wfm.domain.model.organization.Unit;
 import com.kwchina.wfm.interfaces.common.QueryHelper;
 import com.kwchina.wfm.interfaces.organization.facade.UnitServiceFacade;
+import com.kwchina.wfm.interfaces.organization.web.command.SaveUnitCommand;
 
 /**
  * Handles requests for the application home page.
@@ -62,15 +63,10 @@ public class UnitController {
 	}
 	
 	@RequestMapping(value = "/saveUnit", method = RequestMethod.POST)
-	public void saveUnit(@ModelAttribute Unit unit, HttpServletRequest request, Model model) {
+	public void saveUnit(@ModelAttribute SaveUnitCommand command, HttpServletRequest request, Model model) {
 		logger.info("save unit");
-	
-		if (QueryHelper.isEmpty(request, "parentUnitId")) {
-			unitServiceFacade.saveUnit(unit, null);
-		}
-		else {
-			unitServiceFacade.saveUnit(unit, Long.parseLong(request.getParameter("parentUnitId")));
-		}
+		
+		unitServiceFacade.saveUnit(command);
 	}
 
 }
