@@ -21,6 +21,7 @@ import com.kwchina.wfm.domain.model.employee.Employee;
 import com.kwchina.wfm.interfaces.common.JacksonHelper;
 import com.kwchina.wfm.interfaces.common.QueryHelper;
 import com.kwchina.wfm.interfaces.organization.facade.EmployeeServiceFacade;
+import com.kwchina.wfm.interfaces.organization.web.command.QueryCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveEmployeeCommand;
 
 /**
@@ -38,8 +39,9 @@ public class EmployeeController {
 	 * for internet explorer issue, should not use @ResponseBody to return json, instead of use response.write
 	 */
 	@RequestMapping(value = "/queryEmployees", method = RequestMethod.GET)
-	public void queryEmployees(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public void queryEmployees(@ModelAttribute QueryCommand command, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		logger.info("get json employees");
+		logger.info(command.toString());
 		
 		Map<String, String> parameters = QueryHelper.getQueryParameters(request);
 		
@@ -77,7 +79,7 @@ public class EmployeeController {
 			employee =employeeServiceFacade.findById(Long.parseLong(request.getParameter("id")));
 		
 		response.setContentType("text/html;charset=utf-8");
-		response.getWriter().print(JacksonHelper.getJson(employee));
+		response.getWriter().print(JacksonHelper.getUserJsonWithFilters(employee));
 		response.flushBuffer();
 	}
 	

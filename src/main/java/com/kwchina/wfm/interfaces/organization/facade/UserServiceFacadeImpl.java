@@ -83,7 +83,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
 		List<User> rows = userRepository.getRows(whereClause, orderByClause, pageHelper.getStart(), pageHelper.getPageSize());
 		Page page = new Page(pageHelper.getCurrentPage(), pageHelper.getPagesCount(), rowsCount, rows);
 		
-		return JacksonHelper.getJson(page);
+		return JacksonHelper.getUserJsonWithFilters(page);
 	}
 
 }

@@ -7,6 +7,7 @@ import java.util.List;
 import javax.persistence.CollectionTable;
 import javax.persistence.ElementCollection;
 import javax.persistence.Embeddable;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
@@ -29,7 +30,7 @@ public class Job implements ValueObject<Job> {
 	@JoinColumn(name="jobTitleId")
 	private JobTitle title;
 	
-	@ElementCollection
+	@ElementCollection(fetch=FetchType.EAGER)
 	@CollectionTable(name="T_EMPLOYEE_JOBPOSITIONS", joinColumns=@JoinColumn(name="employeeId"))
 	private List<JobPosition> positions;
 	

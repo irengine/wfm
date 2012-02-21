@@ -7,6 +7,7 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonPropertyOrder;
 import org.codehaus.jackson.map.ObjectMapper;
 
+import com.kwchina.wfm.domain.model.employee.Employee;
 import com.kwchina.wfm.domain.model.organization.Unit;
 import com.kwchina.wfm.domain.model.organization.User;
 
@@ -24,17 +25,26 @@ public class JacksonHelper {
 		
 	}
     
-//    @JsonIgnoreProperties({})
-//    @JsonPropertyOrder(value={})
-//    private interface CommonEmployeeFilter {
-//    	
-//    }
+    @JsonIgnoreProperties({})
+    @JsonPropertyOrder(value={})
+    private interface CommonEmployeeFilter {
+    	
+    }
     
     public static String getUserJsonWithFilters(Object o) {
     	
     	Map<Class<?>, Class<?>> filters = new HashMap<Class<?>, Class<?>>();
     	filters.put(Unit.class, CommonUnitFilter.class);
     	filters.put(User.class, CommonUserFilter.class);
+    	
+    	return getJsonWithFilters(o, filters);
+    }
+    
+    public static String getEmployeeJsonWithFilters(Object o) {
+    	
+    	Map<Class<?>, Class<?>> filters = new HashMap<Class<?>, Class<?>>();
+    	filters.put(Unit.class, CommonUnitFilter.class);
+    	filters.put(Employee.class, CommonEmployeeFilter.class);
     	
     	return getJsonWithFilters(o, filters);
     }

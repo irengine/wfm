@@ -52,7 +52,7 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 		List<Employee> rows = employeeRepository.getRows(whereClause, orderByClause, pageHelper.getStart(), pageHelper.getPageSize());
 		
 		Page page = new Page(pageHelper.getCurrentPage(), pageHelper.getPagesCount(), rowsCount, rows);
-		return JacksonHelper.getJson(page);
+		return JacksonHelper.getEmployeeJsonWithFilters(page);
 	}
 
 	@Transactional(propagation=Propagation.REQUIRED)
