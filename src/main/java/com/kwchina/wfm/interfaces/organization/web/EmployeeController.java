@@ -85,12 +85,7 @@ public class EmployeeController {
 	public void saveEmployee(@ModelAttribute SaveEmployeeCommand command, HttpServletRequest request, Model model) {
 		logger.info("save employee");
 		
-//		if (QueryHelper.isEmpty(request, "unitId")) {
-//			employeeServiceFacade.saveEmployee(employee);
-//		}
-//		else {
-//			employeeServiceFacade.saveEmployeeWithUnit(employee, Long.parseLong(request.getParameter("unitId")));
-//		}
+		employeeServiceFacade.saveEmployee(command);
 	}
 
 }
