@@ -1,6 +1,5 @@
 package com.kwchina.wfm.interfaces.organization.facade;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -14,6 +13,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.kwchina.wfm.domain.model.shift.HolidaySpecification;
+import com.kwchina.wfm.domain.model.shift.SystemPreferenceFactory;
 import com.kwchina.wfm.domain.model.shift.SystemPreferenceRepository;
 import com.kwchina.wfm.domain.model.shift.WeekendSpecification;
 import com.kwchina.wfm.infrastructure.common.DateHelper;
@@ -47,13 +47,13 @@ public class SystemServiceFacadeImpl implements SystemServiceFacade {
 		}
 	}
 	
-	private String weekends = "1,7";
-	private List<String> holidays = new ArrayList<String>();
-	private Map<String, String> daysChanged = new HashMap<String, String>();
-	
 	@Override
 	@Transactional(propagation=Propagation.SUPPORTS)
 	public Map<String, String> getHolidays(int year) {
+		
+		String weekends = SystemPreferenceFactory.getInstance(systemPreferenceRepository).getWeekends();
+		List<String> holidays = SystemPreferenceFactory.getInstance(systemPreferenceRepository).getHolidays();
+		Map<String, String> daysChanged = SystemPreferenceFactory.getInstance(systemPreferenceRepository).getDaysChanged();
 		
 		Map<String, String> days = new HashMap<String, String>();
 		
