@@ -10,6 +10,16 @@ public class Preference {
 	private String value;
 	
 	private String scope;
+	
+	public Preference() {
+		
+	}
+	
+	public Preference(String key, String value) {
+		this.key = key;
+		this.value = value;
+		this.scope = "";
+	}
 
 	public String getKey() {
 		return key;

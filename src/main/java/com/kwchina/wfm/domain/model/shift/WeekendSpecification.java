@@ -19,9 +19,9 @@ public class WeekendSpecification extends AbstractSpecification<Date> {
 	private List<Integer> weekends = new ArrayList<Integer>();
 	private Map<String, String> daysChanged = new HashMap<String, String>();
 	
-	public WeekendSpecification(String s, Map<String, String> daysChanged) {
+	public WeekendSpecification(String weekends, Map<String, String> daysChanged) {
 
-		String[] days = s.split(",");
+		String[] days = weekends.split(",");
 		for(String day : days) {
 			this.weekends.add(Integer.parseInt(day));
 		}

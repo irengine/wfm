@@ -5,7 +5,9 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Test;
 
@@ -21,9 +23,39 @@ public class ShiftTest {
 	private AttendanceType nightAttendance = new AttendanceType("夜", 24, 32);
 	private AttendanceType breakDayAttendance = new AttendanceType("休", 0, 24);
 	
+	private String weekends = "1,7";
+	private List<String> holidays = new ArrayList<String>();
+	private Map<String, String> daysChanged = new HashMap<String, String>();
+	
+	private void initialHolidayDefinition() {
+		this.holidays.add("2012-01-01");
+		this.holidays.add("2012-01-22");
+		this.holidays.add("2012-01-23");
+		this.holidays.add("2012-01-24");
+		
+		this.daysChanged.put("2011-12-31", "2012-01-02");
+		this.daysChanged.put("2012-01-01", "2012-01-03");
+		this.daysChanged.put("2012-01-21", "2012-01-25");
+		this.daysChanged.put("2012-01-22", "2012-01-26");
+		this.daysChanged.put("2012-01-27", "2012-01-29");
+		
+		this.daysChanged.put("2012-01-02", "2011-12-31");
+		this.daysChanged.put("2012-01-03", "2012-01-01");
+		this.daysChanged.put("2012-01-25", "2012-01-21");
+		this.daysChanged.put("2012-01-26", "2012-01-22");
+		this.daysChanged.put("2012-01-29", "2012-01-27");
+	}
+	
 	@Test
 	public void testDailyShiftSpecification() {
+		initialHolidayDefinition();
+		DailyShiftPolicy p = new DailyShiftPolicy(morningAttendance, breakDayAttendance, holidays, weekends, daysChanged);
 		
+		printHeader();
+		printResult(p);
+
+		assertEquals(morningAttendance, p.getAttendanceType(DateHelper.getDate("2012-01-04")));
+		assertEquals(breakDayAttendance, p.getAttendanceType(DateHelper.getDate("2012-01-01")));
 	}
 
 	@Test
@@ -94,6 +126,17 @@ public class ShiftTest {
 	}
 	
 	private void printResult(CustomShiftPolicy p) {
+		List<Date> days = DateHelper.getDaysOfMonth(2012, Calendar.JANUARY);
+
+		for(Date day : days) {
+			System.out.print(p.getAttendanceType(day).getName());
+			System.out.print("\t");
+		}
+		System.out.println("");
+		
+	}
+	
+	private void printResult(DailyShiftPolicy p) {
 		List<Date> days = DateHelper.getDaysOfMonth(2012, Calendar.JANUARY);
 
 		for(Date day : days) {

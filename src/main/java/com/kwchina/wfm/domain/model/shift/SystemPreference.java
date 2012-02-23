@@ -39,7 +39,8 @@ public class SystemPreference implements com.kwchina.wfm.domain.common.Entity<Sy
 	
 	public enum ScopeType implements ValueObject<ScopeType> {
 		HOLIDAY,
-		DAYCHANGED;
+		DAYCHANGED,
+		ATTENDANCETYPE;
 
 		@Override
 		public boolean sameValueAs(ScopeType other) {
