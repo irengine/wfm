@@ -16,19 +16,19 @@ public class ShiftType implements com.kwchina.wfm.domain.common.Entity<ShiftType
 	private Long id;
 	
 	@Column(nullable=false, unique=true)
-	private String code;
-	
-	@Column(nullable=false)
 	private String name;
 	
 	@Column(nullable=false)
-	private Long displayIndex = 0L;
+	private int displayIndex = 0;
 	
 	@Column
 	private String displayName;
 	
 	@Column(nullable=false)
 	private String strategyClassName;
+	
+	@Column(nullable=false)
+	private String strategyClassParameters;
 	
 //	@OneToMany
 //	private Collection<Unit> units = new LinkedHashSet<Unit>();
@@ -37,8 +37,7 @@ public class ShiftType implements com.kwchina.wfm.domain.common.Entity<ShiftType
 
 	}
 	
-	public ShiftType(String code, String name, Long displayIndex, String displayName, String strategyClassName) {
-		this.code = code;
+	public ShiftType(String code, String name, int displayIndex, String displayName, String strategyClassName, String strategyClassParameters) {
 		this.name = name;
 		this.displayIndex = displayIndex;
 		this.displayName = displayName;
@@ -53,14 +52,6 @@ public class ShiftType implements com.kwchina.wfm.domain.common.Entity<ShiftType
 		this.id = id;
 	}
 
-	public String getCode() {
-		return code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
 	public String getName() {
 		return name;
 	}
@@ -69,11 +60,11 @@ public class ShiftType implements com.kwchina.wfm.domain.common.Entity<ShiftType
 		this.name = name;
 	}
 
-	public Long getDisplayIndex() {
+	public int getDisplayIndex() {
 		return displayIndex;
 	}
 
-	public void setDisplayIndex(Long displayIndex) {
+	public void setDisplayIndex(int displayIndex) {
 		this.displayIndex = displayIndex;
 	}
 
@@ -93,6 +84,14 @@ public class ShiftType implements com.kwchina.wfm.domain.common.Entity<ShiftType
 		this.strategyClassName = strategyClassName;
 	}
 
+	public String getStrategyClassParameters() {
+		return strategyClassParameters;
+	}
+
+	public void setStrategyClassParameters(String strategyClassParameters) {
+		this.strategyClassParameters = strategyClassParameters;
+	}
+
 //	public Collection<Unit> getUnits() {
 //		return units;
 //	}
@@ -100,10 +99,10 @@ public class ShiftType implements com.kwchina.wfm.domain.common.Entity<ShiftType
 //	public void setUnits(Collection<Unit> units) {
 //		this.units = units;
 //	}
-
+	
 	@Override
 	public boolean sameIdentityAs(ShiftType other) {
-		return other != null && code.equals(other.code);
+		return other != null && this.name.equals(other.name);
 	}
 
 	@Override
@@ -122,6 +121,6 @@ public class ShiftType implements com.kwchina.wfm.domain.common.Entity<ShiftType
 	 */
 	@Override
 	public int hashCode() {
-		return code.hashCode();
+		return this.name.hashCode();
 	}
 }

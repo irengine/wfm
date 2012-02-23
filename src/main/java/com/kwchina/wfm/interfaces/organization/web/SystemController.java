@@ -1,6 +1,7 @@
 package com.kwchina.wfm.interfaces.organization.web;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.kwchina.wfm.interfaces.common.JacksonHelper;
 import com.kwchina.wfm.interfaces.common.QueryHelper;
+import com.kwchina.wfm.interfaces.organization.dto.AttendanceTypePropertyDTO;
 import com.kwchina.wfm.interfaces.organization.facade.SystemServiceFacade;
+import com.kwchina.wfm.interfaces.organization.web.command.SaveAttendanceTypePropertyCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveHolidayCommand;
 
 @Controller
@@ -35,6 +38,7 @@ public class SystemController {
 			systemServiceFacade.saveHoliday(command);
 			output(response, "1");
 		} catch(Exception e) {
+			logger.warn(e.getMessage());
 			output(response, "0");
 		}
 	}
@@ -51,6 +55,27 @@ public class SystemController {
 		Map<String, String> days = systemServiceFacade.getHolidays(year);
 		
 		output(response, JacksonHelper.getJson(days));
+	}
+
+	@RequestMapping(value = "/saveAttendanceTypeProperty", method = RequestMethod.POST)
+	public void saveAttendanceTypeProperty(@ModelAttribute SaveAttendanceTypePropertyCommand command, HttpServletResponse response) {
+		logger.info("save holiday");
+
+		try {
+			systemServiceFacade.saveAttendanceTypeProperty(command);
+			output(response, "1");
+		} catch(Exception e) {
+			logger.warn(e.getMessage());
+			output(response, "0");
+		}
+	}
+
+	@RequestMapping(value = "/getAttendanceTypeProperties", method = RequestMethod.POST)
+	public void getAttendanceTypeProperties(HttpServletResponse response) {
+
+		List<AttendanceTypePropertyDTO> properties = systemServiceFacade.getAttendanceTypeProperties();
+		
+		output(response, JacksonHelper.getJson(properties));
 	}
 	
 	private void output(HttpServletResponse response, String result) {

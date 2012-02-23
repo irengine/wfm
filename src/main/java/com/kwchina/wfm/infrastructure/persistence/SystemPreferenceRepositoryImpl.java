@@ -96,4 +96,32 @@ public class SystemPreferenceRepositoryImpl extends BaseRepositoryImpl<SystemPre
 		}
 		return daysChanged;
 	}
+
+	@Override
+	public void addAttendanceTypeProperty(String name, String type, String description) {
+		SystemPreference p = new SystemPreference(SystemPreference.ScopeType.ATTENDANCETYPE, name, type, description);
+		entityManager.persist(p);
+		entityManager.flush();
+	}
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	public void removeAttendanceTypeProperty(String name) {
+		List<SystemPreference> ps = entityManager.createNamedQuery("systemPreference.findByScopeAndKey")
+										.setParameter("scope", ScopeType.ATTENDANCETYPE)
+										.setParameter("key", name)
+										.getResultList();
+		for(SystemPreference p : ps) {
+			entityManager.remove(p);
+		}
+		entityManager.flush();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<SystemPreference> getAttendanceTypeProperties() {
+		return entityManager.createNamedQuery("systemPreference.findByScope")
+				.setParameter("scope", ScopeType.ATTENDANCETYPE)
+				.getResultList();
+	}
 }

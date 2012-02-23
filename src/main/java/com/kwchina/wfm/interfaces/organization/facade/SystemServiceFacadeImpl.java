@@ -1,5 +1,6 @@
 package com.kwchina.wfm.interfaces.organization.facade;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -13,10 +14,14 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.kwchina.wfm.domain.model.shift.HolidaySpecification;
+import com.kwchina.wfm.domain.model.shift.SystemPreference;
 import com.kwchina.wfm.domain.model.shift.SystemPreferenceFactory;
 import com.kwchina.wfm.domain.model.shift.SystemPreferenceRepository;
 import com.kwchina.wfm.domain.model.shift.WeekendSpecification;
 import com.kwchina.wfm.infrastructure.common.DateHelper;
+import com.kwchina.wfm.interfaces.organization.dto.AttendanceTypePropertyDTO;
+import com.kwchina.wfm.interfaces.organization.web.command.ActionCommand;
+import com.kwchina.wfm.interfaces.organization.web.command.SaveAttendanceTypePropertyCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveHolidayCommand;
 
 @Component
@@ -29,7 +34,7 @@ public class SystemServiceFacadeImpl implements SystemServiceFacade {
 	@Transactional(propagation=Propagation.REQUIRED)
 	public void saveHoliday(SaveHolidayCommand command) {
 
-		if (command.getCommandType().equals(SaveHolidayCommand.ADD)) {
+		if (command.getCommandType().equals(ActionCommand.ADD)) {
 			if (StringUtils.isEmpty(command.getHoliday())) {
 				systemPreferenceRepository.addDaysChanged(command.getDayChangedBefore(), command.getDayChangedAfter());
 			}
@@ -37,7 +42,7 @@ public class SystemServiceFacadeImpl implements SystemServiceFacade {
 				systemPreferenceRepository.addHoliday(command.getHoliday());
 			}
 		}
-		else if (command.getCommandType().equals(SaveHolidayCommand.DELETE)) {
+		else if (command.getCommandType().equals(ActionCommand.DELETE)) {
 			if (StringUtils.isEmpty(command.getHoliday())) {
 				systemPreferenceRepository.removeDaysChanged(command.getDayChangedBefore(), command.getDayChangedAfter());
 			}
@@ -79,6 +84,32 @@ public class SystemServiceFacadeImpl implements SystemServiceFacade {
 		}
 		
 		return days;
+	}
+
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED)
+	public void saveAttendanceTypeProperty(SaveAttendanceTypePropertyCommand command) {
+		
+		if (command.getCommandType().equals(ActionCommand.ADD)) {
+			systemPreferenceRepository.addAttendanceTypeProperty(command.getName(), command.getType(), command.getDescription());
+		}
+		else if (command.getCommandType().equals(ActionCommand.DELETE)) {
+			systemPreferenceRepository.removeAttendanceTypeProperty(command.getName());
+		}
+	}
+
+	@Override
+	@Transactional(propagation=Propagation.SUPPORTS)
+	public List<AttendanceTypePropertyDTO> getAttendanceTypeProperties() {
+		
+		List<AttendanceTypePropertyDTO> properties = new ArrayList<AttendanceTypePropertyDTO>();
+		
+		List<SystemPreference> preferences = systemPreferenceRepository.getAttendanceTypeProperties();
+		for (SystemPreference p : preferences) {
+			properties.add(new AttendanceTypePropertyDTO(p.getKey(), p.getType(), p.getValue()));
+		}
+		
+		return properties;
 	}
 
 }

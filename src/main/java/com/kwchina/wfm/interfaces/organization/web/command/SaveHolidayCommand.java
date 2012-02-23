@@ -1,11 +1,7 @@
 package com.kwchina.wfm.interfaces.organization.web.command;
 
-public class SaveHolidayCommand {
-	
-	public static String ADD = "Add";
-	public static String DELETE = "Delete";
+public class SaveHolidayCommand extends ActionCommand {
 
-	private String commandType;
 	private String holiday;
 	private String dayChangedBefore;
 	private String dayChangedAfter;
@@ -13,13 +9,7 @@ public class SaveHolidayCommand {
 	public SaveHolidayCommand() {
 		
 	}
-	
-	public String getCommandType() {
-		return commandType;
-	}
-	public void setCommandType(String commandType) {
-		this.commandType = commandType;
-	}
+
 	public String getHoliday() {
 		return holiday;
 	}
