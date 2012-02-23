@@ -1,8 +1,12 @@
 package com.kwchina.wfm.interfaces.organization.facade;
 
+import java.util.Map;
+
 import com.kwchina.wfm.interfaces.organization.web.command.SaveHolidayCommand;
 
 public interface SystemServiceFacade {
 
-	String saveHoliday(SaveHolidayCommand command);
+	void saveHoliday(SaveHolidayCommand command);
+
+	Map<String, String> getHolidays(int year);
 }

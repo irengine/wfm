@@ -1,6 +1,9 @@
 package com.kwchina.wfm.interfaces.organization.web.command;
 
 public class SaveHolidayCommand {
+	
+	public static String ADD = "Add";
+	public static String DELETE = "Delete";
 
 	private String type;
 	private String holiday;

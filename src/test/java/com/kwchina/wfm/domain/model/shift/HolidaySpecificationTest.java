@@ -40,11 +40,14 @@ public class HolidaySpecificationTest {
 		
 		initialHolidayDefinition();
 
-		HolidaySpecification hs = new HolidaySpecification(weekends, holidays, daysChanged);
+		HolidaySpecification hs = new HolidaySpecification(holidays);
+		WeekendSpecification ws = new WeekendSpecification(weekends, daysChanged);
 		for(Date d : days) {
 			System.out.print(DateHelper.getString(d));
 			if (hs.isSatisfiedBy(d))
 				System.out.println(" --- holiday");
+			else if (ws.isSatisfiedBy(d))
+				System.out.println(" --- weekend");
 			else
 				System.out.println("");
 		}
@@ -71,23 +74,28 @@ public class HolidaySpecificationTest {
 		this.daysChanged.put("2012-01-25", "2012-01-21");
 		this.daysChanged.put("2012-01-26", "2012-01-22");
 		this.daysChanged.put("2012-01-29", "2012-01-27");
+	}
+	
+	@Test
+	public void getLastDay() {
+		int year = 2012;
+
+		String s = String.format("%d-01-01", year);
+		Date d = DateHelper.getDate(s);
 		
-//		this.holidays.add(DateHelper.getDate("2012-01-01"));
-//		this.holidays.add(DateHelper.getDate("2012-01-22"));
-//		this.holidays.add(DateHelper.getDate("2012-01-23"));
-//		this.holidays.add(DateHelper.getDate("2012-01-24"));
-//		
-//		this.daysChanged.put(DateHelper.getDate("2012-12-31"), DateHelper.getDate("2012-01-02"));
-//		this.daysChanged.put(DateHelper.getDate("2012-01-01"), DateHelper.getDate("2012-01-03"));
-//		this.daysChanged.put(DateHelper.getDate("2012-01-21"), DateHelper.getDate("2012-01-25"));
-//		this.daysChanged.put(DateHelper.getDate("2012-01-22"), DateHelper.getDate("2012-01-26"));
-//		this.daysChanged.put(DateHelper.getDate("2012-01-27"), DateHelper.getDate("2012-01-29"));
-//		
-//		this.daysChanged.put(DateHelper.getDate("2012-01-02"), DateHelper.getDate("2012-12-31"));
-//		this.daysChanged.put(DateHelper.getDate("2012-01-03"), DateHelper.getDate("2012-01-01"));
-//		this.daysChanged.put(DateHelper.getDate("2012-01-25"), DateHelper.getDate("2012-01-21"));
-//		this.daysChanged.put(DateHelper.getDate("2012-01-26"), DateHelper.getDate("2012-01-22"));
-//		this.daysChanged.put(DateHelper.getDate("2012-01-29"), DateHelper.getDate("2012-01-27"));
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(d);
+
+		int lastDay = calendar.getActualMaximum(Calendar.DAY_OF_YEAR);
+		
+		assertTrue(366 == lastDay);
+		
+		for(int i = 0; i< lastDay; i++) {
+			Date x = calendar.getTime();
+			System.out.println(DateHelper.getString(x));
+			calendar.add(Calendar.DAY_OF_MONTH, 1);
+		}
+		
 	}
 
 }
