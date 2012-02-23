@@ -5,16 +5,20 @@ public class SaveHolidayCommand {
 	public static String ADD = "Add";
 	public static String DELETE = "Delete";
 
-	private String type;
+	private String commandType;
 	private String holiday;
 	private String dayChangedBefore;
 	private String dayChangedAfter;
 	
-	public String getType() {
-		return type;
+	public SaveHolidayCommand() {
+		
 	}
-	public void setType(String type) {
-		this.type = type;
+	
+	public String getCommandType() {
+		return commandType;
+	}
+	public void setCommandType(String commandType) {
+		this.commandType = commandType;
 	}
 	public String getHoliday() {
 		return holiday;

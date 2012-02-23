@@ -29,7 +29,7 @@ public class SystemServiceFacadeImpl implements SystemServiceFacade {
 	@Transactional(propagation=Propagation.REQUIRED)
 	public void saveHoliday(SaveHolidayCommand command) {
 
-		if (command.getType().equals(SaveHolidayCommand.ADD)) {
+		if (command.getCommandType().equals(SaveHolidayCommand.ADD)) {
 			if (StringUtils.isEmpty(command.getHoliday())) {
 				systemPreferenceRepository.addDaysChanged(command.getDayChangedBefore(), command.getDayChangedAfter());
 			}
@@ -37,7 +37,7 @@ public class SystemServiceFacadeImpl implements SystemServiceFacade {
 				systemPreferenceRepository.addHoliday(command.getHoliday());
 			}
 		}
-		else if (command.getType().equals(SaveHolidayCommand.DELETE)) {
+		else if (command.getCommandType().equals(SaveHolidayCommand.DELETE)) {
 			if (StringUtils.isEmpty(command.getHoliday())) {
 				systemPreferenceRepository.removeDaysChanged(command.getDayChangedBefore(), command.getDayChangedAfter());
 			}
