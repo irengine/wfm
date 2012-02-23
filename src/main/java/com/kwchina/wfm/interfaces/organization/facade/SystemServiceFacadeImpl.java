@@ -10,6 +10,8 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.kwchina.wfm.domain.model.shift.HolidaySpecification;
 import com.kwchina.wfm.domain.model.shift.SystemPreferenceRepository;
@@ -24,6 +26,7 @@ public class SystemServiceFacadeImpl implements SystemServiceFacade {
 	private SystemPreferenceRepository systemPreferenceRepository;
 	
 	@Override
+	@Transactional(propagation=Propagation.REQUIRED)
 	public void saveHoliday(SaveHolidayCommand command) {
 
 		if (command.getType().equals(SaveHolidayCommand.ADD)) {
@@ -49,6 +52,7 @@ public class SystemServiceFacadeImpl implements SystemServiceFacade {
 	private Map<String, String> daysChanged = new HashMap<String, String>();
 	
 	@Override
+	@Transactional(propagation=Propagation.SUPPORTS)
 	public Map<String, String> getHolidays(int year) {
 		
 		Map<String, String> days = new HashMap<String, String>();
