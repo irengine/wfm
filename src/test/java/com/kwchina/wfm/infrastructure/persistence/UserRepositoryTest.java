@@ -1,11 +1,7 @@
 package com.kwchina.wfm.infrastructure.persistence;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,8 +10,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.kwchina.wfm.domain.model.organization.Unit;
-import com.kwchina.wfm.domain.model.organization.UnitRepository;
 import com.kwchina.wfm.domain.model.organization.User;
 import com.kwchina.wfm.domain.model.organization.UserRepository;
 
@@ -25,12 +19,12 @@ public class UserRepositoryTest {
 
 	@Autowired
 	private UserRepository userRepository;
-	
-	@Autowired
-	private UnitRepository unitRepository;
-	
-	@PersistenceContext
-	private EntityManager entityManager;
+//	
+//	@Autowired
+//	private UnitRepository unitRepository;
+//	
+//	@PersistenceContext
+//	private EntityManager entityManager;
 	
 	@Test
 	@Transactional
@@ -46,6 +40,8 @@ public class UserRepositoryTest {
 		n.validatePassword("123456");
 	}
 	
+	// TODO: add more unit test
+	/*
 	@Test
 	@Transactional
 	public void testUserForUnit() {
@@ -100,5 +96,5 @@ public class UserRepositoryTest {
 		User v = userRepository.findById(u.getId());
 		assertEquals(1, v.getUnits().size());
 	}
-
+	*/
 }
