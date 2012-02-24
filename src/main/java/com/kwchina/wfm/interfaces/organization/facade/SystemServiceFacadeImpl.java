@@ -23,6 +23,10 @@ import com.kwchina.wfm.domain.model.shift.SystemPreferenceFactory;
 import com.kwchina.wfm.domain.model.shift.SystemPreferenceRepository;
 import com.kwchina.wfm.domain.model.shift.WeekendSpecification;
 import com.kwchina.wfm.infrastructure.common.DateHelper;
+import com.kwchina.wfm.interfaces.common.JacksonHelper;
+import com.kwchina.wfm.interfaces.common.Page;
+import com.kwchina.wfm.interfaces.common.PageHelper;
+import com.kwchina.wfm.interfaces.common.QueryHelper;
 import com.kwchina.wfm.interfaces.organization.dto.AttendanceTypePropertyDTO;
 import com.kwchina.wfm.interfaces.organization.web.command.ActionCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveAttendanceTypeCommand;
@@ -144,8 +148,25 @@ public class SystemServiceFacadeImpl implements SystemServiceFacade {
 	@Transactional(propagation=Propagation.SUPPORTS)
 	public String queryAttendanceTypesWithJson(Map<String, String> parameters,
 			int currentPage, int pageSize, List<String> conditions) {
-		// TODO Auto-generated method stub
-		return null;
+		String whereClause = "";
+		String orderByClause = String.format(" ORDER BY %s %s ", parameters.get(QueryHelper.SORT_FIELD), parameters.get(QueryHelper.SORT_DIRECTION));
+		
+		if (Boolean.parseBoolean(parameters.get(QueryHelper.IS_INCLUDE_CONDITION))) {
+			whereClause = QueryHelper.getWhereClause(parameters.get(QueryHelper.FILTERS), conditions);
+		}
+		else {
+			whereClause = QueryHelper.getWhereClause("", conditions);
+		}
+		
+		int rowsCount = attendanceTypeRepository.getRowsCount(whereClause).intValue();
+		
+		PageHelper pageHelper = new PageHelper(rowsCount, pageSize);
+		pageHelper.setCurrentPage(currentPage);
+		
+		List<AttendanceType> rows = attendanceTypeRepository.getRows(whereClause, orderByClause, pageHelper.getStart(), pageHelper.getPageSize());
+		Page page = new Page(pageHelper.getCurrentPage(), pageHelper.getPagesCount(), rowsCount, rows);
+		
+		return JacksonHelper.getJson(page);
 	}
 
 	@Override
@@ -176,8 +197,25 @@ public class SystemServiceFacadeImpl implements SystemServiceFacade {
 	@Transactional(propagation=Propagation.SUPPORTS)
 	public String queryShiftTypesWithJson(Map<String, String> parameters,
 			int currentPage, int pageSize, List<String> conditions) {
-		// TODO Auto-generated method stub
-		return null;
+		String whereClause = "";
+		String orderByClause = String.format(" ORDER BY %s %s ", parameters.get(QueryHelper.SORT_FIELD), parameters.get(QueryHelper.SORT_DIRECTION));
+		
+		if (Boolean.parseBoolean(parameters.get(QueryHelper.IS_INCLUDE_CONDITION))) {
+			whereClause = QueryHelper.getWhereClause(parameters.get(QueryHelper.FILTERS), conditions);
+		}
+		else {
+			whereClause = QueryHelper.getWhereClause("", conditions);
+		}
+		
+		int rowsCount = shiftTypeRepository.getRowsCount(whereClause).intValue();
+		
+		PageHelper pageHelper = new PageHelper(rowsCount, pageSize);
+		pageHelper.setCurrentPage(currentPage);
+		
+		List<ShiftType> rows = shiftTypeRepository.getRows(whereClause, orderByClause, pageHelper.getStart(), pageHelper.getPageSize());
+		Page page = new Page(pageHelper.getCurrentPage(), pageHelper.getPagesCount(), rowsCount, rows);
+		
+		return JacksonHelper.getJson(page);
 	}
 
 	@Override
