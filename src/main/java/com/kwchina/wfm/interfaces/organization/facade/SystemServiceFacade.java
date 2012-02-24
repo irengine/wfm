@@ -20,10 +20,10 @@ public interface SystemServiceFacade {
 	List<AttendanceTypePropertyDTO> getAttendanceTypeProperties();
 	
 	void saveAttendanceType(SaveAttendanceTypeCommand command);
-	List<AttendanceType> getAttendanceTypes();
+	String queryAttendanceTypesWithJson(Map<String, String> parameters, int currentPage, int pageSize, List<String> conditions);
 	AttendanceType findAttendanceTypeById(Long id);
 	
 	void saveShiftType(SaveShiftTypeCommand command);
-	List<ShiftType> getShiftTypes();
+	String queryShiftTypesWithJson(Map<String, String> parameters, int currentPage, int pageSize, List<String> conditions);
 	ShiftType findShiftTypeById(Long id);
 }

@@ -142,7 +142,8 @@ public class SystemServiceFacadeImpl implements SystemServiceFacade {
 
 	@Override
 	@Transactional(propagation=Propagation.SUPPORTS)
-	public List<AttendanceType> getAttendanceTypes() {
+	public String queryAttendanceTypesWithJson(Map<String, String> parameters,
+			int currentPage, int pageSize, List<String> conditions) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -173,7 +174,8 @@ public class SystemServiceFacadeImpl implements SystemServiceFacade {
 
 	@Override
 	@Transactional(propagation=Propagation.SUPPORTS)
-	public List<ShiftType> getShiftTypes() {
+	public String queryShiftTypesWithJson(Map<String, String> parameters,
+			int currentPage, int pageSize, List<String> conditions) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -183,5 +185,4 @@ public class SystemServiceFacadeImpl implements SystemServiceFacade {
 	public ShiftType findShiftTypeById(Long id) {
 		return shiftTypeRepository.findById(id);
 	}
-
 }

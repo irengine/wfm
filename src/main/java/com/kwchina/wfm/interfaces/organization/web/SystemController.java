@@ -1,6 +1,7 @@
 package com.kwchina.wfm.interfaces.organization.web;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +22,7 @@ import com.kwchina.wfm.interfaces.common.JacksonHelper;
 import com.kwchina.wfm.interfaces.common.QueryHelper;
 import com.kwchina.wfm.interfaces.organization.dto.AttendanceTypePropertyDTO;
 import com.kwchina.wfm.interfaces.organization.facade.SystemServiceFacade;
+import com.kwchina.wfm.interfaces.organization.web.command.QueryCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveAttendanceTypeCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveAttendanceTypePropertyCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveHolidayCommand;
@@ -47,7 +49,7 @@ public class SystemController {
 		}
 	}
 
-	@RequestMapping(value = "/getHolidays", method = RequestMethod.POST)
+	@RequestMapping(value = "/getHolidays", method = RequestMethod.GET)
 	public void getHolidays(HttpServletRequest request, HttpServletResponse response) {
 
 		int year = 2012;
@@ -74,7 +76,7 @@ public class SystemController {
 		}
 	}
 
-	@RequestMapping(value = "/getAttendanceTypeProperties", method = RequestMethod.POST)
+	@RequestMapping(value = "/getAttendanceTypeProperties", method = RequestMethod.GET)
 	public void getAttendanceTypeProperties(HttpServletResponse response) {
 
 		List<AttendanceTypePropertyDTO> properties = systemServiceFacade.getAttendanceTypeProperties();
@@ -83,12 +85,28 @@ public class SystemController {
 	}
 	
 	@RequestMapping(value = "/getAttendanceTypes", method = RequestMethod.GET)
-	public void getAttendanceTypes(HttpServletResponse response) throws IOException {
+	public void getAttendanceTypes(@ModelAttribute QueryCommand command, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		logger.info("get all attendanceTypes");
-
-		List<AttendanceType> types = systemServiceFacade.getAttendanceTypes();
 		
-		output(response, JacksonHelper.getJson(types));
+		logger.info(command.toString());
+		
+		Map<String, String> parameters = QueryHelper.getQueryParameters(request);
+		
+		int currentPage = 0;
+		if (QueryHelper.isEmpty(request, "page"))
+			currentPage = 0;
+		else
+			currentPage = Integer.parseInt(request.getParameter("page"));
+		
+		int pageSize = 10;
+		if (QueryHelper.isEmpty(request, "rows"))
+			pageSize = 0;
+		else
+			pageSize = Integer.parseInt(request.getParameter("rows"));
+		
+		List<String> conditions = new ArrayList<String>();
+		
+		output(response, systemServiceFacade.queryAttendanceTypesWithJson(parameters, currentPage, pageSize, conditions));
 	}
 	
 	@RequestMapping(value = "/getAttendanceType", method = RequestMethod.GET)
@@ -118,12 +136,27 @@ public class SystemController {
 	}
 
 	@RequestMapping(value = "/getShiftTypes", method = RequestMethod.GET)
-	public void getShiftTypes(HttpServletResponse response) throws IOException {
+	public void getShiftTypes(@ModelAttribute QueryCommand command, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		logger.info("get all shiftTypes");
-
-		List<ShiftType> types = systemServiceFacade.getShiftTypes();
+		logger.info(command.toString());
 		
-		output(response, JacksonHelper.getJson(types));
+		Map<String, String> parameters = QueryHelper.getQueryParameters(request);
+		
+		int currentPage = 0;
+		if (QueryHelper.isEmpty(request, "page"))
+			currentPage = 0;
+		else
+			currentPage = Integer.parseInt(request.getParameter("page"));
+		
+		int pageSize = 10;
+		if (QueryHelper.isEmpty(request, "rows"))
+			pageSize = 0;
+		else
+			pageSize = Integer.parseInt(request.getParameter("rows"));
+		
+		List<String> conditions = new ArrayList<String>();
+		
+		output(response, systemServiceFacade.queryShiftTypesWithJson(parameters, currentPage, pageSize, conditions));
 	}
 	
 	@RequestMapping(value = "/getShiftType", method = RequestMethod.GET)
