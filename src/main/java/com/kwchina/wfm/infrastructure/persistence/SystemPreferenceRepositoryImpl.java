@@ -64,20 +64,12 @@ public class SystemPreferenceRepositoryImpl extends BaseRepositoryImpl<SystemPre
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public void removeDaysChanged(String dayChangedBefore, String dayChangedAfter) {
-		List<SystemPreference> psBefore = entityManager.createNamedQuery("systemPreference.findByScopeAndKey")
+	public void removeDaysChanged(String dayChanged) {
+		List<SystemPreference> psBefore = entityManager.createNamedQuery("systemPreference.findByScopeAndKeyOrValue")
 										.setParameter("scope", ScopeType.DAYCHANGED)
-										.setParameter("key", dayChangedBefore)
+										.setParameter("key", dayChanged)
 										.getResultList();
 		for(SystemPreference p : psBefore) {
-			entityManager.remove(p);
-		}
-		
-		List<SystemPreference> psAfter = entityManager.createNamedQuery("systemPreference.findByScopeAndKey")
-										.setParameter("scope", ScopeType.DAYCHANGED)
-										.setParameter("key", dayChangedAfter)
-										.getResultList();
-		for(SystemPreference p : psAfter) {
 			entityManager.remove(p);
 		}
 		

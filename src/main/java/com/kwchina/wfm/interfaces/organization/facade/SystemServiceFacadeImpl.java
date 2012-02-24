@@ -44,7 +44,7 @@ public class SystemServiceFacadeImpl implements SystemServiceFacade {
 		}
 		else if (command.getCommandType().equals(ActionCommand.DELETE)) {
 			if (StringUtils.isEmpty(command.getHoliday())) {
-				systemPreferenceRepository.removeDaysChanged(command.getDayChangedBefore(), command.getDayChangedAfter());
+				systemPreferenceRepository.removeDaysChanged(command.getDayChangedBefore());
 			}
 			else {
 				systemPreferenceRepository.removeHoliday(command.getHoliday());

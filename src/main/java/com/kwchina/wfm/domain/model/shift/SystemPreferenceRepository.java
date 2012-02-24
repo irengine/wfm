@@ -11,7 +11,7 @@ public interface SystemPreferenceRepository extends BaseRepository<SystemPrefere
 	void removeHoliday(String holiday);
 	
 	void addDaysChanged(String dayChangedBefore, String dayChangedAfter);
-	void removeDaysChanged(String dayChangedBefore, String dayChangedAfter);
+	void removeDaysChanged(String dayChanged);
 	
 	List<String> getHolidays();
 	Map<String, String> getDaysChanged();

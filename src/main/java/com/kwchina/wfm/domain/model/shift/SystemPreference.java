@@ -17,7 +17,8 @@ import com.kwchina.wfm.domain.common.ValueObject;
 @Table(name="T_SYSTEM_PREFERENCES")
 @NamedQueries({
 	@NamedQuery(name = "systemPreference.findByScope", query = "SELECT sp FROM SystemPreference sp WHERE sp.scope = :scope order by sp.key"),
-	@NamedQuery(name = "systemPreference.findByScopeAndKey", query = "SELECT sp FROM SystemPreference sp WHERE sp.scope = :scope AND sp.key = :key")
+	@NamedQuery(name = "systemPreference.findByScopeAndKey", query = "SELECT sp FROM SystemPreference sp WHERE sp.scope = :scope AND sp.key = :key"),
+	@NamedQuery(name = "systemPreference.findByScopeAndKeyOrValue", query = "SELECT sp FROM SystemPreference sp WHERE sp.scope = :scope AND (sp.key = :key OR sp.value = :key)")
 })
 public class SystemPreference implements com.kwchina.wfm.domain.common.Entity<SystemPreference> {
 	

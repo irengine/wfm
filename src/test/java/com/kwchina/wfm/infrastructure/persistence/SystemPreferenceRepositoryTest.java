@@ -48,7 +48,7 @@ public class SystemPreferenceRepositoryTest {
 		daysChanged = systemPreferenceRepository.getDaysChanged();
 		assertEquals(2, daysChanged.size());
 		
-		systemPreferenceRepository.removeDaysChanged(before, after);
+		systemPreferenceRepository.removeDaysChanged(before);
 		daysChanged = systemPreferenceRepository.getDaysChanged();
 		assertEquals(0, daysChanged.size());
 	}
