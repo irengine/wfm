@@ -13,7 +13,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.kwchina.wfm.domain.model.shift.AttendanceType;
+import com.kwchina.wfm.domain.model.shift.AttendanceTypeRepository;
 import com.kwchina.wfm.domain.model.shift.HolidaySpecification;
+import com.kwchina.wfm.domain.model.shift.ShiftType;
+import com.kwchina.wfm.domain.model.shift.ShiftTypeRepository;
 import com.kwchina.wfm.domain.model.shift.SystemPreference;
 import com.kwchina.wfm.domain.model.shift.SystemPreferenceFactory;
 import com.kwchina.wfm.domain.model.shift.SystemPreferenceRepository;
@@ -21,14 +25,22 @@ import com.kwchina.wfm.domain.model.shift.WeekendSpecification;
 import com.kwchina.wfm.infrastructure.common.DateHelper;
 import com.kwchina.wfm.interfaces.organization.dto.AttendanceTypePropertyDTO;
 import com.kwchina.wfm.interfaces.organization.web.command.ActionCommand;
+import com.kwchina.wfm.interfaces.organization.web.command.SaveAttendanceTypeCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveAttendanceTypePropertyCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveHolidayCommand;
+import com.kwchina.wfm.interfaces.organization.web.command.SaveShiftTypeCommand;
 
 @Component
 public class SystemServiceFacadeImpl implements SystemServiceFacade {
 	
 	@Autowired
 	private SystemPreferenceRepository systemPreferenceRepository;
+	
+	@Autowired
+	private AttendanceTypeRepository attendanceTypeRepository;
+	
+	@Autowired
+	private ShiftTypeRepository shiftTypeRepository;
 	
 	@Override
 	@Transactional(propagation=Propagation.REQUIRED)
@@ -110,6 +122,66 @@ public class SystemServiceFacadeImpl implements SystemServiceFacade {
 		}
 		
 		return properties;
+	}
+
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED)
+	public void saveAttendanceType(SaveAttendanceTypeCommand command) {
+		AttendanceType attendanceType;
+		if (null == command.getId() || command.getId().equals(0))
+			attendanceType = new AttendanceType();
+		else
+			attendanceType = attendanceTypeRepository.findById(command.getId());
+		
+		attendanceType.setName(command.getName());
+		attendanceType.setBeginHour(command.getBeginHour());
+		attendanceType.setEndHour(command.getEndHour());
+		
+		attendanceTypeRepository.save(attendanceType);		
+	}
+
+	@Override
+	@Transactional(propagation=Propagation.SUPPORTS)
+	public List<AttendanceType> getAttendanceTypes() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	@Transactional(propagation=Propagation.SUPPORTS)
+	public AttendanceType findAttendanceTypeById(Long id) {
+		return attendanceTypeRepository.findById(id);
+	}
+	
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED)
+	public void saveShiftType(SaveShiftTypeCommand command) {
+		ShiftType shiftType;
+		if (null == command.getId() || command.getId().equals(0))
+			shiftType = new ShiftType();
+		else
+			shiftType = shiftTypeRepository.findById(command.getId());
+
+		shiftType.setName(command.getName());
+		shiftType.setDisplayIndex(command.getDisplayIndex());
+		shiftType.setDisplayName(command.getDisplayName());
+		shiftType.setStrategyClassName(command.getStrategyClassName());
+		shiftType.setStrategyClassParameters(command.getStrategyClassParameters());
+		
+		shiftTypeRepository.save(shiftType);		
+	}
+
+	@Override
+	@Transactional(propagation=Propagation.SUPPORTS)
+	public List<ShiftType> getShiftTypes() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	@Transactional(propagation=Propagation.SUPPORTS)
+	public ShiftType findShiftTypeById(Long id) {
+		return shiftTypeRepository.findById(id);
 	}
 
 }
