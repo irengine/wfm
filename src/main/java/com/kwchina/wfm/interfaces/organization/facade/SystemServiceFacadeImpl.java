@@ -127,6 +127,17 @@ public class SystemServiceFacadeImpl implements SystemServiceFacade {
 		
 		return properties;
 	}
+	
+	@Override
+	@Transactional(propagation=Propagation.SUPPORTS)
+	public String queryAttendanceTypePropertiesWithJson(Map<String, String> parameters,
+			int currentPage, int pageSize, List<String> conditions) {
+
+		List<AttendanceTypePropertyDTO> rows = getAttendanceTypeProperties();
+		Page page = new Page(1, 1, rows.size(), rows);
+		
+		return JacksonHelper.getJson(page);
+	}
 
 	@Override
 	@Transactional(propagation=Propagation.REQUIRED)
@@ -158,12 +169,12 @@ public class SystemServiceFacadeImpl implements SystemServiceFacade {
 			whereClause = QueryHelper.getWhereClause("", conditions);
 		}
 		
-		int rowsCount = attendanceTypeRepository.getRowsCount(whereClause).intValue();
+		int rowsCount = attendanceTypeRepository.getRowsCount(whereClause, true).intValue();
 		
 		PageHelper pageHelper = new PageHelper(rowsCount, pageSize);
 		pageHelper.setCurrentPage(currentPage);
 		
-		List<AttendanceType> rows = attendanceTypeRepository.getRows(whereClause, orderByClause, pageHelper.getStart(), pageHelper.getPageSize());
+		List<AttendanceType> rows = attendanceTypeRepository.getRows(whereClause, orderByClause, pageHelper.getStart(), pageHelper.getPageSize(), true);
 		Page page = new Page(pageHelper.getCurrentPage(), pageHelper.getPagesCount(), rowsCount, rows);
 		
 		return JacksonHelper.getJson(page);
@@ -207,12 +218,12 @@ public class SystemServiceFacadeImpl implements SystemServiceFacade {
 			whereClause = QueryHelper.getWhereClause("", conditions);
 		}
 		
-		int rowsCount = shiftTypeRepository.getRowsCount(whereClause).intValue();
+		int rowsCount = shiftTypeRepository.getRowsCount(whereClause, true).intValue();
 		
 		PageHelper pageHelper = new PageHelper(rowsCount, pageSize);
 		pageHelper.setCurrentPage(currentPage);
 		
-		List<ShiftType> rows = shiftTypeRepository.getRows(whereClause, orderByClause, pageHelper.getStart(), pageHelper.getPageSize());
+		List<ShiftType> rows = shiftTypeRepository.getRows(whereClause, orderByClause, pageHelper.getStart(), pageHelper.getPageSize(), true);
 		Page page = new Page(pageHelper.getCurrentPage(), pageHelper.getPagesCount(), rowsCount, rows);
 		
 		return JacksonHelper.getJson(page);

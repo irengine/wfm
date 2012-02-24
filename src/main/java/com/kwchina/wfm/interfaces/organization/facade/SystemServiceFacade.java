@@ -18,6 +18,7 @@ public interface SystemServiceFacade {
 	
 	void saveAttendanceTypeProperty(SaveAttendanceTypePropertyCommand command);
 	List<AttendanceTypePropertyDTO> getAttendanceTypeProperties();
+	String queryAttendanceTypePropertiesWithJson(Map<String, String> parameters, int currentPage, int pageSize,List<String> conditions);
 	
 	void saveAttendanceType(SaveAttendanceTypeCommand command);
 	String queryAttendanceTypesWithJson(Map<String, String> parameters, int currentPage, int pageSize, List<String> conditions);

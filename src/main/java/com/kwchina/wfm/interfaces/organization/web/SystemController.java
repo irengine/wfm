@@ -20,7 +20,6 @@ import com.kwchina.wfm.domain.model.shift.AttendanceType;
 import com.kwchina.wfm.domain.model.shift.ShiftType;
 import com.kwchina.wfm.interfaces.common.JacksonHelper;
 import com.kwchina.wfm.interfaces.common.QueryHelper;
-import com.kwchina.wfm.interfaces.organization.dto.AttendanceTypePropertyDTO;
 import com.kwchina.wfm.interfaces.organization.facade.SystemServiceFacade;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveAttendanceTypeCommand;
@@ -77,17 +76,32 @@ public class SystemController {
 	}
 
 	@RequestMapping(value = "/getAttendanceTypeProperties", method = RequestMethod.GET)
-	public void getAttendanceTypeProperties(HttpServletResponse response) {
-
-		List<AttendanceTypePropertyDTO> properties = systemServiceFacade.getAttendanceTypeProperties();
+	public void getAttendanceTypeProperties(@ModelAttribute QueryCommand command, HttpServletRequest request, HttpServletResponse response) {
+		logger.info("get all attendanceType propertiess");
+		logger.info(command.toString());
 		
-		output(response, JacksonHelper.getJson(properties));
+		Map<String, String> parameters = QueryHelper.getQueryParameters(request);
+		
+		int currentPage = 0;
+		if (QueryHelper.isEmpty(request, "page"))
+			currentPage = 0;
+		else
+			currentPage = Integer.parseInt(request.getParameter("page"));
+		
+		int pageSize = 10;
+		if (QueryHelper.isEmpty(request, "rows"))
+			pageSize = 0;
+		else
+			pageSize = Integer.parseInt(request.getParameter("rows"));
+		
+		List<String> conditions = new ArrayList<String>();
+		
+		output(response, JacksonHelper.getJson(systemServiceFacade.queryAttendanceTypePropertiesWithJson(parameters, currentPage, pageSize, conditions)));
 	}
 	
 	@RequestMapping(value = "/getAttendanceTypes", method = RequestMethod.GET)
 	public void getAttendanceTypes(@ModelAttribute QueryCommand command, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		logger.info("get all attendanceTypes");
-		
 		logger.info(command.toString());
 		
 		Map<String, String> parameters = QueryHelper.getQueryParameters(request);
