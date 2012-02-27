@@ -96,7 +96,7 @@ public class SystemController {
 		
 		List<String> conditions = new ArrayList<String>();
 		
-		output(response, JacksonHelper.getJson(systemServiceFacade.queryAttendanceTypePropertiesWithJson(parameters, currentPage, pageSize, conditions)));
+		output(response, systemServiceFacade.queryAttendanceTypePropertiesWithJson(parameters, currentPage, pageSize, conditions));
 	}
 	
 	@RequestMapping(value = "/getAttendanceTypes", method = RequestMethod.GET)
