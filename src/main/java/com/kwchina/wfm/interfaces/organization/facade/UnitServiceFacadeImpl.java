@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.kwchina.wfm.domain.model.organization.Unit;
 import com.kwchina.wfm.domain.model.organization.UnitRepository;
+import com.kwchina.wfm.domain.model.shift.ShiftType;
+import com.kwchina.wfm.domain.model.shift.ShiftTypeRepository;
 import com.kwchina.wfm.interfaces.common.JacksonHelper;
 import com.kwchina.wfm.interfaces.organization.dto.UnitDTO;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveUnitCommand;
@@ -19,6 +21,9 @@ public class UnitServiceFacadeImpl implements UnitServiceFacade {
 
 	@Autowired
 	UnitRepository unitRepository;
+	
+	@Autowired
+	ShiftTypeRepository shiftTypeRepository;
 	
 	@Transactional(propagation=Propagation.REQUIRED)
 	public void loadSampleData() {
@@ -73,9 +78,11 @@ public class UnitServiceFacadeImpl implements UnitServiceFacade {
 		{
 			Unit unit = unitRepository.findById(command.getId());
 			unit.setName(command.getName());
+			ShiftType shiftType = shiftTypeRepository.findById(command.getShiftTypeId());
+			if (null != shiftType)
+				unit.setShiftType(shiftType);
 			unitRepository.save(unit);
 		}
-
 	}
 
 	@Transactional(propagation=Propagation.SUPPORTS)

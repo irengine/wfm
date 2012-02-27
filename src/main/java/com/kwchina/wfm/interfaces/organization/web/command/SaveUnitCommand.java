@@ -5,6 +5,7 @@ public class SaveUnitCommand {
 	private Long id;
 	private Long parentUnitId;
 	private String Name;
+	private Long shiftTypeId;
 	
 	public SaveUnitCommand() {
 		
@@ -27,6 +28,12 @@ public class SaveUnitCommand {
 	}
 	public void setName(String name) {
 		Name = name;
+	}
+	public Long getShiftTypeId() {
+		return shiftTypeId;
+	}
+	public void setShiftTypeId(Long shiftTypeId) {
+		this.shiftTypeId = shiftTypeId;
 	}
 	
 }
