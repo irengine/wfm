@@ -61,7 +61,7 @@ public class UnitController {
 			unit =unitServiceFacade.findById(Long.parseLong(request.getParameter("id")));
 
 		response.setContentType("text/html;charset=utf-8");
-		response.getWriter().print(JacksonHelper.getJson(unit));
+		response.getWriter().print(JacksonHelper.getUnitJsonWithFilters(unit));
 		response.flushBuffer();
 	}
 	

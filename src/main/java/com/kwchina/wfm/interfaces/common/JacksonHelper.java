@@ -30,6 +30,14 @@ public class JacksonHelper {
     private interface CommonEmployeeFilter {
     	
     }
+
+    public static String getUnitJsonWithFilters(Object o) {
+    	
+    	Map<Class<?>, Class<?>> filters = new HashMap<Class<?>, Class<?>>();
+    	filters.put(Unit.class, CommonUnitFilter.class);
+    	
+    	return getJsonWithFilters(o, filters);
+    }
     
     public static String getUserJsonWithFilters(Object o) {
     	
