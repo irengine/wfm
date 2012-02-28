@@ -1,12 +1,15 @@
 package com.kwchina.wfm.interfaces.organization.web.command;
 
+import java.util.Map;
 
-public class SaveAttendanceTypeCommand {
+
+public class SaveAttendanceTypeCommand extends ActionCommand {
 
 	private Long Id;
 	private String name;
-	private int beginHour;
-	private int endHour;;
+	private int beginTime;
+	private int endTime;
+	private Map<String, String> properties;
 	
 	public Long getId() {
 		return Id;
@@ -20,17 +23,23 @@ public class SaveAttendanceTypeCommand {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public int getBeginHour() {
-		return beginHour;
+	public int getBeginTime() {
+		return beginTime;
 	}
-	public void setBeginHour(int beginHour) {
-		this.beginHour = beginHour;
+	public void setBeginTime(int beginTime) {
+		this.beginTime = beginTime;
 	}
-	public int getEndHour() {
-		return endHour;
+	public int getEndTime() {
+		return endTime;
 	}
-	public void setEndHour(int endHour) {
-		this.endHour = endHour;
+	public void setEndTime(int endTime) {
+		this.endTime = endTime;
+	}
+	public Map<String, String> getProperties() {
+		return properties;
+	}
+	public void setProperties(Map<String, String> properties) {
+		this.properties = properties;
 	}
 	
 }

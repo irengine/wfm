@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.kwchina.wfm.domain.model.organization.Preference;
 import com.kwchina.wfm.domain.model.shift.AttendanceType;
 import com.kwchina.wfm.domain.model.shift.AttendanceTypeRepository;
 import com.kwchina.wfm.domain.model.shift.HolidaySpecification;
@@ -142,17 +145,32 @@ public class SystemServiceFacadeImpl implements SystemServiceFacade {
 	@Override
 	@Transactional(propagation=Propagation.REQUIRED)
 	public void saveAttendanceType(SaveAttendanceTypeCommand command) {
-		AttendanceType attendanceType;
-		if (null == command.getId() || command.getId().equals(0))
-			attendanceType = new AttendanceType();
-		else
-			attendanceType = attendanceTypeRepository.findById(command.getId());
 		
-		attendanceType.setName(command.getName());
-		attendanceType.setBeginHour(command.getBeginHour());
-		attendanceType.setEndHour(command.getEndHour());
+		if (command.getCommandType().equals(ActionCommand.ADD)) {
+			AttendanceType attendanceType;
+			if (null == command.getId() || command.getId().equals(0))
+				attendanceType = new AttendanceType();
+			else
+				attendanceType = attendanceTypeRepository.findById(command.getId());
+			
+			attendanceType.setName(command.getName());
+			attendanceType.setBeginTime(command.getBeginTime());
+			attendanceType.setEndTime(command.getEndTime());
+			
+			Set<Preference> preferences = new HashSet<Preference>();
+			for(Map.Entry<String, String> property : command.getProperties().entrySet()) {
+				preferences.add(new Preference(property.getKey(), property.getValue()));
+			}
+			attendanceType.setPreferences(preferences);
+			attendanceTypeRepository.save(attendanceType);		
+		}
+		else if (command.getCommandType().equals(ActionCommand.DELETE)) {
+			if (null != command.getId() && command.getId().equals(0)) {
+				AttendanceType attendanceType = attendanceTypeRepository.findById(command.getId());
+				attendanceTypeRepository.remove(attendanceType);
+			}
+		}
 		
-		attendanceTypeRepository.save(attendanceType);		
 	}
 
 	@Override

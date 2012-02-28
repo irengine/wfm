@@ -30,10 +30,10 @@ public class AttendanceType implements com.kwchina.wfm.domain.common.Entity<Atte
 	private String name;
 	
 	@Column
-	private int beginHour;
+	private int beginTime;
 	
 	@Column
-	private int endHour;
+	private int endTime;
 	
 	@ElementCollection(fetch=FetchType.EAGER)
 	@CollectionTable(name="T_ATTENDANCE_TYPE_PREFERENCES", joinColumns=@JoinColumn(name="attendanceTypeId"))
@@ -47,10 +47,10 @@ public class AttendanceType implements com.kwchina.wfm.domain.common.Entity<Atte
 		
 	}
 	
-	public AttendanceType(String name, int beginHour, int endHour) {
+	public AttendanceType(String name, int beginTime, int endTime) {
 		this.name = name;
-		this.beginHour = beginHour;
-		this.endHour = endHour;
+		this.beginTime = beginTime;
+		this.endTime = endTime;
 		this.preferences = Collections.<Preference>emptySet();
 	}
 	
@@ -70,20 +70,20 @@ public class AttendanceType implements com.kwchina.wfm.domain.common.Entity<Atte
 		this.name = name;
 	}
 
-	public int getBeginHour() {
-		return beginHour;
+	public int getBeginTime() {
+		return beginTime;
 	}
 
-	public void setBeginHour(int beginHour) {
-		this.beginHour = beginHour;
+	public void setBeginTime(int beginTime) {
+		this.beginTime = beginTime;
 	}
 
-	public int getEndHour() {
-		return endHour;
+	public int getEndTime() {
+		return endTime;
 	}
 
-	public void setEndHour(int endHour) {
-		this.endHour = endHour;
+	public void setEndTime(int endTime) {
+		this.endTime = endTime;
 	}
 	
 	public Set<Preference> getPreferences() {

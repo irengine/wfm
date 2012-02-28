@@ -32,6 +32,11 @@ public abstract class BaseRepositoryImpl<T> implements BaseRepository<T> {
 		entityManager.flush();
 	}
 	
+	public void remove(T t) {
+		entityManager.remove(t);
+		entityManager.flush();
+	}
+	
 	private String getEntityName() {
 		return entityClass.getSimpleName();
 	}
