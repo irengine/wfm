@@ -22,6 +22,7 @@ import com.kwchina.wfm.interfaces.common.JacksonHelper;
 import com.kwchina.wfm.interfaces.common.QueryHelper;
 import com.kwchina.wfm.interfaces.organization.facade.EmployeeServiceFacade;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryCommand;
+import com.kwchina.wfm.interfaces.organization.web.command.QueryTimeSheetCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveEmployeeCommand;
 
 /**
@@ -88,6 +89,25 @@ public class EmployeeController {
 		logger.info("save employee");
 		
 		employeeServiceFacade.saveEmployee(command);
+	}
+
+	
+	@RequestMapping(value = "/queryEmployeesDayTimeSheet", method = RequestMethod.GET)
+	public void queryEmployeesDayTimeSheet(@ModelAttribute QueryTimeSheetCommand command, HttpServletResponse response) throws IOException {
+		logger.info("get json employees day timesheet");
+		
+		response.setContentType("text/html;charset=utf-8");
+		response.getWriter().print(employeeServiceFacade.queryEmployeesDayTimeSheetWithJson(command.getDate(), command.getUnitId()));
+		response.flushBuffer();
+	}
+
+	@RequestMapping(value = "/queryEmployeesMonthTimeSheet", method = RequestMethod.GET)
+	public void queryEmployeesMonthTimeSheet(@ModelAttribute QueryTimeSheetCommand command, HttpServletResponse response) throws IOException {
+		logger.info("get json employees month timesheet");
+		
+		response.setContentType("text/html;charset=utf-8");
+		response.getWriter().print(employeeServiceFacade.queryEmployeesMonthTimeSheetWithJson(command.getDate(), command.getUnitId()));
+		response.flushBuffer();
 	}
 
 }

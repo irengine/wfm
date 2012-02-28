@@ -1,5 +1,7 @@
 package com.kwchina.wfm.infrastructure.persistence;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -27,5 +29,13 @@ public class EmployeeRepositoryImpl extends BaseRepositoryImpl<Employee> impleme
 		entityManager.flush();
 		
 		return employee;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Employee> findByUnitId(Long unitId) {
+		List<Employee> employees = entityManager.createNamedQuery("employee.findByUnitId")
+								.setParameter("unitId", unitId)
+								.getResultList();
+		return employees;
 	}
 }

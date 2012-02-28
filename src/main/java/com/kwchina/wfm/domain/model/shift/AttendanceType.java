@@ -14,12 +14,17 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import com.kwchina.wfm.domain.model.organization.Preference;
 
 @Entity
 @Table(name="T_ATTENDANCE_TYPES")
+@NamedQueries({
+	@NamedQuery(name = "attendanceType.findByName", query = "SELECT t FROM AttendanceType t WHERE t.name = :name")
+})
 public class AttendanceType implements com.kwchina.wfm.domain.common.Entity<AttendanceType> {
 	
 	@Id

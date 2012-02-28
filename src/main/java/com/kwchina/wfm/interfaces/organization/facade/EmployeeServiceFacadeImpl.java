@@ -1,6 +1,8 @@
 package com.kwchina.wfm.interfaces.organization.facade;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,12 +18,18 @@ import com.kwchina.wfm.domain.model.employee.Job;
 import com.kwchina.wfm.domain.model.employee.JobStatus;
 import com.kwchina.wfm.domain.model.organization.Unit;
 import com.kwchina.wfm.domain.model.organization.UnitRepository;
+import com.kwchina.wfm.domain.model.shift.AttendanceType;
+import com.kwchina.wfm.domain.model.shift.CustomShiftPolicy;
+import com.kwchina.wfm.domain.model.shift.DailyShiftPolicy;
 import com.kwchina.wfm.domain.model.shift.ShiftType;
 import com.kwchina.wfm.domain.model.shift.ShiftTypeRepository;
+import com.kwchina.wfm.infrastructure.common.DateHelper;
 import com.kwchina.wfm.interfaces.common.JacksonHelper;
 import com.kwchina.wfm.interfaces.common.Page;
 import com.kwchina.wfm.interfaces.common.PageHelper;
 import com.kwchina.wfm.interfaces.common.QueryHelper;
+import com.kwchina.wfm.interfaces.organization.dto.TimeSheetDTO;
+import com.kwchina.wfm.interfaces.organization.dto.TimeSheetDTO.TimeSheetRecordDTO;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveEmployeeCommand;
 
 @Component
@@ -36,6 +44,7 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 	@Autowired
 	ShiftTypeRepository shiftTypeRepository;
 	
+	@Override
 	@Transactional(propagation=Propagation.SUPPORTS)
 	public String queryEmployeesWithJson(Map<String, String> parameters, int currentPage, int pageSize, List<String> conditions) {
 	
@@ -60,6 +69,7 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 		return JacksonHelper.getEmployeeJsonWithFilters(page);
 	}
 
+	@Override
 	@Transactional(propagation=Propagation.REQUIRED)
 	public void saveEmployee(SaveEmployeeCommand command) {
 		
@@ -86,9 +96,102 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 		employeeRepository.save(employee);
 	}
 	
+	@Override
 	@Transactional(propagation=Propagation.SUPPORTS)
 	public Employee findById(Long id) {
 		return employeeRepository.findById(id);
+	}
+
+	@Override
+	@Transactional(propagation=Propagation.SUPPORTS)
+	public String queryEmployeesMonthTimeSheetWithJson(String month, Long unitId) {
+		List<Date> days = DateHelper.getDaysOfMonth(month);
+		Unit unit = unitRepository.findById(unitId);
+		ShiftType defaultShiftType = unit.getShiftType();
+		
+		// TODO: refactory
+		TimeSheetDTO ts = new TimeSheetDTO();
+		ts.setDays(days);
+		List<TimeSheetRecordDTO> records = new ArrayList<TimeSheetRecordDTO>();
+
+		List<Employee> employees = employeeRepository.findByUnitId(unitId);
+		for(Employee employee : employees) {
+			
+			Map<Date, AttendanceType> dayAttendances = new HashMap<Date, AttendanceType>();
+			ShiftType shiftType = null == employee.getShiftType() ? defaultShiftType : employee.getShiftType();
+			
+			if ("CustomShiftPolicy" == shiftType.getStrategyClassName()) {
+				CustomShiftPolicy csp = shiftTypeRepository.getCustomShiftPolicy(shiftType.getStrategyClassParameters());
+				
+				for(Date day : days) {
+					dayAttendances.put(day, csp.getAttendanceType(day));
+				}
+				
+			}
+			else if ("DailyShiftPolicy" == shiftType.getStrategyClassName()) {
+				DailyShiftPolicy dsp = shiftTypeRepository.getDailyShiftPolicy(shiftType.getStrategyClassParameters());
+				
+				for(Date day : days) {
+					dayAttendances.put(day, dsp.getAttendanceType(day));
+				}
+			}
+
+			TimeSheetRecordDTO tsr = ts.new TimeSheetRecordDTO();
+			tsr.setEmployee(employee);
+			tsr.setDayAttendances(dayAttendances);
+			records.add(tsr);
+		}
+		
+		ts.setRecords(records);
+		
+		return JacksonHelper.getJson(ts);
+	}
+
+	@Override
+	@Transactional(propagation=Propagation.SUPPORTS)
+	public String queryEmployeesDayTimeSheetWithJson(String date, Long unitId) {
+		List<Date> days = new ArrayList<Date>();
+		days.add(DateHelper.getDate(date));
+		
+		Unit unit = unitRepository.findById(unitId);
+		ShiftType defaultShiftType = unit.getShiftType();
+		
+		// TODO: refactory
+		TimeSheetDTO ts = new TimeSheetDTO();
+		ts.setDays(days);
+		List<TimeSheetRecordDTO> records = new ArrayList<TimeSheetRecordDTO>();
+
+		List<Employee> employees = employeeRepository.findByUnitId(unitId);
+		for(Employee employee : employees) {
+			
+			Map<Date, AttendanceType> dayAttendances = new HashMap<Date, AttendanceType>();
+			ShiftType shiftType = null == employee.getShiftType() ? defaultShiftType : employee.getShiftType();
+			
+			if ("CustomShiftPolicy" == shiftType.getStrategyClassName()) {
+				CustomShiftPolicy csp = shiftTypeRepository.getCustomShiftPolicy(shiftType.getStrategyClassParameters());
+				
+				for(Date day : days) {
+					dayAttendances.put(day, csp.getAttendanceType(day));
+				}
+				
+			}
+			else if ("DailyShiftPolicy" == shiftType.getStrategyClassName()) {
+				DailyShiftPolicy dsp = shiftTypeRepository.getDailyShiftPolicy(shiftType.getStrategyClassParameters());
+				
+				for(Date day : days) {
+					dayAttendances.put(day, dsp.getAttendanceType(day));
+				}
+			}
+
+			TimeSheetRecordDTO tsr = ts.new TimeSheetRecordDTO();
+			tsr.setEmployee(employee);
+			tsr.setDayAttendances(dayAttendances);
+			records.add(tsr);
+		}
+		
+		ts.setRecords(records);
+		
+		return JacksonHelper.getJson(ts);
 	}
 
 }

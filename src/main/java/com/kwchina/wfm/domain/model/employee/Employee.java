@@ -17,6 +17,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -30,6 +32,9 @@ import com.kwchina.wfm.domain.model.shift.ShiftType;
 
 @Entity
 @Table(name="T_EMPLOYEES")
+@NamedQueries({
+	@NamedQuery(name = "employee.findByUnitId", query = "SELECT e FROM Employee e WHERE e.job.unit.id = :unitId order by e.employeeId")
+})
 public class Employee implements com.kwchina.wfm.domain.common.Entity<Employee> {
 
 	@Id

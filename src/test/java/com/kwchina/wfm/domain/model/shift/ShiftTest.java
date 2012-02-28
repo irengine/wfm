@@ -119,7 +119,7 @@ public class ShiftTest {
 	private void printHeader() {
 		List<Date> days = DateHelper.getDaysOfMonth(2012, Calendar.JANUARY);
 		for(Date day : days) {
-			System.out.print(day.getDate());
+			System.out.print(day.getDay());
 			System.out.print("\t");
 		}
 		System.out.println("");
@@ -145,5 +145,12 @@ public class ShiftTest {
 		}
 		System.out.println("");
 		
+	}
+	
+	@Test
+	public void testGetDaysOfMonth() {
+		List<Date> days = DateHelper.getDaysOfMonth("2012-02-01");
+		assertEquals("2012-02-01", DateHelper.getString(days.get(0)));
+		assertEquals("2012-02-10", DateHelper.getString(days.get(9)));
 	}
 }

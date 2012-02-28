@@ -47,4 +47,13 @@ public class DateHelper {
 		
 		return days;
 	}
+	
+	public static List<Date> getDaysOfMonth(String d) {
+		Date date = getDate(d);
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		
+		return getDaysOfMonth(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH));
+	}
+
 }

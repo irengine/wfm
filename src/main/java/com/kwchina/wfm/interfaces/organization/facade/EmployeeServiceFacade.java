@@ -12,4 +12,7 @@ public interface EmployeeServiceFacade {
 	void saveEmployee(SaveEmployeeCommand command);
 	
 	Employee findById(Long id);
+	
+	String queryEmployeesDayTimeSheetWithJson(String date, Long unitId);
+	String queryEmployeesMonthTimeSheetWithJson(String month, Long unitId);
 }
