@@ -14,7 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.kwchina.wfm.domain.model.organization.Unit;
 import com.kwchina.wfm.domain.model.organization.UnitRepository;
 import com.kwchina.wfm.domain.model.shift.ShiftType;
+import com.kwchina.wfm.interfaces.common.JacksonHelper;
 import com.kwchina.wfm.interfaces.common.PageHelper;
+import com.kwchina.wfm.interfaces.organization.facade.UnitServiceFacade;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({"/context-test.xml"})
@@ -73,6 +75,8 @@ public class UnitRepostioryTest {
 		assertEquals(0, unitRepository.findAllAncestor(root).size());
 		assertEquals(1, unitRepository.findAllAncestor(l2).size());
 		assertEquals(2, unitRepository.findAllAncestor(l21).size());
+		
+		JacksonHelper.getJson(root);
 	}
 	
 	ShiftType dayShift;
@@ -170,6 +174,19 @@ public class UnitRepostioryTest {
 		List<Unit> page3 = unitRepository.getRows(whereClause, orderByClause, pageHelper.getStart(), pageHelper.getPageSize());
 		assertEquals(2, page3.size());
 
+	}
+
+	@Autowired
+	UnitServiceFacade unitServiceFacade;
+	
+	@Test
+	@Transactional
+	public void testGetUnitJson() {
+		
+		unitServiceFacade.loadSampleData();
+		
+		Unit root = unitRepository.findRoot();
+		JacksonHelper.getJson(root);
 	}
 	
 }
