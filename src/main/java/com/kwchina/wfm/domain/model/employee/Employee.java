@@ -11,6 +11,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -19,6 +21,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 import com.kwchina.wfm.domain.model.organization.Unit;
+import com.kwchina.wfm.domain.model.shift.ShiftType;
 
 @Entity
 @Table(name="T_EMPLOYEES")
@@ -51,6 +54,10 @@ public class Employee implements com.kwchina.wfm.domain.common.Entity<Employee> 
 	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(iso=ISO.DATE)
 	private Date beginDateOfJob;
+	
+	@ManyToOne
+	@JoinColumn(name="shiftTypeId")
+	private ShiftType shiftType;
 	
 	@Embedded
 	private Job job;
@@ -119,6 +126,14 @@ public class Employee implements com.kwchina.wfm.domain.common.Entity<Employee> 
 		this.beginDateOfJob = beginDateOfJob;
 	}
 	
+	public ShiftType getShiftType() {
+		return shiftType;
+	}
+
+	public void setShiftType(ShiftType shiftType) {
+		this.shiftType = shiftType;
+	}
+
 	public Job getJob() {
 		return job;
 	}

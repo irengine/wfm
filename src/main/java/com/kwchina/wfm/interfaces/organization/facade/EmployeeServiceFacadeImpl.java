@@ -16,6 +16,8 @@ import com.kwchina.wfm.domain.model.employee.Job;
 import com.kwchina.wfm.domain.model.employee.JobStatus;
 import com.kwchina.wfm.domain.model.organization.Unit;
 import com.kwchina.wfm.domain.model.organization.UnitRepository;
+import com.kwchina.wfm.domain.model.shift.ShiftType;
+import com.kwchina.wfm.domain.model.shift.ShiftTypeRepository;
 import com.kwchina.wfm.interfaces.common.JacksonHelper;
 import com.kwchina.wfm.interfaces.common.Page;
 import com.kwchina.wfm.interfaces.common.PageHelper;
@@ -30,6 +32,9 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 	
 	@Autowired
 	EmployeeRepository employeeRepository;
+	
+	@Autowired
+	ShiftTypeRepository shiftTypeRepository;
 	
 	@Transactional(propagation=Propagation.SUPPORTS)
 	public String queryEmployeesWithJson(Map<String, String> parameters, int currentPage, int pageSize, List<String> conditions) {
@@ -70,6 +75,10 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 		employee.setBeginDateOfWork(command.getBeginDateOfWork());
 		employee.setBirthday(command.getBirthday());
 		
+		ShiftType shiftType = shiftTypeRepository.findById(command.getShiftTypeId());
+		if (null != shiftType)
+			employee.setShiftType(shiftType);
+			
 		Unit unit = unitRepository.findById(command.getUnitId());
 		// TODO: add job title and job positions
 		Job job = new Job(unit, null, null, JobStatus.UNKNOWN, new Date());

@@ -17,6 +17,7 @@ public class SaveEmployeeCommand {
 	@DateTimeFormat(iso=ISO.DATE)
 	private Date beginDateOfJob;
 	private Long unitId;
+	private Long shiftTypeId;
 	
 	public SaveEmployeeCommand() {
 		
@@ -63,6 +64,12 @@ public class SaveEmployeeCommand {
 	}
 	public void setUnitId(Long unitId) {
 		this.unitId = unitId;
+	}
+	public Long getShiftTypeId() {
+		return shiftTypeId;
+	}
+	public void setShiftTypeId(Long shiftTypeId) {
+		this.shiftTypeId = shiftTypeId;
 	}
 	
 }
