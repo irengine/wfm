@@ -6,8 +6,10 @@ import java.util.Map;
 import com.kwchina.wfm.domain.model.shift.AttendanceType;
 import com.kwchina.wfm.domain.model.shift.ShiftType;
 import com.kwchina.wfm.interfaces.organization.dto.AttendanceTypePropertyDTO;
+import com.kwchina.wfm.interfaces.organization.dto.EmployeePropertyDTO;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveAttendanceTypeCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveAttendanceTypePropertyCommand;
+import com.kwchina.wfm.interfaces.organization.web.command.SaveEmployeePropertyCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveHolidayCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveShiftTypeCommand;
 
@@ -19,7 +21,11 @@ public interface SystemServiceFacade {
 	void saveAttendanceTypeProperty(SaveAttendanceTypePropertyCommand command);
 	List<AttendanceTypePropertyDTO> getAttendanceTypeProperties();
 	String queryAttendanceTypePropertiesWithJson(Map<String, String> parameters, int currentPage, int pageSize,List<String> conditions);
-	
+
+	void saveEmployeeProperty(SaveEmployeePropertyCommand command);
+	List<EmployeePropertyDTO> getEmployeeProperties();
+	String queryEmployeePropertiesWithJson(Map<String, String> parameters, int currentPage, int pageSize,List<String> conditions);
+
 	void saveAttendanceType(SaveAttendanceTypeCommand command);
 	String queryAttendanceTypesWithJson(Map<String, String> parameters, int currentPage, int pageSize, List<String> conditions);
 	AttendanceType findAttendanceTypeById(Long id);

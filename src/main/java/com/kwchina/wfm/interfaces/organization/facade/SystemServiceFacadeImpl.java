@@ -31,9 +31,11 @@ import com.kwchina.wfm.interfaces.common.Page;
 import com.kwchina.wfm.interfaces.common.PageHelper;
 import com.kwchina.wfm.interfaces.common.QueryHelper;
 import com.kwchina.wfm.interfaces.organization.dto.AttendanceTypePropertyDTO;
+import com.kwchina.wfm.interfaces.organization.dto.EmployeePropertyDTO;
 import com.kwchina.wfm.interfaces.organization.web.command.ActionCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveAttendanceTypeCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveAttendanceTypePropertyCommand;
+import com.kwchina.wfm.interfaces.organization.web.command.SaveEmployeePropertyCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveHolidayCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveShiftTypeCommand;
 
@@ -110,10 +112,10 @@ public class SystemServiceFacadeImpl implements SystemServiceFacade {
 	public void saveAttendanceTypeProperty(SaveAttendanceTypePropertyCommand command) {
 		
 		if (command.getCommandType().equals(ActionCommand.ADD)) {
-			systemPreferenceRepository.addAttendanceTypeProperty(command.getName(), command.getType(), command.getDescription());
+			systemPreferenceRepository.addProperty(SystemPreference.ScopeType.ATTENDANCETYPE, command.getName(), command.getType(), command.getDescription());
 		}
 		else if (command.getCommandType().equals(ActionCommand.DELETE)) {
-			systemPreferenceRepository.removeAttendanceTypeProperty(command.getName());
+			systemPreferenceRepository.removeProperty(SystemPreference.ScopeType.ATTENDANCETYPE, command.getName());
 		}
 	}
 
@@ -123,7 +125,7 @@ public class SystemServiceFacadeImpl implements SystemServiceFacade {
 		
 		List<AttendanceTypePropertyDTO> properties = new ArrayList<AttendanceTypePropertyDTO>();
 		
-		List<SystemPreference> preferences = systemPreferenceRepository.getAttendanceTypeProperties();
+		List<SystemPreference> preferences = systemPreferenceRepository.getProperties(SystemPreference.ScopeType.ATTENDANCETYPE);
 		for (SystemPreference p : preferences) {
 			properties.add(new AttendanceTypePropertyDTO(p.getKey(), p.getType(), p.getValue()));
 		}
@@ -137,6 +139,43 @@ public class SystemServiceFacadeImpl implements SystemServiceFacade {
 			int currentPage, int pageSize, List<String> conditions) {
 
 		List<AttendanceTypePropertyDTO> rows = getAttendanceTypeProperties();
+		Page page = new Page(1, 1, rows.size(), rows);
+		
+		return JacksonHelper.getJson(page);
+	}
+	
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED)
+	public void saveEmployeeProperty(SaveEmployeePropertyCommand command) {
+		
+		if (command.getCommandType().equals(ActionCommand.ADD)) {
+			systemPreferenceRepository.addProperty(SystemPreference.ScopeType.EMPLOYEE, command.getName(), command.getType(), command.getDescription());
+		}
+		else if (command.getCommandType().equals(ActionCommand.DELETE)) {
+			systemPreferenceRepository.removeProperty(SystemPreference.ScopeType.EMPLOYEE, command.getName());
+		}
+	}
+
+	@Override
+	@Transactional(propagation=Propagation.SUPPORTS)
+	public List<EmployeePropertyDTO> getEmployeeProperties() {
+		
+		List<EmployeePropertyDTO> properties = new ArrayList<EmployeePropertyDTO>();
+		
+		List<SystemPreference> preferences = systemPreferenceRepository.getProperties(SystemPreference.ScopeType.EMPLOYEE);
+		for (SystemPreference p : preferences) {
+			properties.add(new EmployeePropertyDTO(p.getKey(), p.getType(), p.getValue()));
+		}
+		
+		return properties;
+	}
+	
+	@Override
+	@Transactional(propagation=Propagation.SUPPORTS)
+	public String queryEmployeePropertiesWithJson(Map<String, String> parameters,
+			int currentPage, int pageSize, List<String> conditions) {
+
+		List<EmployeePropertyDTO> rows = getEmployeeProperties();
 		Page page = new Page(1, 1, rows.size(), rows);
 		
 		return JacksonHelper.getJson(page);

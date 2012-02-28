@@ -90,17 +90,17 @@ public class SystemPreferenceRepositoryImpl extends BaseRepositoryImpl<SystemPre
 	}
 
 	@Override
-	public void addAttendanceTypeProperty(String name, String type, String description) {
-		SystemPreference p = new SystemPreference(SystemPreference.ScopeType.ATTENDANCETYPE, name, type, description);
+	public void addProperty(SystemPreference.ScopeType scope, String name, String type, String description) {
+		SystemPreference p = new SystemPreference(scope, name, type, description);
 		entityManager.persist(p);
 		entityManager.flush();
 	}
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public void removeAttendanceTypeProperty(String name) {
+	public void removeProperty(SystemPreference.ScopeType scope, String name) {
 		List<SystemPreference> ps = entityManager.createNamedQuery("systemPreference.findByScopeAndKey")
-										.setParameter("scope", ScopeType.ATTENDANCETYPE)
+										.setParameter("scope", scope)
 										.setParameter("key", name)
 										.getResultList();
 		for(SystemPreference p : ps) {
@@ -111,9 +111,9 @@ public class SystemPreferenceRepositoryImpl extends BaseRepositoryImpl<SystemPre
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<SystemPreference> getAttendanceTypeProperties() {
+	public List<SystemPreference> getProperties(SystemPreference.ScopeType scope) {
 		return entityManager.createNamedQuery("systemPreference.findByScope")
-				.setParameter("scope", ScopeType.ATTENDANCETYPE)
+				.setParameter("scope", scope)
 				.getResultList();
 	}
 }

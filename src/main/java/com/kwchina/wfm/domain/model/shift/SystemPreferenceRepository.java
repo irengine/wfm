@@ -16,9 +16,8 @@ public interface SystemPreferenceRepository extends BaseRepository<SystemPrefere
 	List<String> getHolidays();
 	Map<String, String> getDaysChanged();
 	
-	void addAttendanceTypeProperty(String name, String type, String description);
-	void removeAttendanceTypeProperty(String name);
-	
-	List<SystemPreference> getAttendanceTypeProperties();
+	void addProperty(SystemPreference.ScopeType scope, String name, String type, String description);
+	void removeProperty(SystemPreference.ScopeType scope, String name);
+	List<SystemPreference> getProperties(SystemPreference.ScopeType scope);
 	
 }

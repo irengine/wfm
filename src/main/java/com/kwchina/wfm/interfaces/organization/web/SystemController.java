@@ -24,6 +24,7 @@ import com.kwchina.wfm.interfaces.organization.facade.SystemServiceFacade;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveAttendanceTypeCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveAttendanceTypePropertyCommand;
+import com.kwchina.wfm.interfaces.organization.web.command.SaveEmployeePropertyCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveHolidayCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveShiftTypeCommand;
 
@@ -98,7 +99,44 @@ public class SystemController {
 		
 		output(response, systemServiceFacade.queryAttendanceTypePropertiesWithJson(parameters, currentPage, pageSize, conditions));
 	}
-	
+
+	@RequestMapping(value = "/saveEmployeeProperty", method = RequestMethod.POST)
+	public void saveEmployeeProperty(@ModelAttribute SaveEmployeePropertyCommand command, HttpServletResponse response) {
+		logger.info("save holiday");
+
+		try {
+			systemServiceFacade.saveEmployeeProperty(command);
+			output(response, "1");
+		} catch(Exception e) {
+			logger.warn(e.getMessage());
+			output(response, "0");
+		}
+	}
+
+	@RequestMapping(value = "/getEmployeeProperties", method = RequestMethod.GET)
+	public void getEmployeeProperties(@ModelAttribute QueryCommand command, HttpServletRequest request, HttpServletResponse response) {
+		logger.info("get all employee propertiess");
+		logger.info(command.toString());
+		
+		Map<String, String> parameters = QueryHelper.getQueryParameters(request);
+		
+		int currentPage = 0;
+		if (QueryHelper.isEmpty(request, "page"))
+			currentPage = 0;
+		else
+			currentPage = Integer.parseInt(request.getParameter("page"));
+		
+		int pageSize = 10;
+		if (QueryHelper.isEmpty(request, "rows"))
+			pageSize = 0;
+		else
+			pageSize = Integer.parseInt(request.getParameter("rows"));
+		
+		List<String> conditions = new ArrayList<String>();
+		
+		output(response, systemServiceFacade.queryEmployeePropertiesWithJson(parameters, currentPage, pageSize, conditions));
+	}
+
 	@RequestMapping(value = "/getAttendanceTypes", method = RequestMethod.GET)
 	public void getAttendanceTypes(@ModelAttribute QueryCommand command, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		logger.info("get all attendanceTypes");

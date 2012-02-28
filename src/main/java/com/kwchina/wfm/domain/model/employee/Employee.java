@@ -2,12 +2,16 @@ package com.kwchina.wfm.domain.model.employee;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -20,6 +24,7 @@ import javax.persistence.TemporalType;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
+import com.kwchina.wfm.domain.model.organization.Preference;
 import com.kwchina.wfm.domain.model.organization.Unit;
 import com.kwchina.wfm.domain.model.shift.ShiftType;
 
@@ -61,6 +66,14 @@ public class Employee implements com.kwchina.wfm.domain.common.Entity<Employee> 
 	
 	@Embedded
 	private Job job;
+	
+	@ElementCollection(fetch=FetchType.EAGER)
+	@CollectionTable(name="T_EMPLOYEE_PREFERENCES", joinColumns=@JoinColumn(name="employeeId"))
+	@AttributeOverrides({
+		@AttributeOverride(name="key", column=@Column(name="xkey", nullable=false)),
+		@AttributeOverride(name="value", column=@Column(name="xvalue"))
+	})
+    private Set<Preference> preferences;
 	
 	@Column(nullable=false)
 	private boolean enable;
@@ -140,6 +153,14 @@ public class Employee implements com.kwchina.wfm.domain.common.Entity<Employee> 
 
 	public void setJob(Job job) {
 		this.job = job;
+	}
+
+	public Set<Preference> getPreferences() {
+		return preferences;
+	}
+
+	public void setPreferences(Set<Preference> preferences) {
+		this.preferences = preferences;
 	}
 
 	public boolean isEnable() {
