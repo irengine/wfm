@@ -165,7 +165,7 @@ public class SystemServiceFacadeImpl implements SystemServiceFacade {
 			attendanceTypeRepository.save(attendanceType);		
 		}
 		else if (command.getCommandType().equals(ActionCommand.DELETE)) {
-			if (null != command.getId() && command.getId().equals(0)) {
+			if (null != command.getId() && !command.getId().equals(0)) {
 				AttendanceType attendanceType = attendanceTypeRepository.findById(command.getId());
 				attendanceTypeRepository.remove(attendanceType);
 			}
