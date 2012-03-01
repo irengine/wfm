@@ -25,7 +25,7 @@ public class JacksonHelper {
 		
 	}
     
-    @JsonIgnoreProperties({})
+    @JsonIgnoreProperties({"preferences"})
     @JsonPropertyOrder(value={})
     private interface CommonEmployeeFilter {
     	
@@ -52,6 +52,16 @@ public class JacksonHelper {
     	
     	Map<Class<?>, Class<?>> filters = new HashMap<Class<?>, Class<?>>();
     	filters.put(Unit.class, CommonUnitFilter.class);
+    	filters.put(Employee.class, CommonEmployeeFilter.class);
+    	
+    	return getJsonWithFilters(o, filters);
+    }
+    
+    public static String getTimeSheetJsonWithFilters(Object o) {
+    	
+    	Map<Class<?>, Class<?>> filters = new HashMap<Class<?>, Class<?>>();
+    	filters.put(Unit.class, CommonUnitFilter.class);
+    	filters.put(User.class, CommonUserFilter.class);
     	filters.put(Employee.class, CommonEmployeeFilter.class);
     	
     	return getJsonWithFilters(o, filters);

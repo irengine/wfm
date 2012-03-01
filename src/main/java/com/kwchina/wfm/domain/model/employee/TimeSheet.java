@@ -69,7 +69,11 @@ public class TimeSheet implements com.kwchina.wfm.domain.common.Entity<TimeSheet
 	}
 	
 	public enum ActionType implements ValueObject<ActionType> {
-		MONTH;
+		MONTH_PLAN,
+		MONTH_PLAN_ADJUST,
+		DAY_PLAN,
+		DAY_PLAN_ADJUST,
+		ACTUAL;
 
 		@Override
 		public boolean sameValueAs(ActionType other) {
