@@ -16,9 +16,12 @@ import com.kwchina.wfm.domain.model.employee.EmployeeId;
 import com.kwchina.wfm.domain.model.employee.EmployeeRepository;
 import com.kwchina.wfm.domain.model.employee.Job;
 import com.kwchina.wfm.domain.model.employee.JobStatus;
+import com.kwchina.wfm.domain.model.employee.TimeSheet;
+import com.kwchina.wfm.domain.model.employee.TimeSheetRepository;
 import com.kwchina.wfm.domain.model.organization.Unit;
 import com.kwchina.wfm.domain.model.organization.UnitRepository;
 import com.kwchina.wfm.domain.model.shift.AttendanceType;
+import com.kwchina.wfm.domain.model.shift.AttendanceTypeRepository;
 import com.kwchina.wfm.domain.model.shift.CustomShiftPolicy;
 import com.kwchina.wfm.domain.model.shift.DailyShiftPolicy;
 import com.kwchina.wfm.domain.model.shift.ShiftType;
@@ -31,6 +34,7 @@ import com.kwchina.wfm.interfaces.common.QueryHelper;
 import com.kwchina.wfm.interfaces.organization.dto.TimeSheetDTO;
 import com.kwchina.wfm.interfaces.organization.dto.TimeSheetDTO.TimeSheetRecordDTO;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveEmployeeCommand;
+import com.kwchina.wfm.interfaces.organization.web.command.SaveTimeSheetRecordCommand;
 
 @Component
 public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
@@ -43,6 +47,12 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 	
 	@Autowired
 	ShiftTypeRepository shiftTypeRepository;
+	
+	@Autowired
+	AttendanceTypeRepository attendanceTypeRepository;
+	
+	@Autowired
+	TimeSheetRepository timeSheetRepository;
 	
 	@Override
 	@Transactional(propagation=Propagation.SUPPORTS)
@@ -196,6 +206,17 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 		ts.setRecords(records);
 		
 		return JacksonHelper.getJson(ts);
+	}
+
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED)
+	public void saveTimeSheetRecord(SaveTimeSheetRecordCommand command) {
+		Unit unit = unitRepository.findById(command.getUnitId());
+		Employee employee = employeeRepository.findById(command.getEmployeeId());
+		AttendanceType attendanceType = attendanceTypeRepository.findByName(command.getAttendanceTypeName());
+		
+		TimeSheet record = new TimeSheet(unit, employee, command.getDate(), command.getBeginTime(), command.getEndTime(), attendanceType, TimeSheet.ActionType.MONTH);
+		timeSheetRepository.save(record);
 	}
 
 }

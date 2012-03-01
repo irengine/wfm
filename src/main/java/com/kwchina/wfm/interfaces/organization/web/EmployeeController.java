@@ -24,6 +24,7 @@ import com.kwchina.wfm.interfaces.organization.facade.EmployeeServiceFacade;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryTimeSheetCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveEmployeeCommand;
+import com.kwchina.wfm.interfaces.organization.web.command.SaveTimeSheetRecordCommand;
 
 /**
  * Handles requests for the application home page.
@@ -108,6 +109,13 @@ public class EmployeeController {
 		response.setContentType("text/html;charset=utf-8");
 		response.getWriter().print(employeeServiceFacade.queryEmployeesMonthTimeSheetWithJson(command.getDate(), command.getUnitId()));
 		response.flushBuffer();
+	}
+	
+	@RequestMapping(value = "/saveTimeSheetRecored", method = RequestMethod.POST)
+	public void saveTimeSheetRecored(@ModelAttribute SaveTimeSheetRecordCommand command, HttpServletRequest request, Model model) {
+		logger.info("save time sheet record");
+		
+		employeeServiceFacade.saveTimeSheetRecord(command);
 	}
 
 }

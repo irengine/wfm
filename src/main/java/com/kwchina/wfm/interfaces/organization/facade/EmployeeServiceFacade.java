@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.kwchina.wfm.domain.model.employee.Employee;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveEmployeeCommand;
+import com.kwchina.wfm.interfaces.organization.web.command.SaveTimeSheetRecordCommand;
 
 public interface EmployeeServiceFacade {
 
@@ -15,4 +16,6 @@ public interface EmployeeServiceFacade {
 	
 	String queryEmployeesDayTimeSheetWithJson(String date, Long unitId);
 	String queryEmployeesMonthTimeSheetWithJson(String month, Long unitId);
+	
+	void saveTimeSheetRecord(SaveTimeSheetRecordCommand command);
 }
