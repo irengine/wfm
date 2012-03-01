@@ -14,7 +14,7 @@ public class TimeSheetDTO {
 	
 	public class TimeSheetRecordDTO {
 		private Employee employee;
-		private Map<Date, AttendanceType> dayAttendances;
+		private Map<String, AttendanceType> dayAttendances;
 		
 		public Employee getEmployee() {
 			return employee;
@@ -22,10 +22,10 @@ public class TimeSheetDTO {
 		public void setEmployee(Employee employee) {
 			this.employee = employee;
 		}
-		public Map<Date, AttendanceType> getDayAttendances() {
+		public Map<String, AttendanceType> getDayAttendances() {
 			return dayAttendances;
 		}
-		public void setDayAttendances(Map<Date, AttendanceType> dayAttendances) {
+		public void setDayAttendances(Map<String, AttendanceType> dayAttendances) {
 			this.dayAttendances = dayAttendances;
 		}
 	}

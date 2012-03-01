@@ -85,9 +85,13 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 		employee.setBeginDateOfWork(command.getBeginDateOfWork());
 		employee.setBirthday(command.getBirthday());
 		
-		ShiftType shiftType = shiftTypeRepository.findById(command.getShiftTypeId());
-		if (null != shiftType)
-			employee.setShiftType(shiftType);
+		if (null == command.getShiftTypeId() || command.getShiftTypeId().equals(0))
+			employee.setShiftType(null);
+		else {
+			ShiftType shiftType = shiftTypeRepository.findById(command.getShiftTypeId());
+			if (null != shiftType)
+				employee.setShiftType(shiftType);
+		}
 			
 		Unit unit = unitRepository.findById(command.getUnitId());
 		// TODO: add job title and job positions
@@ -117,22 +121,22 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 		List<Employee> employees = employeeRepository.findByUnitId(unitId);
 		for(Employee employee : employees) {
 			
-			Map<Date, AttendanceType> dayAttendances = new HashMap<Date, AttendanceType>();
+			Map<String, AttendanceType> dayAttendances = new HashMap<String, AttendanceType>();
 			ShiftType shiftType = null == employee.getShiftType() ? defaultShiftType : employee.getShiftType();
 			
-			if ("CustomShiftPolicy" == shiftType.getStrategyClassName()) {
+			if (shiftType.getStrategyClassName().equals("CustomShiftPolicy")) {
 				CustomShiftPolicy csp = shiftTypeRepository.getCustomShiftPolicy(shiftType.getStrategyClassParameters());
 				
 				for(Date day : days) {
-					dayAttendances.put(day, csp.getAttendanceType(day));
+					dayAttendances.put(DateHelper.getString(day), csp.getAttendanceType(day));
 				}
 				
 			}
-			else if ("DailyShiftPolicy" == shiftType.getStrategyClassName()) {
+			else if (shiftType.getStrategyClassName().equals("DailyShiftPolicy")) {
 				DailyShiftPolicy dsp = shiftTypeRepository.getDailyShiftPolicy(shiftType.getStrategyClassParameters());
 				
 				for(Date day : days) {
-					dayAttendances.put(day, dsp.getAttendanceType(day));
+					dayAttendances.put(DateHelper.getString(day), dsp.getAttendanceType(day));
 				}
 			}
 
@@ -164,22 +168,22 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 		List<Employee> employees = employeeRepository.findByUnitId(unitId);
 		for(Employee employee : employees) {
 			
-			Map<Date, AttendanceType> dayAttendances = new HashMap<Date, AttendanceType>();
+			Map<String, AttendanceType> dayAttendances = new HashMap<String, AttendanceType>();
 			ShiftType shiftType = null == employee.getShiftType() ? defaultShiftType : employee.getShiftType();
 			
-			if ("CustomShiftPolicy" == shiftType.getStrategyClassName()) {
+			if (shiftType.getStrategyClassName().equals("CustomShiftPolicy")) {
 				CustomShiftPolicy csp = shiftTypeRepository.getCustomShiftPolicy(shiftType.getStrategyClassParameters());
 				
 				for(Date day : days) {
-					dayAttendances.put(day, csp.getAttendanceType(day));
+					dayAttendances.put(DateHelper.getString(day), csp.getAttendanceType(day));
 				}
 				
 			}
-			else if ("DailyShiftPolicy" == shiftType.getStrategyClassName()) {
+			else if (shiftType.getStrategyClassName().equals("DailyShiftPolicy")) {
 				DailyShiftPolicy dsp = shiftTypeRepository.getDailyShiftPolicy(shiftType.getStrategyClassParameters());
 				
 				for(Date day : days) {
-					dayAttendances.put(day, dsp.getAttendanceType(day));
+					dayAttendances.put(DateHelper.getString(day), dsp.getAttendanceType(day));
 				}
 			}
 
