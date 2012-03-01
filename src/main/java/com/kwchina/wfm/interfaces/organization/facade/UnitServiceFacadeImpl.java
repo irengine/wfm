@@ -78,9 +78,13 @@ public class UnitServiceFacadeImpl implements UnitServiceFacade {
 		{
 			Unit unit = unitRepository.findById(command.getId());
 			unit.setName(command.getName());
-			ShiftType shiftType = shiftTypeRepository.findById(command.getShiftTypeId());
-			if (null != shiftType)
-				unit.setShiftType(shiftType);
+			if (null == command.getShiftTypeId() || command.getShiftTypeId().equals(0))
+				unit.setShiftType(null);
+			else {
+				ShiftType shiftType = shiftTypeRepository.findById(command.getShiftTypeId());
+				if (null != shiftType)
+					unit.setShiftType(shiftType);
+			}
 			unitRepository.save(unit);
 		}
 	}
