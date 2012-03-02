@@ -29,6 +29,7 @@ import com.kwchina.wfm.interfaces.common.Page;
 import com.kwchina.wfm.interfaces.common.PageHelper;
 import com.kwchina.wfm.interfaces.common.QueryHelper;
 import com.kwchina.wfm.interfaces.organization.dto.TimeSheetDTO;
+import com.kwchina.wfm.interfaces.organization.web.command.ActionCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveEmployeeCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveTimeSheetRecordCommand;
 
@@ -113,7 +114,7 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 	}
 
 	@Override
-	@Transactional(propagation=Propagation.SUPPORTS)
+	@Transactional(propagation=Propagation.REQUIRED)
 	public String queryEmployeesMonthTimeSheetWithJson(String month, Long unitId) {
 		Unit unit = unitRepository.findById(unitId);
 		List<Date> days = DateHelper.getDaysOfMonth(month);
@@ -238,8 +239,31 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 		Employee employee = employeeRepository.findById(command.getEmployeeId());
 		AttendanceType attendanceType = attendanceTypeRepository.findByName(command.getAttendanceTypeName());
 		
-		TimeSheet record = new TimeSheet(unit, employee, command.getDate(), command.getBeginTime(), command.getEndTime(), attendanceType, TimeSheet.ActionType.MONTH_PLAN_ADJUST);
-		timeSheetRepository.save(record);
+		if (command.getCommandType().equals(ActionCommand.ADD)) {
+			TimeSheet record;
+			if (null == command.getId() || command.getId().equals(0))
+				record = new TimeSheet(unit, employee, command.getDate(), command.getBeginTime(), command.getEndTime(), attendanceType, TimeSheet.ActionType.MONTH_PLAN_ADJUST);
+			else {
+				record = timeSheetRepository.findById(command.getId());
+				record.setUnit(unit);
+				record.setEmployee(employee);
+				record.setDate(command.getDate());
+				record.setBeginTime(command.getBeginTime());
+				record.setEndTime(command.getEndTime());
+				record.setAttendanceType(attendanceType);
+				record.setActionType(TimeSheet.ActionType.MONTH_PLAN_ADJUST);
+			}
+
+			timeSheetRepository.save(record);
+		}
+		else if (command.getCommandType().equals(ActionCommand.DELETE)){
+			if (null != command.getId() && !command.getId().equals(0)) {
+				TimeSheet record = timeSheetRepository.findById(command.getId());
+				timeSheetRepository.remove(record);
+				
+			}
+		}
+		
 	}
 
 }
