@@ -8,13 +8,14 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.apache.commons.lang.Validate;
 
 import com.kwchina.wfm.domain.common.ValueObject;
 
 @Entity
-@Table(name="T_SYSTEM_PREFERENCES")
+@Table(name="T_SYSTEM_PREFERENCES", uniqueConstraints= @UniqueConstraint(columnNames = {"xkey", "scope"}) )
 @NamedQueries({
 	@NamedQuery(name = "systemPreference.findByScope", query = "SELECT sp FROM SystemPreference sp WHERE sp.scope = :scope order by sp.key"),
 	@NamedQuery(name = "systemPreference.findByScopeAndKey", query = "SELECT sp FROM SystemPreference sp WHERE sp.scope = :scope AND sp.key = :key"),
