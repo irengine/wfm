@@ -46,11 +46,21 @@ public class AttendanceTypeRepositoryTest {
 		
 		attendanceTypeRepository.save(at);
 		
-		System.out.println("1");
-		
 		Long count = attendanceTypeRepository.getRowsCount("", true);
 		assertEquals(new Long(1), count);
 
-		System.out.println("2");
+		AttendanceType at2 = new AttendanceType("Day2", 8, 16);
+		Set<Preference> preferences2 = new HashSet<Preference>();
+		
+		preferences2.add(new Preference("2+2=", "4"));
+		preferences2.add(new Preference("2*2=", "4"));
+		
+		at2.setPreferences(preferences2);
+		
+		attendanceTypeRepository.save(at2);
+		
+		count = attendanceTypeRepository.getRowsCount("", true);
+		assertEquals(new Long(2), count);
+	
 	}
 }
