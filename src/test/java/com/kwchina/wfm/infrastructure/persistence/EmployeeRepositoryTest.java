@@ -141,6 +141,11 @@ public class EmployeeRepositoryTest {
 		Long cnt = (Long)entityManager.createQuery("SELECT COUNT(*) FROM Employee WHERE enable=true AND job.unit.id = 1").getSingleResult();
 		assertEquals(new Long(0), cnt);
 	}
+	
+	@Test
+	public void testfindAllEmployees() {
+		employeeRepository.findAllByUnitId(new Long(1));
+	}
 
 
 }

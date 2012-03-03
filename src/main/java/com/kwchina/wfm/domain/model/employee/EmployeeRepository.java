@@ -8,5 +8,5 @@ public interface EmployeeRepository extends BaseRepository<Employee> {
 
 	Employee disable(Employee employee);
 	List<Employee> findByUnitId(Long unitId);
-
+	List<Employee> findAllByUnitId(Long unitId);
 }

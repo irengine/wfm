@@ -38,4 +38,12 @@ public class EmployeeRepositoryImpl extends BaseRepositoryImpl<Employee> impleme
 								.getResultList();
 		return employees;
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Employee> findAllByUnitId(Long unitId) {
+		List<Employee> employees = entityManager.createNamedQuery("employee.findAllByUnitId")
+								.setParameter("unitId", unitId)
+								.getResultList();
+		return employees;
+	}
 }
