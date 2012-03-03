@@ -49,7 +49,7 @@ public class TimeSheetRepositoryImpl extends BaseRepositoryImpl<TimeSheet> imple
 			
 			for(Date day : days) {
 				AttendanceType attendanceType = shiftPolicy.getAttendanceType(day);
-				TimeSheet record = new TimeSheet(unit, employee, day, attendanceType.getBeginTime(), attendanceType.getBeginTime(), attendanceType, TimeSheet.ActionType.MONTH_PLAN);
+				TimeSheet record = new TimeSheet(unit, employee, day, attendanceType.getBeginTime(), attendanceType.getEndTime(), attendanceType, TimeSheet.ActionType.MONTH_PLAN);
 				entityManager.persist(record);
 			}
 		}
