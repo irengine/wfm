@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -53,8 +54,17 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 	
 	@Override
 	@Transactional(propagation=Propagation.SUPPORTS)
-	public String queryEmployeesWithJson(Map<String, String> parameters, int currentPage, int pageSize, List<String> conditions) {
+	public String queryEmployeesWithJson(Map<String, String> parameters, int currentPage, int pageSize, String unitId) {
 	
+		List<String> conditions = new ArrayList<String>();
+		if (!StringUtils.isEmpty(unitId)) {
+			Unit unit = unitRepository.findById(Long.parseLong(unitId));
+			String left = String.format("job.unit.left > %d", unit.getLeft());
+			conditions.add(left);
+			String right = String.format("job.unit.right > %d", unit.getRight());
+			conditions.add(right);
+		}
+		
 		String whereClause = "";
 		String orderByClause = String.format(" ORDER BY %s %s ", parameters.get(QueryHelper.SORT_FIELD), parameters.get(QueryHelper.SORT_DIRECTION));
 		

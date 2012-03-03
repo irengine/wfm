@@ -1,8 +1,6 @@
 package com.kwchina.wfm.interfaces.organization.web;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -59,14 +57,8 @@ public class EmployeeController {
 		else
 			pageSize = Integer.parseInt(request.getParameter("rows"));
 		
-		List<String> conditions = new ArrayList<String>();
-		if (!QueryHelper.isEmpty(request, "unitId")) {
-			String condition = String.format("job.unit.id = %s", request.getParameter("unitId"));
-			conditions.add(condition);
-		}
-		
 		response.setContentType("text/html;charset=utf-8");
-		response.getWriter().print(employeeServiceFacade.queryEmployeesWithJson(parameters, currentPage, pageSize, conditions));
+		response.getWriter().print(employeeServiceFacade.queryEmployeesWithJson(parameters, currentPage, pageSize, request.getParameter("unitId")));
 		response.flushBuffer();
 	}
 	
