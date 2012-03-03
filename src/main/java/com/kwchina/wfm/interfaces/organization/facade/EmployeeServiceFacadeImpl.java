@@ -2,8 +2,10 @@ package com.kwchina.wfm.interfaces.organization.facade;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,7 @@ import com.kwchina.wfm.domain.model.employee.Job;
 import com.kwchina.wfm.domain.model.employee.JobStatus;
 import com.kwchina.wfm.domain.model.employee.TimeSheet;
 import com.kwchina.wfm.domain.model.employee.TimeSheetRepository;
+import com.kwchina.wfm.domain.model.organization.Preference;
 import com.kwchina.wfm.domain.model.organization.Unit;
 import com.kwchina.wfm.domain.model.organization.UnitRepository;
 import com.kwchina.wfm.domain.model.shift.AttendanceType;
@@ -114,6 +117,13 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 		// TODO: add job title and job positions
 		Job job = new Job(unit, null, null, JobStatus.UNKNOWN, new Date());
 		employee.setJob(job);
+		
+		Set<Preference> preferences = new HashSet<Preference>();
+		for(Map.Entry<String, String> property : command.getProperties().entrySet()) {
+			preferences.add(new Preference(property.getKey(), property.getValue()));
+		}
+		employee.setPreferences(preferences);
+		
 		employeeRepository.save(employee);
 	}
 	

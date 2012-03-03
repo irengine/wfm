@@ -1,6 +1,7 @@
 package com.kwchina.wfm.interfaces.organization.web.command;
 
 import java.util.Date;
+import java.util.Map;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
@@ -18,6 +19,7 @@ public class SaveEmployeeCommand {
 	private Date beginDateOfJob;
 	private Long unitId;
 	private Long shiftTypeId;
+	private Map<String, String> properties;
 	
 	public SaveEmployeeCommand() {
 		
@@ -70,6 +72,14 @@ public class SaveEmployeeCommand {
 	}
 	public void setShiftTypeId(Long shiftTypeId) {
 		this.shiftTypeId = shiftTypeId;
+	}
+
+	public Map<String, String> getProperties() {
+		return properties;
+	}
+
+	public void setProperties(Map<String, String> properties) {
+		this.properties = properties;
 	}
 	
 }
