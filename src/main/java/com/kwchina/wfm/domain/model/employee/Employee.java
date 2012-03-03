@@ -34,7 +34,7 @@ import com.kwchina.wfm.domain.model.shift.ShiftType;
 @Table(name="T_EMPLOYEES")
 @NamedQueries({
 	@NamedQuery(name = "employee.findByUnitId", query = "SELECT e FROM Employee e WHERE e.job.unit.id = :unitId order by e.employeeId"),
-	@NamedQuery(name = "employee.findAllByUnitId", query = "SELECT e FROM Employee e, Unit u WHERE u.id = :unitId AND u.left < e.job.unit.left AND u.right > e.job.unit.right order by e.employeeId")
+	@NamedQuery(name = "employee.findAllByUnitId", query = "SELECT e FROM Employee e, Unit u WHERE u.id = :unitId AND u.left <= e.job.unit.left AND u.right >= e.job.unit.right order by e.employeeId")
 })
 public class Employee implements com.kwchina.wfm.domain.common.Entity<Employee> {
 

@@ -59,9 +59,9 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 		List<String> conditions = new ArrayList<String>();
 		if (!StringUtils.isEmpty(unitId)) {
 			Unit unit = unitRepository.findById(Long.parseLong(unitId));
-			String left = String.format("job.unit.left > %d", unit.getLeft());
+			String left = String.format("job.unit.left >= %d", unit.getLeft());
 			conditions.add(left);
-			String right = String.format("job.unit.right > %d", unit.getRight());
+			String right = String.format("job.unit.right <= %d", unit.getRight());
 			conditions.add(right);
 		}
 		
