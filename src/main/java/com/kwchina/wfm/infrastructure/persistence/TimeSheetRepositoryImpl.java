@@ -83,7 +83,7 @@ public class TimeSheetRepositoryImpl extends BaseRepositoryImpl<TimeSheet> imple
 		
 		List<TimeSheet> ts = entityManager.createQuery("from TimeSheet ts where ts.unit.id = :unitId and ts.date = :date order by ts.employee.employeeId, ts.date")
 				.setParameter("unitId", unit.getId())
-				.setParameter("beginDate", date)
+				.setParameter("date", date)
 				.getResultList();
 		return ts;
 	}

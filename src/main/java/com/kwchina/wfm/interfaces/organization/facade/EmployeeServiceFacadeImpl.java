@@ -153,13 +153,13 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 	}
 
 	@Override
-	@Transactional(propagation=Propagation.REQUIRED)
+	@Transactional(propagation=Propagation.SUPPORTS)
 	public String queryEmployeesDayTimeSheetWithJson(String day, Long unitId) {
 		Unit unit = unitRepository.findById(unitId);
-		timeSheetRepository.generateMonthTimeSheet(day, unit);
+
 		List<Date> days = new ArrayList<Date>();
 		days.add(DateHelper.getDate(day));
-		List<TimeSheet> records = timeSheetRepository.getMonthTimeSheet(day, unit);
+		List<TimeSheet> records = timeSheetRepository.getDayTimeSheet(day, unit);
 		
 
 		TimeSheetDTO ts = new TimeSheetDTO();
