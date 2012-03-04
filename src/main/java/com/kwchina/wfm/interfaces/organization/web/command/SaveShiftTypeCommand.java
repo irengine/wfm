@@ -1,6 +1,6 @@
 package com.kwchina.wfm.interfaces.organization.web.command;
 
-public class SaveShiftTypeCommand {
+public class SaveShiftTypeCommand extends ActionCommand {
 
 	private Long Id;
 	private String name;

@@ -246,19 +246,28 @@ public class SystemServiceFacadeImpl implements SystemServiceFacade {
 	@Override
 	@Transactional(propagation=Propagation.REQUIRED)
 	public void saveShiftType(SaveShiftTypeCommand command) {
-		ShiftType shiftType;
-		if (null == command.getId() || command.getId().equals(0))
-			shiftType = new ShiftType();
-		else
-			shiftType = shiftTypeRepository.findById(command.getId());
+		if (command.getCommandType().equals(ActionCommand.ADD)) {
+			ShiftType shiftType;
+			if (null == command.getId() || command.getId().equals(0))
+				shiftType = new ShiftType();
+			else
+				shiftType = shiftTypeRepository.findById(command.getId());
 
-		shiftType.setName(command.getName());
-		shiftType.setDisplayIndex(command.getDisplayIndex());
-		shiftType.setDisplayName(command.getDisplayName());
-		shiftType.setStrategyClassName(command.getStrategyClassName());
-		shiftType.setStrategyClassParameters(command.getStrategyClassParameters());
-		
-		shiftTypeRepository.save(shiftType);		
+			shiftType.setName(command.getName());
+			shiftType.setDisplayIndex(command.getDisplayIndex());
+			shiftType.setDisplayName(command.getDisplayName());
+			shiftType.setStrategyClassName(command.getStrategyClassName());
+			shiftType.setStrategyClassParameters(command.getStrategyClassParameters());
+			
+			shiftTypeRepository.save(shiftType);
+		}
+		else if (command.getCommandType().equals(ActionCommand.DELETE)) {
+			String[] ids = StringUtils.split(command.getIds(), ActionCommand.ID_SEPARATOR);
+			for (String id : ids) {
+				ShiftType shiftType = shiftTypeRepository.findById(Long.parseLong(id));
+				shiftTypeRepository.remove(shiftType);
+			}
+		}
 	}
 
 	@Override
