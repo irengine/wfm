@@ -153,7 +153,7 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 	}
 
 	@Override
-	@Transactional(propagation=Propagation.SUPPORTS)
+	@Transactional(propagation=Propagation.REQUIRED)
 	public String queryEmployeesDayTimeSheetWithJson(String day, Long unitId) {
 		Unit unit = unitRepository.findById(unitId);
 
@@ -167,6 +167,18 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 		ts.setRecords(records);
 		
 		return JacksonHelper.getTimeSheetJsonWithFilters(ts);
+	}
+	
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED)
+	public void generateEmployeesMonthTimeSheet(String month, Long unitId) {
+		Unit unit = unitRepository.findById(unitId);
+		List<TimeSheet> records = timeSheetRepository.getMonthTimeSheet(month, unit);
+		
+		if (0 == records.size()) {
+			timeSheetRepository.generateMonthTimeSheet(month, unit);
+			records = timeSheetRepository.getMonthTimeSheet(month, unit);
+		}
 	}
 
 	@Override

@@ -39,6 +39,9 @@ public class TimeSheetRepositoryImpl extends BaseRepositoryImpl<TimeSheet> imple
 
 	@Override
 	public void generateMonthTimeSheet(String month, Unit unit) {
+		// Remove old time sheet entries
+		removeMonthTimeSheet(month, unit);
+		
 		List<Date> days = DateHelper.getDaysOfMonth(month);
 		ShiftType defaultShiftType = unit.getShiftType();
 
@@ -58,6 +61,24 @@ public class TimeSheetRepositoryImpl extends BaseRepositoryImpl<TimeSheet> imple
 		}
 		
 		entityManager.flush();
+	}
+	
+	private int removeMonthTimeSheet(String month, Unit unit) {
+		Date date = DateHelper.getDate(month);
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		calendar.set(Calendar.DAY_OF_MONTH, 1);
+		Date beginDate = calendar.getTime();
+		calendar.add(Calendar.MONTH, 1);
+		Date endDate = calendar.getTime();
+		
+		int cnt = entityManager.createQuery("delete from TimeSheet ts, Unit u where u.id = :unitId and u.left <= ts.unit.left and u.right >= ts.unit.right and ts.date >= :beginDate and ts.date < :endDate")
+				.setParameter("unitId", unit.getId())
+				.setParameter("beginDate", beginDate)
+				.setParameter("endDate", endDate)
+				.executeUpdate();
+		
+		return cnt;
 	}
 	
 	@Override
