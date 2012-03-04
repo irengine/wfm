@@ -71,7 +71,7 @@ public class TimeSheetRepositoryImpl extends BaseRepositoryImpl<TimeSheet> imple
 		calendar.add(Calendar.MONTH, 1);
 		Date endDate = calendar.getTime();
 		
-		List<TimeSheet> ts = entityManager.createQuery("from TimeSheet ts where ts.unit.id = :unitId and ts.date >= :beginDate and ts.date < :endDate and ts.actionType <= :actionType order by ts.employee.employeeId, ts.date, ts.actionType, ts.updatedAt")
+		List<TimeSheet> ts = entityManager.createQuery("select ts from TimeSheet ts, Unit u where u.id = :unitId and u.left <= ts.unit.left and u.right >= ts.unit.right and ts.date >= :beginDate and ts.date < :endDate and ts.actionType <= :actionType order by ts.employee.employeeId, ts.date, ts.actionType, ts.updatedAt")
 				.setParameter("unitId", unit.getId())
 				.setParameter("beginDate", beginDate)
 				.setParameter("endDate", endDate)
@@ -94,7 +94,7 @@ public class TimeSheetRepositoryImpl extends BaseRepositoryImpl<TimeSheet> imple
 	public List<TimeSheet> getDayTimeSheet(String day, Unit unit) {
 		Date date = DateHelper.getDate(day);
 		
-		List<TimeSheet> ts = entityManager.createQuery("from TimeSheet ts where ts.unit.id = :unitId and ts.date = :date and ts.actionType <= :actionType order by ts.employee.employeeId, ts.date, ts.actionType, ts.updatedAt")
+		List<TimeSheet> ts = entityManager.createQuery("select ts from TimeSheet ts, Unit u where u.id = :unitId and u.left <= ts.unit.left and u.right >= ts.unit.right and ts.date = :date and ts.actionType <= :actionType order by ts.employee.employeeId, ts.date, ts.actionType, ts.updatedAt")
 				.setParameter("unitId", unit.getId())
 				.setParameter("date", date)
 				.setParameter("actionType", TimeSheet.ActionType.DAY_PLAN_ADJUST)
