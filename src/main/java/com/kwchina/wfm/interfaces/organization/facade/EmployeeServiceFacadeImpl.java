@@ -192,6 +192,7 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 			if (null != command.getId() && !command.getId().equals(0)) {
 				TimeSheet ts = timeSheetRepository.findById(command.getId());
 				TimeSheet record = new TimeSheet(ts.getUnit(), ts.getEmployee(), ts.getDate(), ts.getBeginTime(), ts.getEndTime(), ts.getAttendanceType(), command.getActionType());
+				record.setReferTo(ts);
 				timeSheetRepository.disable(record);
 			}
 		}

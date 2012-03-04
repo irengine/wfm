@@ -94,9 +94,10 @@ public class TimeSheetRepositoryImpl extends BaseRepositoryImpl<TimeSheet> imple
 	public List<TimeSheet> getDayTimeSheet(String day, Unit unit) {
 		Date date = DateHelper.getDate(day);
 		
-		List<TimeSheet> ts = entityManager.createQuery("from TimeSheet ts where ts.unit.id = :unitId and ts.date = :date order by ts.employee.employeeId, ts.date")
+		List<TimeSheet> ts = entityManager.createQuery("from TimeSheet ts where ts.unit.id = :unitId and ts.date = :date and ts.actionType <= :actionType order by ts.employee.employeeId, ts.date, ts.actionType, ts.updatedAt")
 				.setParameter("unitId", unit.getId())
 				.setParameter("date", date)
+				.setParameter("actionType", TimeSheet.ActionType.DAY_PLAN_ADJUST)
 				.getResultList();
 		return ts;
 	}
