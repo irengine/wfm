@@ -63,7 +63,10 @@ public class TimeSheetRepositoryImpl extends BaseRepositoryImpl<TimeSheet> imple
 		entityManager.flush();
 	}
 	
-	private int removeMonthTimeSheet(String month, Unit unit) {
+	@SuppressWarnings("unchecked")
+	private void removeMonthTimeSheet(String month, Unit unit) {
+		
+		// TODO: refactory using native sql
 		Date date = DateHelper.getDate(month);
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(date);
@@ -72,13 +75,18 @@ public class TimeSheetRepositoryImpl extends BaseRepositoryImpl<TimeSheet> imple
 		calendar.add(Calendar.MONTH, 1);
 		Date endDate = calendar.getTime();
 		
-		int cnt = entityManager.createQuery("delete from TimeSheet ts, Unit u where u.id = :unitId and u.left <= ts.unit.left and u.right >= ts.unit.right and ts.date >= :beginDate and ts.date < :endDate")
+		List<TimeSheet> ts = entityManager.createQuery("select ts from TimeSheet ts, Unit u where u.id = :unitId and u.left <= ts.unit.left and u.right >= ts.unit.right and ts.date >= :beginDate and ts.date < :endDate and ts.actionType <= :actionType order by ts.employee.employeeId desc, ts.date desc, ts.actionType desc, ts.updatedAt desc")
 				.setParameter("unitId", unit.getId())
 				.setParameter("beginDate", beginDate)
 				.setParameter("endDate", endDate)
-				.executeUpdate();
+				.setParameter("actionType", TimeSheet.ActionType.MONTH_PLAN_ADJUST)
+				.getResultList();
+
+		for(TimeSheet t : ts) {
+			entityManager.remove(t);
+		}
 		
-		return cnt;
+		entityManager.flush();
 	}
 	
 	@Override

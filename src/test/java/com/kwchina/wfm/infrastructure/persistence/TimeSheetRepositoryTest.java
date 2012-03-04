@@ -1,6 +1,8 @@
 package com.kwchina.wfm.infrastructure.persistence;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -14,7 +16,6 @@ import javax.persistence.PersistenceContext;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -99,11 +100,9 @@ public class TimeSheetRepositoryTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	@Transactional
-	@Rollback(false)
 	public void testSaveTimeSheet() {
 		Date date = DateHelper.getDate("2012-02-14");
-		Unit u = new Unit("X");
-		unitRepository.save(u);
+		Unit u = unitRepository.getRoot("XX");
 		
 		Employee e = new Employee(new EmployeeId("0001"), "Alex Tang", date, date, date);
 		employeeRepository.save(e);
@@ -139,5 +138,7 @@ public class TimeSheetRepositoryTest {
 		
 		List<TimeSheet> qs2 = timeSheetRepository.getMonthTimeSheet("2012-02-14", u);
 		assertTrue(0 == qs2.size());
+		
+		timeSheetRepository.generateMonthTimeSheet("2012-02-14", u);
 	}
 }
