@@ -1,8 +1,11 @@
 package com.kwchina.wfm.infrastructure.persistence;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -68,12 +71,22 @@ public class TimeSheetRepositoryImpl extends BaseRepositoryImpl<TimeSheet> imple
 		calendar.add(Calendar.MONTH, 1);
 		Date endDate = calendar.getTime();
 		
-		List<TimeSheet> ts = entityManager.createQuery("from TimeSheet ts where ts.unit.id = :unitId and ts.date >= :beginDate and ts.date < :endDate order by ts.employee.employeeId, ts.date")
+		List<TimeSheet> ts = entityManager.createQuery("from TimeSheet ts where ts.unit.id = :unitId and ts.date >= :beginDate and ts.date < :endDate and ts.actionType <= :actionType order by ts.employee.employeeId, ts.date, ts.actionType, ts.updatedAt")
 				.setParameter("unitId", unit.getId())
 				.setParameter("beginDate", beginDate)
 				.setParameter("endDate", endDate)
+				.setParameter("actionType", TimeSheet.ActionType.MONTH_PLAN_ADJUST)
 				.getResultList();
-		return ts;
+
+		Set<TimeSheet> rts = new HashSet<TimeSheet>();
+		for(TimeSheet t : ts) {
+			if (t.isEnable())
+				rts.add(t);
+			if (null != t.getReferTo())
+				rts.remove(t.getReferTo());
+		}
+		
+		return new ArrayList<TimeSheet>(rts);
 	}
 	
 	@Override
@@ -86,5 +99,14 @@ public class TimeSheetRepositoryImpl extends BaseRepositoryImpl<TimeSheet> imple
 				.setParameter("date", date)
 				.getResultList();
 		return ts;
+	}
+
+	@Override
+	public void disable(TimeSheet ts) {
+		
+		ts.setEnable(false);
+
+		entityManager.persist(ts);
+		entityManager.flush();
 	}
 }

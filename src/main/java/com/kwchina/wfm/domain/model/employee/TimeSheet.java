@@ -4,11 +4,15 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -52,10 +56,28 @@ public class TimeSheet implements com.kwchina.wfm.domain.common.Entity<TimeSheet
 	private AttendanceType attendanceType;
 	
 	@Column(nullable=false)
+	@Enumerated(EnumType.ORDINAL)
 	private ActionType actionType;
 	
+	@Column(nullable=false)
+	private boolean enable;
+	
+	@ManyToOne
+	@JoinColumn(name="referTo")
+	private TimeSheet referTo;
+	
+	@Column(nullable=false)
+	@Temporal(TemporalType.TIMESTAMP)
+	@DateTimeFormat(iso=ISO.DATE_TIME)
+	private Date createdAt;
+	
+	@Column(nullable=false)
+	@Temporal(TemporalType.TIMESTAMP)
+	@DateTimeFormat(iso=ISO.DATE_TIME)
+	private Date updatedAt;
+	
 	public TimeSheet() {
-		
+		this.enable = true;
 	}
 	
 	public TimeSheet(Unit unit, Employee employee, Date date, int beginTime, int endTime, AttendanceType attendanceType, ActionType actionType) {
@@ -66,12 +88,12 @@ public class TimeSheet implements com.kwchina.wfm.domain.common.Entity<TimeSheet
 		this.endTime = endTime;
 		this.attendanceType = attendanceType;
 		this.actionType = actionType;
+		this.enable = true;
 	}
 	
 	public enum ActionType implements ValueObject<ActionType> {
 		MONTH_PLAN,
 		MONTH_PLAN_ADJUST,
-		DAY_PLAN,
 		DAY_PLAN_ADJUST,
 		ACTUAL;
 
@@ -144,6 +166,48 @@ public class TimeSheet implements com.kwchina.wfm.domain.common.Entity<TimeSheet
 	public void setActionType(ActionType actionType) {
 		this.actionType = actionType;
 	}
+	
+	public boolean isEnable() {
+		return enable;
+	}
+
+	public void setEnable(boolean enable) {
+		this.enable = enable;
+	}
+
+	public TimeSheet getReferTo() {
+		return referTo;
+	}
+
+	public void setReferTo(TimeSheet referTo) {
+		this.referTo = referTo;
+	}
+
+	public Date getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public Date getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(Date updatedAt) {
+		this.updatedAt = updatedAt;
+	}
+	
+	@PreUpdate
+	@PrePersist
+	public void updateTimeStamps() {
+	    this.updatedAt = new Date();
+	    if (this.createdAt == null) {
+	      this.createdAt = this.updatedAt;
+	    }
+	}
+
 	
 	@Override
 	public boolean sameIdentityAs(TimeSheet other) {

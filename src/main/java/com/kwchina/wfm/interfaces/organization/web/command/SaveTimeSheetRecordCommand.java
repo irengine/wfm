@@ -5,6 +5,8 @@ import java.util.Date;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
+import com.kwchina.wfm.domain.model.employee.TimeSheet.ActionType;
+
 public class SaveTimeSheetRecordCommand extends ActionCommand {
 
 	private Long id;
@@ -15,6 +17,7 @@ public class SaveTimeSheetRecordCommand extends ActionCommand {
 	private int beginTime;
 	private int endTime;
 	private String attendanceTypeName;
+	private ActionType actionType;
 	
 	public Long getId() {
 		return id;
@@ -57,5 +60,11 @@ public class SaveTimeSheetRecordCommand extends ActionCommand {
 	}
 	public void setAttendanceTypeName(String attendanceTypeName) {
 		this.attendanceTypeName = attendanceTypeName;
+	}
+	public ActionType getActionType() {
+		return actionType;
+	}
+	public void setActionType(ActionType actionType) {
+		this.actionType = actionType;
 	}
 }

@@ -13,4 +13,6 @@ public interface TimeSheetRepository extends BaseRepository<TimeSheet> {
 
 	List<TimeSheet> getDayTimeSheet(String day, Unit unit);
 
+	void disable(TimeSheet ts);
+
 }

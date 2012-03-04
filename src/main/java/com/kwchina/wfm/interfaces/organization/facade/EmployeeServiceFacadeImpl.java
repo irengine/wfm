@@ -179,25 +179,20 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 		if (command.getCommandType().equals(ActionCommand.ADD)) {
 			TimeSheet record;
 			if (null == command.getId() || command.getId().equals(0))
-				record = new TimeSheet(unit, employee, command.getDate(), command.getBeginTime(), command.getEndTime(), attendanceType, TimeSheet.ActionType.MONTH_PLAN_ADJUST);
+				record = new TimeSheet(unit, employee, command.getDate(), command.getBeginTime(), command.getEndTime(), attendanceType, command.getActionType());
 			else {
-				record = timeSheetRepository.findById(command.getId());
-				record.setUnit(unit);
-				record.setEmployee(employee);
-				record.setDate(command.getDate());
-				record.setBeginTime(command.getBeginTime());
-				record.setEndTime(command.getEndTime());
-				record.setAttendanceType(attendanceType);
-				record.setActionType(TimeSheet.ActionType.MONTH_PLAN_ADJUST);
+				TimeSheet ts = timeSheetRepository.findById(command.getId());
+				record = new TimeSheet(unit, employee, command.getDate(), command.getBeginTime(), command.getEndTime(), attendanceType, command.getActionType());
+				record.setReferTo(ts);
 			}
 
 			timeSheetRepository.save(record);
 		}
 		else if (command.getCommandType().equals(ActionCommand.DELETE)){
 			if (null != command.getId() && !command.getId().equals(0)) {
-				TimeSheet record = timeSheetRepository.findById(command.getId());
-				timeSheetRepository.remove(record);
-				
+				TimeSheet ts = timeSheetRepository.findById(command.getId());
+				TimeSheet record = new TimeSheet(ts.getUnit(), ts.getEmployee(), ts.getDate(), ts.getBeginTime(), ts.getEndTime(), ts.getAttendanceType(), command.getActionType());
+				timeSheetRepository.disable(record);
 			}
 		}
 		
