@@ -3,8 +3,8 @@ package com.kwchina.wfm.interfaces.organization.web.command;
 public class QueryCommand {
 	
 	private String unitId;
-	private String page;
-	private String rows;
+	private int page;
+	private int rows;
 	private String sidx;
 	private String sord;
 	private String search;
@@ -16,16 +16,16 @@ public class QueryCommand {
 	public void setUnitId(String unitId) {
 		this.unitId = unitId;
 	}
-	public String getPage() {
+	public int getPage() {
 		return page;
 	}
-	public void setPage(String page) {
+	public void setPage(int page) {
 		this.page = page;
 	}
-	public String getRows() {
+	public int getRows() {
 		return rows;
 	}
-	public void setRows(String rows) {
+	public void setRows(int rows) {
 		this.rows = rows;
 	}
 	public String getSidx() {

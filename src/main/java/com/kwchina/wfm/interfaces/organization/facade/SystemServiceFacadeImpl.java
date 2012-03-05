@@ -33,6 +33,7 @@ import com.kwchina.wfm.interfaces.common.QueryHelper;
 import com.kwchina.wfm.interfaces.organization.dto.AttendanceTypePropertyDTO;
 import com.kwchina.wfm.interfaces.organization.dto.EmployeePropertyDTO;
 import com.kwchina.wfm.interfaces.organization.web.command.ActionCommand;
+import com.kwchina.wfm.interfaces.organization.web.command.QueryCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveAttendanceTypeCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveAttendanceTypePropertyCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveEmployeePropertyCommand;
@@ -270,15 +271,40 @@ public class SystemServiceFacadeImpl implements SystemServiceFacade {
 		}
 	}
 
+//	@Override
+//	@Transactional(propagation=Propagation.SUPPORTS)
+//	public String queryShiftTypesWithJson(Map<String, String> parameters,
+//			int currentPage, int pageSize, List<String> conditions) {
+//		String whereClause = "";
+//		String orderByClause = String.format(" ORDER BY %s %s ", parameters.get(QueryHelper.SORT_FIELD), parameters.get(QueryHelper.SORT_DIRECTION));
+//		
+//		if (Boolean.parseBoolean(parameters.get(QueryHelper.IS_INCLUDE_CONDITION))) {
+//			whereClause = QueryHelper.getWhereClause(parameters.get(QueryHelper.FILTERS), conditions);
+//		}
+//		else {
+//			whereClause = QueryHelper.getWhereClause("", conditions);
+//		}
+//		
+//		int rowsCount = shiftTypeRepository.getRowsCount(whereClause, true).intValue();
+//		
+//		PageHelper pageHelper = new PageHelper(rowsCount, pageSize);
+//		pageHelper.setCurrentPage(currentPage);
+//		
+//		List<ShiftType> rows = shiftTypeRepository.getRows(whereClause, orderByClause, pageHelper.getStart(), pageHelper.getPageSize(), true);
+//		Page page = new Page(pageHelper.getCurrentPage(), pageHelper.getPagesCount(), rowsCount, rows);
+//		
+//		return JacksonHelper.getJson(page);
+//	}
+	
 	@Override
 	@Transactional(propagation=Propagation.SUPPORTS)
-	public String queryShiftTypesWithJson(Map<String, String> parameters,
-			int currentPage, int pageSize, List<String> conditions) {
+	public String queryShiftTypesWithJson(QueryCommand command) {
+		List<String> conditions = new ArrayList<String>();
 		String whereClause = "";
-		String orderByClause = String.format(" ORDER BY %s %s ", parameters.get(QueryHelper.SORT_FIELD), parameters.get(QueryHelper.SORT_DIRECTION));
+		String orderByClause = String.format(" ORDER BY %s %s ", command.getSidx(), command.getSord());
 		
-		if (Boolean.parseBoolean(parameters.get(QueryHelper.IS_INCLUDE_CONDITION))) {
-			whereClause = QueryHelper.getWhereClause(parameters.get(QueryHelper.FILTERS), conditions);
+		if (Boolean.parseBoolean(command.getSearch())) {
+			whereClause = QueryHelper.getWhereClause(command.getFilters(), conditions);
 		}
 		else {
 			whereClause = QueryHelper.getWhereClause("", conditions);
@@ -286,8 +312,8 @@ public class SystemServiceFacadeImpl implements SystemServiceFacade {
 		
 		int rowsCount = shiftTypeRepository.getRowsCount(whereClause, true).intValue();
 		
-		PageHelper pageHelper = new PageHelper(rowsCount, pageSize);
-		pageHelper.setCurrentPage(currentPage);
+		PageHelper pageHelper = new PageHelper(rowsCount, command.getRows());
+		pageHelper.setCurrentPage(command.getPage());
 		
 		List<ShiftType> rows = shiftTypeRepository.getRows(whereClause, orderByClause, pageHelper.getStart(), pageHelper.getPageSize(), true);
 		Page page = new Page(pageHelper.getCurrentPage(), pageHelper.getPagesCount(), rowsCount, rows);

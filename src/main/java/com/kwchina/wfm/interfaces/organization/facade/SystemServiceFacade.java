@@ -7,6 +7,7 @@ import com.kwchina.wfm.domain.model.shift.AttendanceType;
 import com.kwchina.wfm.domain.model.shift.ShiftType;
 import com.kwchina.wfm.interfaces.organization.dto.AttendanceTypePropertyDTO;
 import com.kwchina.wfm.interfaces.organization.dto.EmployeePropertyDTO;
+import com.kwchina.wfm.interfaces.organization.web.command.QueryCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveAttendanceTypeCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveAttendanceTypePropertyCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveEmployeePropertyCommand;
@@ -31,6 +32,8 @@ public interface SystemServiceFacade {
 	AttendanceType findAttendanceTypeById(Long id);
 	
 	void saveShiftType(SaveShiftTypeCommand command);
-	String queryShiftTypesWithJson(Map<String, String> parameters, int currentPage, int pageSize, List<String> conditions);
+	String queryShiftTypesWithJson(QueryCommand command);
+//	String queryShiftTypesWithJson(Map<String, String> parameters, int currentPage, int pageSize, List<String> conditions);
+
 	ShiftType findShiftTypeById(Long id);
 }

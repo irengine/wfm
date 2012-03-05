@@ -156,24 +156,25 @@ public class SystemController {
 	@RequestMapping(value = "/getShiftTypes", method = RequestMethod.GET)
 	public void getShiftTypes(HttpServletRequest request, HttpServletResponse response, @ModelAttribute QueryCommand command) {
 		logger.info(command.toString());
-		
-		Map<String, String> parameters = QueryHelper.getQueryParameters(request);
-		
-		int currentPage = 0;
-		if (QueryHelper.isEmpty(request, "page"))
-			currentPage = 0;
-		else
-			currentPage = Integer.parseInt(request.getParameter("page"));
-		
-		int pageSize = 10;
-		if (QueryHelper.isEmpty(request, "rows"))
-			pageSize = 0;
-		else
-			pageSize = Integer.parseInt(request.getParameter("rows"));
-		
-		List<String> conditions = new ArrayList<String>();
-		
-		HttpHelper.output(response, systemServiceFacade.queryShiftTypesWithJson(parameters, currentPage, pageSize, conditions));
+//		
+//		Map<String, String> parameters = QueryHelper.getQueryParameters(request);
+//		
+//		int currentPage = 0;
+//		if (QueryHelper.isEmpty(request, "page"))
+//			currentPage = 0;
+//		else
+//			currentPage = Integer.parseInt(request.getParameter("page"));
+//		
+//		int pageSize = 10;
+//		if (QueryHelper.isEmpty(request, "rows"))
+//			pageSize = 0;
+//		else
+//			pageSize = Integer.parseInt(request.getParameter("rows"));
+//		
+//		List<String> conditions = new ArrayList<String>();
+//		
+//		HttpHelper.output(response, systemServiceFacade.queryShiftTypesWithJson(parameters, currentPage, pageSize, conditions));
+		HttpHelper.output(response, systemServiceFacade.queryShiftTypesWithJson(command));
 	}
 	
 	@RequestMapping(value = "/getShiftType", method = RequestMethod.GET)
