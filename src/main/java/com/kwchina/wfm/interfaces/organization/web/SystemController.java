@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.kwchina.wfm.domain.model.shift.AttendanceType;
 import com.kwchina.wfm.domain.model.shift.ShiftType;
+import com.kwchina.wfm.infrastructure.common.HttpHelper;
 import com.kwchina.wfm.interfaces.common.JacksonHelper;
 import com.kwchina.wfm.interfaces.common.QueryHelper;
 import com.kwchina.wfm.interfaces.organization.facade.SystemServiceFacade;
@@ -42,10 +43,10 @@ public class SystemController {
 
 		try {
 			systemServiceFacade.saveHoliday(command);
-			output(response, "1");
+			HttpHelper.output(response, "1");
 		} catch(Exception e) {
 			logger.warn(e.getMessage());
-			output(response, "0");
+			HttpHelper.output(response, "0");
 		}
 	}
 
@@ -60,7 +61,7 @@ public class SystemController {
 		
 		Map<String, String> days = systemServiceFacade.getHolidays(year);
 		
-		output(response, JacksonHelper.getJson(days));
+		HttpHelper.output(response, JacksonHelper.getJson(days));
 	}
 
 	@RequestMapping(value = "/saveAttendanceTypeProperty", method = RequestMethod.POST)
@@ -69,10 +70,10 @@ public class SystemController {
 
 		try {
 			systemServiceFacade.saveAttendanceTypeProperty(command);
-			output(response, "1");
+			HttpHelper.output(response, "1");
 		} catch(Exception e) {
 			logger.warn(e.getMessage());
-			output(response, "0");
+			HttpHelper.output(response, "0");
 		}
 	}
 
@@ -97,7 +98,7 @@ public class SystemController {
 		
 		List<String> conditions = new ArrayList<String>();
 		
-		output(response, systemServiceFacade.queryAttendanceTypePropertiesWithJson(parameters, currentPage, pageSize, conditions));
+		HttpHelper.output(response, systemServiceFacade.queryAttendanceTypePropertiesWithJson(parameters, currentPage, pageSize, conditions));
 	}
 
 	@RequestMapping(value = "/saveEmployeeProperty", method = RequestMethod.POST)
@@ -106,10 +107,10 @@ public class SystemController {
 
 		try {
 			systemServiceFacade.saveEmployeeProperty(command);
-			output(response, "1");
+			HttpHelper.output(response, "1");
 		} catch(Exception e) {
 			logger.warn(e.getMessage());
-			output(response, "0");
+			HttpHelper.output(response, "0");
 		}
 	}
 
@@ -134,7 +135,7 @@ public class SystemController {
 		
 		List<String> conditions = new ArrayList<String>();
 		
-		output(response, systemServiceFacade.queryEmployeePropertiesWithJson(parameters, currentPage, pageSize, conditions));
+		HttpHelper.output(response, systemServiceFacade.queryEmployeePropertiesWithJson(parameters, currentPage, pageSize, conditions));
 	}
 
 	@RequestMapping(value = "/getAttendanceTypes", method = RequestMethod.GET)
@@ -158,7 +159,7 @@ public class SystemController {
 		
 		List<String> conditions = new ArrayList<String>();
 		
-		output(response, systemServiceFacade.queryAttendanceTypesWithJson(parameters, currentPage, pageSize, conditions));
+		HttpHelper.output(response, systemServiceFacade.queryAttendanceTypesWithJson(parameters, currentPage, pageSize, conditions));
 	}
 	
 	@RequestMapping(value = "/getAttendanceType", method = RequestMethod.GET)
@@ -171,7 +172,7 @@ public class SystemController {
 		else
 			attendanceType = systemServiceFacade.findAttendanceTypeById(Long.parseLong(request.getParameter("id")));
 
-		output(response, JacksonHelper.getJson(attendanceType));
+		HttpHelper.output(response, JacksonHelper.getJson(attendanceType));
 	}
 	
 	@RequestMapping(value = "/saveAttendanceType", method = RequestMethod.POST)
@@ -180,10 +181,10 @@ public class SystemController {
 		
 		try {
 			systemServiceFacade.saveAttendanceType(command);
-			output(response, "1");
+			HttpHelper.output(response, "1");
 		} catch(Exception e) {
 			logger.warn(e.getMessage());
-			output(response, "0");
+			HttpHelper.output(response, "0");
 		}
 	}
 
@@ -208,7 +209,7 @@ public class SystemController {
 		
 		List<String> conditions = new ArrayList<String>();
 		
-		output(response, systemServiceFacade.queryShiftTypesWithJson(parameters, currentPage, pageSize, conditions));
+		HttpHelper.output(response, systemServiceFacade.queryShiftTypesWithJson(parameters, currentPage, pageSize, conditions));
 	}
 	
 	@RequestMapping(value = "/getShiftType", method = RequestMethod.GET)
@@ -221,7 +222,7 @@ public class SystemController {
 		else
 			shiftType = systemServiceFacade.findShiftTypeById(Long.parseLong(request.getParameter("id")));
 
-		output(response, JacksonHelper.getJson(shiftType));
+		HttpHelper.output(response, JacksonHelper.getJson(shiftType));
 	}
 	
 	@RequestMapping(value = "/saveShiftType", method = RequestMethod.POST)
@@ -230,20 +231,10 @@ public class SystemController {
 		
 		try {
 			systemServiceFacade.saveShiftType(command);
-			output(response, "1");
+			HttpHelper.output(response, "1");
 		} catch(Exception e) {
 			logger.warn(e.getMessage());
-			output(response, "0");
-		}
-	}
-
-	
-	private void output(HttpServletResponse response, String result) {
-		try {
-			response.setContentType("text/html;charset=utf-8");
-			response.getWriter().print(result);
-			response.flushBuffer();
-		} catch (IOException e) {
+			HttpHelper.output(response, "0");
 		}
 	}
 
