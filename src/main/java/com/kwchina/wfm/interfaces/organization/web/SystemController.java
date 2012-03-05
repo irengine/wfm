@@ -1,7 +1,5 @@
 package com.kwchina.wfm.interfaces.organization.web;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,6 +34,9 @@ public class SystemController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(SystemController.class);
 
+	/*
+	 * Holiday
+	 */
 	@RequestMapping(value = "/saveHoliday", method = RequestMethod.POST)
 	public void saveHoliday(HttpServletResponse response, @ModelAttribute SaveHolidayCommand command) {
 
@@ -56,6 +57,9 @@ public class SystemController {
 		HttpHelper.output(response, JacksonHelper.getJson(days));
 	}
 
+	/*
+	 * Attendance type properties
+	 */
 	@RequestMapping(value = "/saveAttendanceTypeProperty", method = RequestMethod.POST)
 	public void saveAttendanceTypeProperty(HttpServletResponse response, @ModelAttribute SaveAttendanceTypePropertyCommand command) {
 
@@ -65,26 +69,13 @@ public class SystemController {
 	@RequestMapping(value = "/getAttendanceTypeProperties", method = RequestMethod.GET)
 	public void getAttendanceTypeProperties(HttpServletRequest request, HttpServletResponse response, @ModelAttribute QueryCommand command) {
 		logger.info(command.toString());
-		
-		Map<String, String> parameters = QueryHelper.getQueryParameters(request);
-		
-		int currentPage = 0;
-		if (QueryHelper.isEmpty(request, "page"))
-			currentPage = 0;
-		else
-			currentPage = Integer.parseInt(request.getParameter("page"));
-		
-		int pageSize = 10;
-		if (QueryHelper.isEmpty(request, "rows"))
-			pageSize = 0;
-		else
-			pageSize = Integer.parseInt(request.getParameter("rows"));
-		
-		List<String> conditions = new ArrayList<String>();
-		
-		HttpHelper.output(response, systemServiceFacade.queryAttendanceTypePropertiesWithJson(parameters, currentPage, pageSize, conditions));
+
+		HttpHelper.output(response, systemServiceFacade.queryAttendanceTypePropertiesWithJson());
 	}
 
+	/*
+	 * Employee properties
+	 */
 	@RequestMapping(value = "/saveEmployeeProperty", method = RequestMethod.POST)
 	public void saveEmployeeProperty(HttpServletResponse response, @ModelAttribute SaveEmployeePropertyCommand command) {
 
@@ -95,45 +86,17 @@ public class SystemController {
 	public void getEmployeeProperties(HttpServletRequest request, HttpServletResponse response, @ModelAttribute QueryCommand command) {
 		logger.info(command.toString());
 		
-		Map<String, String> parameters = QueryHelper.getQueryParameters(request);
-		
-		int currentPage = 0;
-		if (QueryHelper.isEmpty(request, "page"))
-			currentPage = 0;
-		else
-			currentPage = Integer.parseInt(request.getParameter("page"));
-		
-		int pageSize = 10;
-		if (QueryHelper.isEmpty(request, "rows"))
-			pageSize = 0;
-		else
-			pageSize = Integer.parseInt(request.getParameter("rows"));
-		
-		List<String> conditions = new ArrayList<String>();
-		
-		HttpHelper.output(response, systemServiceFacade.queryEmployeePropertiesWithJson(parameters, currentPage, pageSize, conditions));
+		HttpHelper.output(response, systemServiceFacade.queryEmployeePropertiesWithJson());
 	}
 
+	/*
+	 * Attendance type
+	 */
 	@RequestMapping(value = "/getAttendanceTypes", method = RequestMethod.GET)
 	public void getAttendanceTypes(HttpServletRequest request, HttpServletResponse response, @ModelAttribute QueryCommand command) {
+		logger.info(command.toString());
 		
-		Map<String, String> parameters = QueryHelper.getQueryParameters(request);
-		
-		int currentPage = 0;
-		if (QueryHelper.isEmpty(request, "page"))
-			currentPage = 0;
-		else
-			currentPage = Integer.parseInt(request.getParameter("page"));
-		
-		int pageSize = 10;
-		if (QueryHelper.isEmpty(request, "rows"))
-			pageSize = 0;
-		else
-			pageSize = Integer.parseInt(request.getParameter("rows"));
-		
-		List<String> conditions = new ArrayList<String>();
-		
-		HttpHelper.output(response, systemServiceFacade.queryAttendanceTypesWithJson(parameters, currentPage, pageSize, conditions));
+		HttpHelper.output(response, systemServiceFacade.queryAttendanceTypesWithJson(command));
 	}
 	
 	@RequestMapping(value = "/getAttendanceType", method = RequestMethod.GET)
@@ -153,27 +116,13 @@ public class SystemController {
 		systemServiceFacade.saveAttendanceType(command);
 	}
 
+	/*
+	 * Shift type
+	 */
 	@RequestMapping(value = "/getShiftTypes", method = RequestMethod.GET)
 	public void getShiftTypes(HttpServletRequest request, HttpServletResponse response, @ModelAttribute QueryCommand command) {
 		logger.info(command.toString());
-//		
-//		Map<String, String> parameters = QueryHelper.getQueryParameters(request);
-//		
-//		int currentPage = 0;
-//		if (QueryHelper.isEmpty(request, "page"))
-//			currentPage = 0;
-//		else
-//			currentPage = Integer.parseInt(request.getParameter("page"));
-//		
-//		int pageSize = 10;
-//		if (QueryHelper.isEmpty(request, "rows"))
-//			pageSize = 0;
-//		else
-//			pageSize = Integer.parseInt(request.getParameter("rows"));
-//		
-//		List<String> conditions = new ArrayList<String>();
-//		
-//		HttpHelper.output(response, systemServiceFacade.queryShiftTypesWithJson(parameters, currentPage, pageSize, conditions));
+
 		HttpHelper.output(response, systemServiceFacade.queryShiftTypesWithJson(command));
 	}
 	

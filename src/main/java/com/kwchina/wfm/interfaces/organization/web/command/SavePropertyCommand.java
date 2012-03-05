@@ -1,7 +1,7 @@
 package com.kwchina.wfm.interfaces.organization.web.command;
 
 public class SavePropertyCommand extends ActionCommand {
-
+	
 	private String name;
 	private String type;
 	private String description;
