@@ -1,6 +1,6 @@
 package com.kwchina.wfm.interfaces.organization.web.command;
 
-public class SaveUserCommand {
+public class SaveUserCommand extends ActionCommand {
 
 	private Long id;
 	private String code;

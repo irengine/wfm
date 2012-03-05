@@ -6,7 +6,7 @@ import java.util.Map;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
-public class SaveEmployeeCommand {
+public class SaveEmployeeCommand extends ActionCommand {
 
 	private Long id;
 	private String employeeId;

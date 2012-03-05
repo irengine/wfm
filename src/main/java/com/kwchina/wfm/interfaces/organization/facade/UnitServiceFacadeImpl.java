@@ -14,6 +14,7 @@ import com.kwchina.wfm.domain.model.shift.ShiftType;
 import com.kwchina.wfm.domain.model.shift.ShiftTypeRepository;
 import com.kwchina.wfm.interfaces.common.JacksonHelper;
 import com.kwchina.wfm.interfaces.organization.dto.UnitDTO;
+import com.kwchina.wfm.interfaces.organization.web.command.ActionCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveUnitCommand;
 
 @Component
@@ -64,28 +65,37 @@ public class UnitServiceFacadeImpl implements UnitServiceFacade {
 	
 	@Transactional(propagation=Propagation.REQUIRED)
 	public void saveUnit(SaveUnitCommand command) {
-		if (null == command.getId() || command.getId().equals(0))
-		{
-			if (null == command.getParentUnitId() || command.getParentUnitId().equals(0)) {
-				unitRepository.getRoot(command.getName());
+		if (command.getCommandType().equals(ActionCommand.ADD)) {
+			if (null == command.getId() || command.getId().equals(0))
+			{
+				if (null == command.getParentUnitId() || command.getParentUnitId().equals(0)) {
+					unitRepository.getRoot(command.getName());
+				}
+				else {
+					Unit parentUnit = unitRepository.findById(command.getParentUnitId());
+					unitRepository.addChild(parentUnit, new Unit(command.getName()));
+				}
 			}
-			else {
-				Unit parentUnit = unitRepository.findById(command.getParentUnitId());
-				unitRepository.addChild(parentUnit, new Unit(command.getName()));
+			else
+			{
+				Unit unit = unitRepository.findById(command.getId());
+				unit.setName(command.getName());
+				if (null == command.getShiftTypeId() || command.getShiftTypeId().equals(0))
+					unit.setShiftType(null);
+				else {
+					ShiftType shiftType = shiftTypeRepository.findById(command.getShiftTypeId());
+					if (null != shiftType)
+						unit.setShiftType(shiftType);
+				}
+				unitRepository.save(unit);
 			}
 		}
-		else
-		{
-			Unit unit = unitRepository.findById(command.getId());
-			unit.setName(command.getName());
-			if (null == command.getShiftTypeId() || command.getShiftTypeId().equals(0))
-				unit.setShiftType(null);
-			else {
-				ShiftType shiftType = shiftTypeRepository.findById(command.getShiftTypeId());
-				if (null != shiftType)
-					unit.setShiftType(shiftType);
+		else if (command.getCommandType().equals(ActionCommand.DELETE)) {
+			if (null != command.getId() && command.getId().equals(0)) {
+				Unit unit = unitRepository.findById(command.getId());
+				unitRepository.disable(unit);
 			}
-			unitRepository.save(unit);
+				
 		}
 	}
 

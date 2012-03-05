@@ -4,4 +4,6 @@ import com.kwchina.wfm.domain.common.BaseRepository;
 
 public interface UserRepository extends BaseRepository<User> {
 
+	void disable(User user);
+
 }

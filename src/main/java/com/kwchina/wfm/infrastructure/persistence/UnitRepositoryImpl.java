@@ -129,4 +129,13 @@ public class UnitRepositoryImpl extends BaseRepositoryImpl<Unit> implements Unit
 								.getResultList();
 		return units;
 	}
+	
+	@Override
+	public void disable(Unit unit) {
+	
+		unit.setEnable(false);
+
+		entityManager.persist(unit);
+		entityManager.flush();
+	}
 }

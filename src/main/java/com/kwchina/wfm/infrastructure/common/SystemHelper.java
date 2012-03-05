@@ -39,10 +39,10 @@ public class SystemHelper {
 	}
 	
 	@Pointcut("execution(* com.kwchina.wfm.interfaces.organization.web.SystemController.get*(..))")
-	public void inWebControllerLayerGetMethod() {}
+	public void inSystemControllerGetMethods() {}
 	
-	@Around("com.kwchina.wfm.infrastructure.common.SystemHelper.inWebControllerLayerGetMethod() && args(request, response,..)")
-	public Object doHandleExceptionWithGet(ProceedingJoinPoint pjp, HttpServletRequest request, HttpServletResponse response) throws Throwable {
+	@Around("com.kwchina.wfm.infrastructure.common.SystemHelper.inSystemControllerGetMethods() && args(request, response,..)")
+	public Object doSystemControllerHandleExceptionWithGet(ProceedingJoinPoint pjp, HttpServletRequest request, HttpServletResponse response) throws Throwable {
 		try {
 			Object retVal = pjp.proceed();
 			return retVal;
@@ -56,10 +56,10 @@ public class SystemHelper {
 	}
 	
 	@Pointcut("execution(* com.kwchina.wfm.interfaces.organization.web.SystemController.save*(..))")
-	public void inWebControllerLayerSetMethod() {}
+	public void inSystemControllerSetMethods() {}
 	
-	@Around("com.kwchina.wfm.infrastructure.common.SystemHelper.inWebControllerLayerSetMethod() && args(response,..)")
-	public Object doHandleExceptionWithSet(ProceedingJoinPoint pjp, HttpServletResponse response) throws Throwable {
+	@Around("com.kwchina.wfm.infrastructure.common.SystemHelper.inSystemControllerSetMethods() && args(response,..)")
+	public Object doSystemControllerHandleExceptionWithSet(ProceedingJoinPoint pjp, HttpServletResponse response) throws Throwable {
 		try {
 			Object retVal = pjp.proceed();
 			HttpHelper.output(response, "1");
@@ -72,4 +72,72 @@ public class SystemHelper {
 		}
 	}	
 	
+	@Pointcut("execution(* com.kwchina.wfm.interfaces.organization.web.EmployeeController.get*(..)) || execution(* com.kwchina.wfm.interfaces.organization.web.EmployeeController.query*(..))")
+	public void inEmployeeControllerGetMethods() {}
+	
+	@Around("com.kwchina.wfm.infrastructure.common.SystemHelper.inEmployeeControllerGetMethods() && args(request, response,..)")
+	public Object doEmployeeControllerHandleExceptionWithGet(ProceedingJoinPoint pjp, HttpServletRequest request, HttpServletResponse response) throws Throwable {
+		try {
+			Object retVal = pjp.proceed();
+			return retVal;
+		} catch (Throwable t) {
+			logger.warn("Error:", t);
+
+			ErrorDTO error = new ErrorDTO(t.getMessage());
+			HttpHelper.output(response, error);
+			return null;
+		}
+	}
+	
+	@Pointcut("execution(* com.kwchina.wfm.interfaces.organization.web.EmployeeController.save*(..)) || execution(* com.kwchina.wfm.interfaces.organization.web.EmployeeController.generate*(..))")
+	public void inEmployeeControllerSetMethods() {}
+	
+	@Around("com.kwchina.wfm.infrastructure.common.SystemHelper.inEmployeeControllerSetMethods() && args(response,..)")
+	public Object doEmployeeControllerHandleExceptionWithSet(ProceedingJoinPoint pjp, HttpServletResponse response) throws Throwable {
+		try {
+			Object retVal = pjp.proceed();
+			HttpHelper.output(response, "1");
+			return retVal;
+		} catch (Throwable t) {
+			logger.warn("Error:", t);
+
+			HttpHelper.output(response, "0");
+			return null;
+		}
+	}
+	
+	@Pointcut("execution(* com.kwchina.wfm.interfaces.organization.web.UnitController.get*(..)) || execution(* com.kwchina.wfm.interfaces.organization.web.UnitController.query*(..))")
+	public void inUnitControllerGetMethods() {}
+	
+	@Around("com.kwchina.wfm.infrastructure.common.SystemHelper.inUnitControllerGetMethods() && args(request, response,..)")
+	public Object doUnitControllerHandleExceptionWithGet(ProceedingJoinPoint pjp, HttpServletRequest request, HttpServletResponse response) throws Throwable {
+		try {
+			Object retVal = pjp.proceed();
+			return retVal;
+		} catch (Throwable t) {
+			logger.warn("Error:", t);
+
+			ErrorDTO error = new ErrorDTO(t.getMessage());
+			HttpHelper.output(response, error);
+			return null;
+		}
+	}
+	
+	@Pointcut("execution(* com.kwchina.wfm.interfaces.organization.web.UnitController.save*(..)) || execution(* com.kwchina.wfm.interfaces.organization.web.UnitController.generate*(..))")
+	public void inUnitControllerSetMethods() {}
+	
+	@Around("com.kwchina.wfm.infrastructure.common.SystemHelper.inUnitControllerSetMethods() && args(response,..)")
+	public Object doUnitControllerHandleExceptionWithSet(ProceedingJoinPoint pjp, HttpServletResponse response) throws Throwable {
+		try {
+			Object retVal = pjp.proceed();
+			HttpHelper.output(response, "1");
+			return retVal;
+		} catch (Throwable t) {
+			logger.warn("Error:", t);
+
+			HttpHelper.output(response, "0");
+			return null;
+		}
+	}	
+
 }

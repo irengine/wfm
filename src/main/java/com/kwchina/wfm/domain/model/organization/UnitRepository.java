@@ -15,4 +15,5 @@ public interface UnitRepository extends BaseRepository<Unit> {
 	void removeChild(Unit parentUnit, Unit unit);
 	
 	void printTree(Unit root);
+	void disable(Unit unit);
 }

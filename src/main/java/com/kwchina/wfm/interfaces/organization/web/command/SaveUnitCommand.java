@@ -1,6 +1,6 @@
 package com.kwchina.wfm.interfaces.organization.web.command;
 
-public class SaveUnitCommand {
+public class SaveUnitCommand extends ActionCommand {
 
 	private Long id;
 	private Long parentUnitId;

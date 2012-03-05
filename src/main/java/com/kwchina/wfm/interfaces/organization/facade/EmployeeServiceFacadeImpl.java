@@ -34,6 +34,7 @@ import com.kwchina.wfm.interfaces.common.PageHelper;
 import com.kwchina.wfm.interfaces.common.QueryHelper;
 import com.kwchina.wfm.interfaces.organization.dto.TimeSheetDTO;
 import com.kwchina.wfm.interfaces.organization.web.command.ActionCommand;
+import com.kwchina.wfm.interfaces.organization.web.command.QueryCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveEmployeeCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveTimeSheetRecordCommand;
 
@@ -57,11 +58,10 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 	
 	@Override
 	@Transactional(propagation=Propagation.SUPPORTS)
-	public String queryEmployeesWithJson(Map<String, String> parameters, int currentPage, int pageSize, String unitId) {
-	
+	public String queryEmployeesWithJson(QueryCommand command) {
 		List<String> conditions = new ArrayList<String>();
-		if (!StringUtils.isEmpty(unitId)) {
-			Unit unit = unitRepository.findById(Long.parseLong(unitId));
+		if (!StringUtils.isEmpty(command.getUnitId())) {
+			Unit unit = unitRepository.findById(Long.parseLong(command.getUnitId()));
 			String left = String.format("job.unit.left >= %d", unit.getLeft());
 			conditions.add(left);
 			String right = String.format("job.unit.right <= %d", unit.getRight());
@@ -69,10 +69,10 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 		}
 		
 		String whereClause = "";
-		String orderByClause = String.format(" ORDER BY %s %s ", parameters.get(QueryHelper.SORT_FIELD), parameters.get(QueryHelper.SORT_DIRECTION));
+		String orderByClause = String.format(" ORDER BY %s %s ", command.getSidx(), command.getSord());
 		
-		if (Boolean.parseBoolean(parameters.get(QueryHelper.IS_INCLUDE_CONDITION))) {
-			whereClause = QueryHelper.getWhereClause(parameters.get(QueryHelper.FILTERS), conditions);
+		if (Boolean.parseBoolean(command.getSearch())) {
+			whereClause = QueryHelper.getWhereClause(command.getFilters(), conditions);
 		}
 		else {
 			whereClause = QueryHelper.getWhereClause("", conditions);
@@ -80,8 +80,8 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 		
 		int rowsCount = employeeRepository.getRowsCount(whereClause).intValue();
 		
-		PageHelper pageHelper = new PageHelper(rowsCount, pageSize);
-		pageHelper.setCurrentPage(currentPage);
+		PageHelper pageHelper = new PageHelper(rowsCount, command.getRows());
+		pageHelper.setCurrentPage(command.getPage());
 		
 		List<Employee> rows = employeeRepository.getRows(whereClause, orderByClause, pageHelper.getStart(), pageHelper.getPageSize());
 		
@@ -93,38 +93,47 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 	@Transactional(propagation=Propagation.REQUIRED)
 	public void saveEmployee(SaveEmployeeCommand command) {
 		
-		Employee employee;
-		if (null == command.getId() || command.getId().equals(0))
-			employee = new Employee();
-		else
-			employee = employeeRepository.findById(command.getId());
-		
-		employee.setEmployeeId(new EmployeeId(command.getEmployeeId()));
-		employee.setName(command.getName());
-		employee.setBeginDateOfJob(command.getBeginDateOfJob());
-		employee.setBeginDateOfWork(command.getBeginDateOfWork());
-		employee.setBirthday(command.getBirthday());
-		
-		if (null == command.getShiftTypeId() || command.getShiftTypeId().equals(0))
-			employee.setShiftType(null);
-		else {
-			ShiftType shiftType = shiftTypeRepository.findById(command.getShiftTypeId());
-			if (null != shiftType)
-				employee.setShiftType(shiftType);
-		}
+		if (command.getCommandType().equals(ActionCommand.ADD)) {
+			Employee employee;
+			if (null == command.getId() || command.getId().equals(0))
+				employee = new Employee();
+			else
+				employee = employeeRepository.findById(command.getId());
 			
-		Unit unit = unitRepository.findById(command.getUnitId());
-		// TODO: add job title and job positions
-		Job job = new Job(unit, null, null, JobStatus.UNKNOWN, new Date());
-		employee.setJob(job);
-		
-		Set<Preference> preferences = new HashSet<Preference>();
-		for(Map.Entry<String, String> property : command.getProperties().entrySet()) {
-			preferences.add(new Preference(property.getKey(), property.getValue()));
+			employee.setEmployeeId(new EmployeeId(command.getEmployeeId()));
+			employee.setName(command.getName());
+			employee.setBeginDateOfJob(command.getBeginDateOfJob());
+			employee.setBeginDateOfWork(command.getBeginDateOfWork());
+			employee.setBirthday(command.getBirthday());
+			
+			if (null == command.getShiftTypeId() || command.getShiftTypeId().equals(0))
+				employee.setShiftType(null);
+			else {
+				ShiftType shiftType = shiftTypeRepository.findById(command.getShiftTypeId());
+				if (null != shiftType)
+					employee.setShiftType(shiftType);
+			}
+				
+			Unit unit = unitRepository.findById(command.getUnitId());
+			// TODO: add job title and job positions
+			Job job = new Job(unit, null, null, JobStatus.UNKNOWN, new Date());
+			employee.setJob(job);
+			
+			Set<Preference> preferences = new HashSet<Preference>();
+			for(Map.Entry<String, String> property : command.getProperties().entrySet()) {
+				preferences.add(new Preference(property.getKey(), property.getValue()));
+			}
+			employee.setPreferences(preferences);
+			
+			employeeRepository.save(employee);
 		}
-		employee.setPreferences(preferences);
-		
-		employeeRepository.save(employee);
+		else if (command.getCommandType().equals(ActionCommand.DELETE)) {
+			String[] ids = StringUtils.split(command.getIds(), ActionCommand.ID_SEPARATOR);
+			for (String id : ids) {
+				Employee employee = employeeRepository.findById(Long.parseLong(id));
+				employeeRepository.disable(employee);
+			}
+		}
 	}
 	
 	@Override

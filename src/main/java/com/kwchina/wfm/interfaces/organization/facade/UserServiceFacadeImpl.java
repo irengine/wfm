@@ -1,9 +1,9 @@
 package com.kwchina.wfm.interfaces.organization.facade;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +19,8 @@ import com.kwchina.wfm.interfaces.common.JacksonHelper;
 import com.kwchina.wfm.interfaces.common.Page;
 import com.kwchina.wfm.interfaces.common.PageHelper;
 import com.kwchina.wfm.interfaces.common.QueryHelper;
+import com.kwchina.wfm.interfaces.organization.web.command.ActionCommand;
+import com.kwchina.wfm.interfaces.organization.web.command.QueryCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveUserCommand;
 
 @Component
@@ -32,29 +34,39 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
 	
 	@Transactional(propagation=Propagation.REQUIRED)
 	public void saveUser(SaveUserCommand command) {
-		User user;
 		
-		if (null == command.getId() || command.getId().equals(0))
-			user = new User();
-		else
-			user = userRepository.findById(command.getId());
-		
-		user.setCode(command.getCode());
-		user.setName(command.getName());
-		user.setPassword(command.getPassword());
-		user.setEmail(command.getEmail());
-		
-		Collection<Unit> units = new LinkedHashSet<Unit>();
-		String[] us = StringUtils.split(command.getUnitIds(), ",");
-		for(String u: us) {
-			Long unitId = Long.parseLong(u);
-			Unit unit = unitRepository.findById(unitId);
-			units.add(unit);
+		if (command.getCommandType().equals(ActionCommand.ADD)) {
+			User user;
+			
+			if (null == command.getId() || command.getId().equals(0))
+				user = new User();
+			else
+				user = userRepository.findById(command.getId());
+			
+			user.setCode(command.getCode());
+			user.setName(command.getName());
+			user.setPassword(command.getPassword());
+			user.setEmail(command.getEmail());
+			
+			Collection<Unit> units = new LinkedHashSet<Unit>();
+			String[] us = StringUtils.split(command.getUnitIds(), ",");
+			for(String u: us) {
+				Long unitId = Long.parseLong(u);
+				Unit unit = unitRepository.findById(unitId);
+				units.add(unit);
+			}
+			
+			user.setUnits(units);
+			
+			userRepository.save(user);
 		}
-		
-		user.setUnits(units);
-		
-		userRepository.save(user);
+		else if (command.getCommandType().equals(ActionCommand.DELETE)) {
+			String[] ids = StringUtils.split(command.getIds(), ActionCommand.ID_SEPARATOR);
+			for (String id : ids) {
+				User user = userRepository.findById(Long.parseLong(id));
+				userRepository.disable(user);
+			}
+		}
 	}
 	
 	@Transactional(propagation=Propagation.SUPPORTS)
@@ -63,13 +75,13 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
 	}
 	
 	@Transactional(propagation=Propagation.SUPPORTS)
-	public String queryUsersWithJson(Map<String, String> parameters, int currentPage, int pageSize, List<String> conditions) {
-	
+	public String queryUsersWithJson(QueryCommand command) {
+		List<String> conditions = new ArrayList<String>();
 		String whereClause = "";
-		String orderByClause = String.format(" ORDER BY %s %s ", parameters.get(QueryHelper.SORT_FIELD), parameters.get(QueryHelper.SORT_DIRECTION));
+		String orderByClause = String.format(" ORDER BY %s %s ", command.getSidx(), command.getSord());
 		
-		if (Boolean.parseBoolean(parameters.get(QueryHelper.IS_INCLUDE_CONDITION))) {
-			whereClause = QueryHelper.getWhereClause(parameters.get(QueryHelper.FILTERS), conditions);
+		if (Boolean.parseBoolean(command.getSearch())) {
+			whereClause = QueryHelper.getWhereClause(command.getFilters(), conditions);
 		}
 		else {
 			whereClause = QueryHelper.getWhereClause("", conditions);
@@ -77,8 +89,8 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
 		
 		int rowsCount = userRepository.getRowsCount(whereClause).intValue();
 		
-		PageHelper pageHelper = new PageHelper(rowsCount, pageSize);
-		pageHelper.setCurrentPage(currentPage);
+		PageHelper pageHelper = new PageHelper(rowsCount, command.getRows());
+		pageHelper.setCurrentPage(command.getPage());
 		
 		List<User> rows = userRepository.getRows(whereClause, orderByClause, pageHelper.getStart(), pageHelper.getPageSize());
 		Page page = new Page(pageHelper.getCurrentPage(), pageHelper.getPagesCount(), rowsCount, rows);

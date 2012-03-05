@@ -1,7 +1,6 @@
 package com.kwchina.wfm.interfaces.organization.web;
 
 import java.io.IOException;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -10,12 +9,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.kwchina.wfm.domain.model.employee.Employee;
+import com.kwchina.wfm.infrastructure.common.HttpHelper;
 import com.kwchina.wfm.interfaces.common.JacksonHelper;
 import com.kwchina.wfm.interfaces.common.QueryHelper;
 import com.kwchina.wfm.interfaces.organization.facade.EmployeeServiceFacade;
@@ -39,32 +38,14 @@ public class EmployeeController {
 	 * for internet explorer issue, should not use @ResponseBody to return json, instead of use response.write
 	 */
 	@RequestMapping(value = "/queryEmployees", method = RequestMethod.GET)
-	public void queryEmployees(@ModelAttribute QueryCommand command, HttpServletRequest request, HttpServletResponse response) throws IOException {
-		logger.info("get json employees");
+	public void queryEmployees(HttpServletRequest request, HttpServletResponse response, @ModelAttribute QueryCommand command) {
 		logger.info(command.toString());
 		
-		Map<String, String> parameters = QueryHelper.getQueryParameters(request);
-		
-		int currentPage = 0;
-		if (QueryHelper.isEmpty(request, "page"))
-			currentPage = 0;
-		else
-			currentPage = Integer.parseInt(request.getParameter("page"));
-		
-		int pageSize = 10;
-		if (QueryHelper.isEmpty(request, "rows"))
-			pageSize = 0;
-		else
-			pageSize = Integer.parseInt(request.getParameter("rows"));
-		
-		response.setContentType("text/html;charset=utf-8");
-		response.getWriter().print(employeeServiceFacade.queryEmployeesWithJson(parameters, currentPage, pageSize, request.getParameter("unitId")));
-		response.flushBuffer();
+		HttpHelper.output(response, employeeServiceFacade.queryEmployeesWithJson(command));
 	}
 	
 	@RequestMapping(value = "/getEmployee", method = RequestMethod.GET)
-	public void getEmployee(HttpServletRequest request,  HttpServletResponse response) throws IOException {
-		logger.info("get employee");
+	public void getEmployee(HttpServletRequest request, HttpServletResponse response) {
 		
 		Employee employee;
 		if (QueryHelper.isEmpty(request, "id"))
@@ -72,48 +53,37 @@ public class EmployeeController {
 		else
 			employee =employeeServiceFacade.findById(Long.parseLong(request.getParameter("id")));
 		
-		response.setContentType("text/html;charset=utf-8");
-		response.getWriter().print(JacksonHelper.getUserJsonWithFilters(employee));
-		response.flushBuffer();
+		HttpHelper.output(response, JacksonHelper.getUserJsonWithFilters(employee));
 	}
 	
 	@RequestMapping(value = "/saveEmployee", method = RequestMethod.POST)
-	public void saveEmployee(@ModelAttribute SaveEmployeeCommand command, HttpServletRequest request, Model model) {
-		logger.info("save employee");
+	public void saveEmployee(HttpServletResponse response, @ModelAttribute SaveEmployeeCommand command) {
 		
 		employeeServiceFacade.saveEmployee(command);
 	}
 
 	
 	@RequestMapping(value = "/queryEmployeesDayTimeSheet", method = RequestMethod.GET)
-	public void queryEmployeesDayTimeSheet(@ModelAttribute QueryTimeSheetCommand command, HttpServletResponse response) throws IOException {
-		logger.info("get json employees day timesheet");
-		
-		response.setContentType("text/html;charset=utf-8");
-		response.getWriter().print(employeeServiceFacade.queryEmployeesDayTimeSheetWithJson(command.getDate(), command.getUnitId()));
-		response.flushBuffer();
+	public void queryEmployeesDayTimeSheet(HttpServletRequest request, HttpServletResponse response, @ModelAttribute QueryTimeSheetCommand command) {
+
+		HttpHelper.output(response, employeeServiceFacade.queryEmployeesDayTimeSheetWithJson(command.getDate(), command.getUnitId()));
 	}
 
 	@RequestMapping(value = "/queryEmployeesMonthTimeSheet", method = RequestMethod.GET)
-	public void queryEmployeesMonthTimeSheet(@ModelAttribute QueryTimeSheetCommand command, HttpServletResponse response) throws IOException {
-		logger.info("get json employees month timesheet");
+	public void queryEmployeesMonthTimeSheet(HttpServletRequest request, HttpServletResponse response, @ModelAttribute QueryTimeSheetCommand command) {
 		
-		response.setContentType("text/html;charset=utf-8");
-		response.getWriter().print(employeeServiceFacade.queryEmployeesMonthTimeSheetWithJson(command.getDate(), command.getUnitId()));
-		response.flushBuffer();
+		HttpHelper.output(response, employeeServiceFacade.queryEmployeesMonthTimeSheetWithJson(command.getDate(), command.getUnitId()));
 	}
 	
 	@RequestMapping(value = "/generateEmployeesMonthTimeSheet", method = RequestMethod.GET)
-	public void generateEmployeesMonthTimeSheet(@ModelAttribute QueryTimeSheetCommand command, HttpServletResponse response) throws IOException {
-		logger.info("generate employees month timesheet");
+	public void generateEmployeesMonthTimeSheet(HttpServletResponse response, @ModelAttribute QueryTimeSheetCommand command) throws IOException {
 		
 		employeeServiceFacade.generateEmployeesMonthTimeSheet(command.getDate(), command.getUnitId());
 	}
 	
 	@RequestMapping(value = "/saveTimeSheetRecored", method = RequestMethod.POST)
-	public void saveTimeSheetRecored(@ModelAttribute SaveTimeSheetRecordCommand command, HttpServletRequest request, Model model) {
-		logger.info("save time sheet record");
-		
+	public void saveTimeSheetRecored(HttpServletResponse response, @ModelAttribute SaveTimeSheetRecordCommand command) {
+
 		employeeServiceFacade.saveTimeSheetRecord(command);
 	}
 
