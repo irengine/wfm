@@ -1,6 +1,5 @@
 package com.kwchina.wfm.interfaces.organization.web;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -38,16 +37,9 @@ public class SystemController {
 	private static final Logger logger = LoggerFactory.getLogger(SystemController.class);
 
 	@RequestMapping(value = "/saveHoliday", method = RequestMethod.POST)
-	public void saveHoliday(@ModelAttribute SaveHolidayCommand command, HttpServletResponse response) {
-		logger.info("save holiday");
+	public void saveHoliday(HttpServletResponse response, @ModelAttribute SaveHolidayCommand command) {
 
-		try {
-			systemServiceFacade.saveHoliday(command);
-			HttpHelper.output(response, "1");
-		} catch(Exception e) {
-			logger.warn(e.getMessage());
-			HttpHelper.output(response, "0");
-		}
+		systemServiceFacade.saveHoliday(command);
 	}
 
 	@RequestMapping(value = "/getHolidays", method = RequestMethod.GET)
@@ -65,21 +57,13 @@ public class SystemController {
 	}
 
 	@RequestMapping(value = "/saveAttendanceTypeProperty", method = RequestMethod.POST)
-	public void saveAttendanceTypeProperty(@ModelAttribute SaveAttendanceTypePropertyCommand command, HttpServletResponse response) {
-		logger.info("save holiday");
+	public void saveAttendanceTypeProperty(HttpServletResponse response, @ModelAttribute SaveAttendanceTypePropertyCommand command) {
 
-		try {
-			systemServiceFacade.saveAttendanceTypeProperty(command);
-			HttpHelper.output(response, "1");
-		} catch(Exception e) {
-			logger.warn(e.getMessage());
-			HttpHelper.output(response, "0");
-		}
+		systemServiceFacade.saveAttendanceTypeProperty(command);
 	}
 
 	@RequestMapping(value = "/getAttendanceTypeProperties", method = RequestMethod.GET)
-	public void getAttendanceTypeProperties(@ModelAttribute QueryCommand command, HttpServletRequest request, HttpServletResponse response) {
-		logger.info("get all attendanceType propertiess");
+	public void getAttendanceTypeProperties(HttpServletRequest request, HttpServletResponse response, @ModelAttribute QueryCommand command) {
 		logger.info(command.toString());
 		
 		Map<String, String> parameters = QueryHelper.getQueryParameters(request);
@@ -102,21 +86,13 @@ public class SystemController {
 	}
 
 	@RequestMapping(value = "/saveEmployeeProperty", method = RequestMethod.POST)
-	public void saveEmployeeProperty(@ModelAttribute SaveEmployeePropertyCommand command, HttpServletResponse response) {
-		logger.info("save holiday");
+	public void saveEmployeeProperty(HttpServletResponse response, @ModelAttribute SaveEmployeePropertyCommand command) {
 
-		try {
-			systemServiceFacade.saveEmployeeProperty(command);
-			HttpHelper.output(response, "1");
-		} catch(Exception e) {
-			logger.warn(e.getMessage());
-			HttpHelper.output(response, "0");
-		}
+		systemServiceFacade.saveEmployeeProperty(command);
 	}
 
 	@RequestMapping(value = "/getEmployeeProperties", method = RequestMethod.GET)
-	public void getEmployeeProperties(@ModelAttribute QueryCommand command, HttpServletRequest request, HttpServletResponse response) {
-		logger.info("get all employee propertiess");
+	public void getEmployeeProperties(HttpServletRequest request, HttpServletResponse response, @ModelAttribute QueryCommand command) {
 		logger.info(command.toString());
 		
 		Map<String, String> parameters = QueryHelper.getQueryParameters(request);
@@ -139,9 +115,7 @@ public class SystemController {
 	}
 
 	@RequestMapping(value = "/getAttendanceTypes", method = RequestMethod.GET)
-	public void getAttendanceTypes(@ModelAttribute QueryCommand command, HttpServletRequest request, HttpServletResponse response) throws IOException {
-		logger.info("get all attendanceTypes");
-		logger.info(command.toString());
+	public void getAttendanceTypes(HttpServletRequest request, HttpServletResponse response, @ModelAttribute QueryCommand command) {
 		
 		Map<String, String> parameters = QueryHelper.getQueryParameters(request);
 		
@@ -163,8 +137,7 @@ public class SystemController {
 	}
 	
 	@RequestMapping(value = "/getAttendanceType", method = RequestMethod.GET)
-	public void getAttendanceType(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		logger.info("get attendanceType");
+	public void getAttendanceType(HttpServletRequest request, HttpServletResponse response) {
 
 		AttendanceType attendanceType;
 		if (QueryHelper.isEmpty(request, "id"))
@@ -176,21 +149,12 @@ public class SystemController {
 	}
 	
 	@RequestMapping(value = "/saveAttendanceType", method = RequestMethod.POST)
-	public void saveAttendanceType(@ModelAttribute SaveAttendanceTypeCommand command, HttpServletResponse response) {
-		logger.info("save attendanceType");
-		
-		try {
-			systemServiceFacade.saveAttendanceType(command);
-			HttpHelper.output(response, "1");
-		} catch(Exception e) {
-			logger.warn(e.getMessage());
-			HttpHelper.output(response, "0");
-		}
+	public void saveAttendanceType(HttpServletResponse response, @ModelAttribute SaveAttendanceTypeCommand command) {
+		systemServiceFacade.saveAttendanceType(command);
 	}
 
 	@RequestMapping(value = "/getShiftTypes", method = RequestMethod.GET)
-	public void getShiftTypes(@ModelAttribute QueryCommand command, HttpServletRequest request, HttpServletResponse response) throws IOException {
-		logger.info("get all shiftTypes");
+	public void getShiftTypes(HttpServletRequest request, HttpServletResponse response, @ModelAttribute QueryCommand command) {
 		logger.info(command.toString());
 		
 		Map<String, String> parameters = QueryHelper.getQueryParameters(request);
@@ -213,8 +177,7 @@ public class SystemController {
 	}
 	
 	@RequestMapping(value = "/getShiftType", method = RequestMethod.GET)
-	public void getShiftType(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		logger.info("get shiftType");
+	public void getShiftType(HttpServletRequest request, HttpServletResponse response) {
 
 		ShiftType shiftType;
 		if (QueryHelper.isEmpty(request, "id"))
@@ -226,16 +189,9 @@ public class SystemController {
 	}
 	
 	@RequestMapping(value = "/saveShiftType", method = RequestMethod.POST)
-	public void saveShiftType(@ModelAttribute SaveShiftTypeCommand command, HttpServletResponse response) {
-		logger.info("save shiftType");
-		
-		try {
-			systemServiceFacade.saveShiftType(command);
-			HttpHelper.output(response, "1");
-		} catch(Exception e) {
-			logger.warn(e.getMessage());
-			HttpHelper.output(response, "0");
-		}
+	public void saveShiftType(HttpServletResponse response, @ModelAttribute SaveShiftTypeCommand command) {
+
+		systemServiceFacade.saveShiftType(command);
 	}
 
 }

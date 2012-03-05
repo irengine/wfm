@@ -2,6 +2,7 @@ package com.kwchina.wfm.infrastructure.common;
 
 import java.util.Locale;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.aspectj.lang.JoinPoint;
@@ -40,29 +41,35 @@ public class SystemHelper {
 	@Pointcut("execution(* com.kwchina.wfm.interfaces.organization.web.SystemController.get*(..))")
 	public void inWebControllerLayerGetMethod() {}
 	
-	@Around("com.kwchina.wfm.infrastructure.common.SystemHelper.inWebControllerLayerGetMethod() && args(response,..)")
-	public Object doHandleExceptionWithGet(ProceedingJoinPoint pjp, HttpServletResponse response) throws Throwable {
+	@Around("com.kwchina.wfm.infrastructure.common.SystemHelper.inWebControllerLayerGetMethod() && args(request, response,..)")
+	public Object doHandleExceptionWithGet(ProceedingJoinPoint pjp, HttpServletRequest request, HttpServletResponse response) throws Throwable {
 		try {
 			Object retVal = pjp.proceed();
 			return retVal;
 		} catch (Throwable t) {
+			logger.warn("Error:", t);
+
 			ErrorDTO error = new ErrorDTO(t.getMessage());
 			HttpHelper.output(response, error);
 			return null;
 		}
 	}
 	
-//	@Pointcut("execution(* com.kwchina.wfm.interfaces.organization.web.SystemController.save*(..))")
-//	public void inWebControllerLayerSetMethod() {}
-//	
-//	@Around("com.kwchina.wfm.infrastructure.common.SystemHelper.inWebControllerLayerSetMethod()")
-//	public Object doHandleExceptionWithSet(ProceedingJoinPoint pjp) throws Throwable {
-//		try {
-//			Object retVal = pjp.proceed();
-//			return retVal;
-//		} catch (Throwable t) {
-//			return "error";
-//		}
-//	}	
+	@Pointcut("execution(* com.kwchina.wfm.interfaces.organization.web.SystemController.save*(..))")
+	public void inWebControllerLayerSetMethod() {}
+	
+	@Around("com.kwchina.wfm.infrastructure.common.SystemHelper.inWebControllerLayerSetMethod() && args(response,..)")
+	public Object doHandleExceptionWithSet(ProceedingJoinPoint pjp, HttpServletResponse response) throws Throwable {
+		try {
+			Object retVal = pjp.proceed();
+			HttpHelper.output(response, "1");
+			return retVal;
+		} catch (Throwable t) {
+			logger.warn("Error:", t);
+
+			HttpHelper.output(response, "0");
+			return null;
+		}
+	}	
 	
 }
