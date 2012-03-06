@@ -40,6 +40,12 @@ public class AttendanceType implements com.kwchina.wfm.domain.common.Entity<Atte
 	@Column
 	private int endTime;
 	
+	@Column(nullable=false)
+	private int displayIndex = 0;
+	
+	@Column
+	private String displayName;
+	
 	@ElementCollection(fetch=FetchType.EAGER)
 	@CollectionTable(name="T_ATTENDANCE_TYPE_PREFERENCES", joinColumns=@JoinColumn(name="attendanceTypeId"))
 	@AttributeOverrides({
@@ -91,6 +97,22 @@ public class AttendanceType implements com.kwchina.wfm.domain.common.Entity<Atte
 		this.endTime = endTime;
 	}
 	
+	public int getDisplayIndex() {
+		return displayIndex;
+	}
+
+	public void setDisplayIndex(int displayIndex) {
+		this.displayIndex = displayIndex;
+	}
+
+	public String getDisplayName() {
+		return displayName;
+	}
+
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
+	}
+
 	public Set<Preference> getPreferences() {
 		return preferences;
 	}
