@@ -128,7 +128,16 @@ public class TimeSheetRepositoryImpl extends BaseRepositoryImpl<TimeSheet> imple
 				.setParameter("date", date)
 				.setParameter("actionType", TimeSheet.ActionType.DAY_PLAN_ADJUST)
 				.getResultList();
-		return ts;
+		
+		Set<TimeSheet> rts = new HashSet<TimeSheet>();
+		for(TimeSheet t : ts) {
+			if (t.isEnable())
+				rts.add(t);
+			if (null != t.getReferTo())
+				rts.remove(t.getReferTo());
+		}
+		
+		return new ArrayList<TimeSheet>(rts);
 	}
 
 	@Override
