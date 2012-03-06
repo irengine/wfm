@@ -1,5 +1,6 @@
 package com.kwchina.wfm.interfaces;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,6 +9,12 @@ import java.io.OutputStream;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import jxl.Cell;
+import jxl.CellType;
+import jxl.Sheet;
+import jxl.Workbook;
+import jxl.read.biff.BiffException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -48,13 +55,50 @@ public class FileUploadController {
                 }
                 outputStream.close();
                 inputStream.close();
-            }
 
+                readExcel(fileName);
+
+            }
         } catch (Exception e) {
                 e.printStackTrace();
         }
         
         HttpHelper.output(response, "done.");
     }
+	
+	private void readExcel(String inputFile) throws IOException  {
+		
+		// TODO: import data
+		/*
+		 * 1- 早班
+		 * 2- 中班
+		 * 3- 晚班
+		 */
+		
+		File inputWorkbook = new File(inputFile);
+		Workbook w;
+		try {
+			w = Workbook.getWorkbook(inputWorkbook);
+			Sheet sheet = w.getSheet(0);
+			for (int i = 0; i < sheet.getRows(); i++) {
+				for (int j = 0; j < sheet.getColumns(); j++) {
+					Cell cell = sheet.getCell(j, i);
+
+					if (cell.getType() == CellType.LABEL) {
+						System.out.print("I got a label " + cell.getContents());
+					}
+
+					if (cell.getType() == CellType.NUMBER) {
+						System.out.print("I got a number " + cell.getContents());
+					}
+
+				}
+				
+				System.out.println("");
+			}
+		} catch (BiffException e) {
+			e.printStackTrace();
+		}
+	}
 
 }
