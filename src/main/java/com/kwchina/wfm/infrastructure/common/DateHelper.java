@@ -22,6 +22,14 @@ public class DateHelper {
 		return null;
 	}
 	
+	public static DateTime getDateTime(String dt) {
+		Date d = getDate(dt);
+		Calendar c = Calendar.getInstance();
+		c.setTime(d);
+		
+		return new DateTime().withDate(c.get(Calendar.YEAR), c.get(Calendar.MONTH) + 1, c.get(Calendar.DAY_OF_MONTH));
+	}
+	
 	public static String getString(Date d) {
 		return new SimpleDateFormat(DEFAULT_DATE_FORMAT).format(d);
 	}
