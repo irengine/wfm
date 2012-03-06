@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.kwchina.wfm.domain.model.employee.Employee;
+import com.kwchina.wfm.domain.model.employee.TimeSheet;
 import com.kwchina.wfm.infrastructure.common.HttpHelper;
 import com.kwchina.wfm.interfaces.common.JacksonHelper;
 import com.kwchina.wfm.interfaces.common.QueryHelper;
@@ -67,12 +68,16 @@ public class EmployeeController {
 	@RequestMapping(value = "/queryEmployeesDayTimeSheet", method = RequestMethod.GET)
 	public void queryEmployeesDayTimeSheet(HttpServletRequest request, HttpServletResponse response, @ModelAttribute QueryTimeSheetCommand command) {
 
-		HttpHelper.output(response, employeeServiceFacade.queryEmployeesDayTimeSheetWithJson(command.getDate(), command.getUnitId()));
+		if (null == command.getActionType())
+			command.setActionType(TimeSheet.ActionType.DAY_PLAN_ADJUST);
+		HttpHelper.output(response, employeeServiceFacade.queryEmployeesDayTimeSheetWithJson(command));
 	}
 
 	@RequestMapping(value = "/queryEmployeesMonthTimeSheet", method = RequestMethod.GET)
 	public void queryEmployeesMonthTimeSheet(HttpServletRequest request, HttpServletResponse response, @ModelAttribute QueryTimeSheetCommand command) {
-		
+
+		if (null == command.getActionType())
+			command.setActionType(TimeSheet.ActionType.MONTH_PLAN_ADJUST);
 		HttpHelper.output(response, employeeServiceFacade.queryEmployeesMonthTimeSheetWithJson(command));
 	}
 	

@@ -1,12 +1,9 @@
 package com.kwchina.wfm.infrastructure.persistence;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -66,10 +63,9 @@ public class TimeSheetRepositoryImpl extends BaseRepositoryImpl<TimeSheet> imple
 		entityManager.flush();
 	}
 	
-	@SuppressWarnings("unchecked")
 	private void removeMonthTimeSheet(String month, Unit unit) {
 		
-		// TODO: refactory using native sql
+		// Get first and last day for month
 		Date date = DateHelper.getDate(month);
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(date);
@@ -78,17 +74,15 @@ public class TimeSheetRepositoryImpl extends BaseRepositoryImpl<TimeSheet> imple
 		calendar.add(Calendar.MONTH, 1);
 		Date endDate = calendar.getTime();
 		
-		List<TimeSheet> ts = entityManager.createQuery("select ts from TimeSheet ts, Unit u where u.id = :unitId and u.left <= ts.unit.left and u.right >= ts.unit.right and ts.date >= :beginDate and ts.date < :endDate and ts.actionType <= :actionType order by ts.employee.employeeId desc, ts.date desc, ts.actionType desc, ts.updatedAt desc")
+		entityManager.createQuery("delete from TimeSheet ts where ts.unit.id = :unitId " +
+				"and ts.date >= :beginDate and ts.date < :endDate and " +
+				"ts.actionType <= :actionType")
 				.setParameter("unitId", unit.getId())
 				.setParameter("beginDate", beginDate)
 				.setParameter("endDate", endDate)
 				.setParameter("actionType", TimeSheet.ActionType.MONTH_PLAN_ADJUST)
-				.getResultList();
+				.executeUpdate();
 
-		for(TimeSheet t : ts) {
-			entityManager.remove(t);
-		}
-		
 		entityManager.flush();
 	}
 	
@@ -103,66 +97,45 @@ public class TimeSheetRepositoryImpl extends BaseRepositoryImpl<TimeSheet> imple
 		calendar.add(Calendar.MONTH, 1);
 		Date endDate = calendar.getTime();
 		
-		List<TimeSheet> ts = entityManager.createQuery("select ts from TimeSheet ts, Unit u where u.id = :unitId and u.left <= ts.unit.left and u.right >= ts.unit.right and ts.date >= :beginDate and ts.date < :endDate and ts.actionType <= :actionType order by ts.employee.employeeId, ts.date, ts.actionType, ts.updatedAt")
+		List<TimeSheet> ts = entityManager.createQuery("select ts from TimeSheet ts, Unit u " +
+							"where u.id = :unitId and u.left <= ts.unit.left and u.right >= ts.unit.right and " +
+							"ts.date >= :beginDate and ts.date < :endDate and ts.enable = true and " +
+							"((ts.lastActionType = null and ts.actionType <= :actionType) or ts.lastActionType > :actionType) " +
+							"order by ts.employee.employeeId, ts.date, ts.actionType, ts.updatedAt")
 				.setParameter("unitId", unit.getId())
 				.setParameter("beginDate", beginDate)
 				.setParameter("endDate", endDate)
 				.setParameter("actionType", actionType)
 				.getResultList();
-
-		Set<TimeSheet> rts = new HashSet<TimeSheet>();
-		for(TimeSheet t : ts) {
-			if (t.isEnable())
-				rts.add(t);
-			if (null != t.getReferTo())
-				rts.remove(t.getReferTo());
-		}
 		
-		return new ArrayList<TimeSheet>(rts);
+		return ts;
 	}
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<TimeSheet> getDayTimeSheet(String day, Unit unit) {
+	public List<TimeSheet> getDayTimeSheet(String day, Unit unit, TimeSheet.ActionType actionType) {
 		Date date = DateHelper.getDate(day);
 		
-		List<TimeSheet> ts = entityManager.createQuery("select ts from TimeSheet ts, Unit u where u.id = :unitId and u.left <= ts.unit.left and u.right >= ts.unit.right and ts.date = :date and ts.actionType <= :actionType order by ts.employee.employeeId, ts.date, ts.actionType, ts.updatedAt")
+		List<TimeSheet> ts = entityManager.createQuery("select ts from TimeSheet ts, Unit u " +
+							"where u.id = :unitId and u.left <= ts.unit.left and u.right >= ts.unit.right and " +
+							"ts.date = :date and ts.enable = true and " +
+							"((ts.lastActionType = null and ts.actionType <= :actionType) or ts.lastActionType > :actionType) " +
+							"order by ts.employee.employeeId, ts.date, ts.actionType, ts.updatedAt")
 				.setParameter("unitId", unit.getId())
 				.setParameter("date", date)
-				.setParameter("actionType", TimeSheet.ActionType.DAY_PLAN_ADJUST)
+				.setParameter("actionType", actionType)
 				.getResultList();
 		
-		Set<TimeSheet> rts = new HashSet<TimeSheet>();
-		for(TimeSheet t : ts) {
-			if (t.isEnable())
-				rts.add(t);
-			if (null != t.getReferTo())
-				rts.remove(t.getReferTo());
-		}
-		
-		return new ArrayList<TimeSheet>(rts);
+		return ts;
 	}
 	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 	
 	@Override
-	@SuppressWarnings("unchecked")
 	public List<Map<String, Object>> queryActualTimeSheet(QueryActualTimeSheetCommand command) {
 		
-		//TODO: refactory sql
 		List<Map<String, Object>> rows = jdbcTemplate.queryForList(command.toSQL());
-//		
-//		List<TimeSheet> ts = entityManager.createNativeQuery(command.toSQL())
-//				.getResultList();
-//		
-//		Set<TimeSheet> rts = new HashSet<TimeSheet>();
-//		for(TimeSheet t : ts) {
-//			if (t.isEnable())
-//				rts.add(t);
-//			if (null != t.getReferTo())
-//				rts.remove(t.getReferTo());
-//		}
 		
 		return rows;
 	}

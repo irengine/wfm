@@ -58,13 +58,13 @@ public class TimeSheet implements com.kwchina.wfm.domain.common.Entity<TimeSheet
 	@Column(nullable=false)
 	@Enumerated(EnumType.ORDINAL)
 	private ActionType actionType;
-	
+
+	@Column
+	@Enumerated(EnumType.ORDINAL)
+	private ActionType lastActionType;
+
 	@Column(nullable=false)
 	private boolean enable;
-	
-	@ManyToOne
-	@JoinColumn(name="referTo")
-	private TimeSheet referTo;
 	
 	@Column(nullable=false)
 	@Temporal(TemporalType.TIMESTAMP)
@@ -167,20 +167,20 @@ public class TimeSheet implements com.kwchina.wfm.domain.common.Entity<TimeSheet
 		this.actionType = actionType;
 	}
 	
+	public ActionType getLastActionType() {
+		return lastActionType;
+	}
+
+	public void setLastActionType(ActionType lastActionType) {
+		this.lastActionType = lastActionType;
+	}
+
 	public boolean isEnable() {
 		return enable;
 	}
 
 	public void setEnable(boolean enable) {
 		this.enable = enable;
-	}
-
-	public TimeSheet getReferTo() {
-		return referTo;
-	}
-
-	public void setReferTo(TimeSheet referTo) {
-		this.referTo = referTo;
 	}
 
 	public Date getCreatedAt() {

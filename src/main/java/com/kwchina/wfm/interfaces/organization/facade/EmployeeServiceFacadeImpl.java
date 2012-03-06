@@ -169,13 +169,15 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 
 	@Override
 	@Transactional(propagation=Propagation.REQUIRED)
-	public String queryEmployeesDayTimeSheetWithJson(String day, Long unitId) {
+	public String queryEmployeesDayTimeSheetWithJson(QueryTimeSheetCommand command) {
+		Long unitId = command.getUnitId();
+		String day = command.getDate();
+		TimeSheet.ActionType actionType = command.getActionType();
 		Unit unit = unitRepository.findById(unitId);
 
 		List<Date> days = new ArrayList<Date>();
 		days.add(DateHelper.getDate(day));
-		List<TimeSheet> records = timeSheetRepository.getDayTimeSheet(day, unit);
-		
+		List<TimeSheet> records = timeSheetRepository.getDayTimeSheet(day, unit, actionType);
 
 		TimeSheetDTO ts = new TimeSheetDTO();
 		ts.setDays(days);
@@ -208,8 +210,9 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 				record = new TimeSheet(unit, employee, command.getDate(), command.getBeginTime(), command.getEndTime(), attendanceType, command.getActionType());
 			else {
 				TimeSheet ts = timeSheetRepository.findById(command.getId());
+				ts.setLastActionType(command.getActionType());
+				timeSheetRepository.save(ts);
 				record = new TimeSheet(unit, employee, command.getDate(), command.getBeginTime(), command.getEndTime(), attendanceType, command.getActionType());
-				record.setReferTo(ts);
 			}
 
 			timeSheetRepository.save(record);
@@ -217,8 +220,9 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 		else if (command.getCommandType().equals(ActionCommand.DELETE)){
 			if (null != command.getId() && !command.getId().equals(0)) {
 				TimeSheet ts = timeSheetRepository.findById(command.getId());
+				ts.setLastActionType(command.getActionType());
+				timeSheetRepository.save(ts);
 				TimeSheet record = new TimeSheet(ts.getUnit(), ts.getEmployee(), ts.getDate(), ts.getBeginTime(), ts.getEndTime(), ts.getAttendanceType(), command.getActionType());
-				record.setReferTo(ts);
 				timeSheetRepository.disable(record);
 			}
 		}

@@ -1,6 +1,5 @@
 package com.kwchina.wfm.infrastructure.persistence;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -39,34 +38,6 @@ import com.kwchina.wfm.interfaces.organization.web.command.QueryActualTimeSheetC
 @ContextConfiguration({"/context-test.xml"})
 public class TimeSheetRepositoryTest {
 	
-	@PersistenceContext
-	private EntityManager entityManager;
-	
-	@Autowired
-	TimeSheetRepository timeSheetRepository;
-	
-	@Autowired
-	AttendanceTypeRepository attendanceTypeRepository;
-	
-	@Autowired
-	EmployeeRepository employeeRepository;
-	
-	@Autowired
-	UnitRepository unitRepository;
-
-	@SuppressWarnings("unchecked")
-	@Test
-	@Transactional
-	public void testGetMonthTimeSheet() throws Exception {
-		List<TimeSheet> ts = entityManager.createQuery("from TimeSheet ts where ts.unit.id = :unitId and ts.date >= :beginDate and ts.date < :endDate order by ts.employee.employeeId, ts.date")
-					.setParameter("unitId", new Long(0))
-					.setParameter("beginDate", DateHelper.getDate("2012-02-01"))
-					.setParameter("endDate", DateHelper.getDate("2012-03-01"))
-					.getResultList();
-		
-		assertTrue(0 == ts.size());
-	}
-	
 	@Test
 	public void testActionTypeCompare() {
 		TimeSheet.ActionType a1 = TimeSheet.ActionType.MONTH_PLAN;
@@ -75,7 +46,7 @@ public class TimeSheetRepositoryTest {
 	}
 	
 	@Test
-	public void testRemoveChildFromCollection() {
+	public void testDifferenceBetweenSetAndList() {
 		Set<String> ss = new HashSet<String>();
 		ss.add("XX1");
 		ss.add("XX1");
@@ -100,12 +71,40 @@ public class TimeSheetRepositoryTest {
 		assertTrue(ls.size() == 2);
 	}
 	
+	@PersistenceContext
+	private EntityManager entityManager;
+	
+	@Autowired
+	TimeSheetRepository timeSheetRepository;
+	
+	@Autowired
+	AttendanceTypeRepository attendanceTypeRepository;
+	
+	@Autowired
+	EmployeeRepository employeeRepository;
+	
+	@Autowired
+	UnitRepository unitRepository;
+
 	@SuppressWarnings("unchecked")
 	@Test
 	@Transactional
-	public void testSaveTimeSheet() {
-		Date date = DateHelper.getDate("2012-02-14");
-		Unit u = unitRepository.getRoot("XX");
+	public void testIsGetMonthTimeSheetSQLWorking() throws Exception {
+		List<TimeSheet> ts = entityManager.createQuery("from TimeSheet ts where ts.unit.id = :unitId and ts.date >= :beginDate and ts.date < :endDate order by ts.employee.employeeId, ts.date")
+					.setParameter("unitId", new Long(0))
+					.setParameter("beginDate", DateHelper.getDate("2012-02-01"))
+					.setParameter("endDate", DateHelper.getDate("2012-03-01"))
+					.getResultList();
+		
+		assertTrue(0 == ts.size());
+	}
+
+	@Test
+	@Transactional
+	public void testCreateTimeSheet() {
+		String day = "2012-02-14";
+		Date date = DateHelper.getDate(day);
+		Unit unit = unitRepository.getRoot("XX");
 		
 		Employee e = new Employee(new EmployeeId("0001"), "Alex Tang", date, date, date);
 		employeeRepository.save(e);
@@ -113,36 +112,117 @@ public class TimeSheetRepositoryTest {
 		AttendanceType at = new AttendanceType("Day", 8, 16);
 		attendanceTypeRepository.save(at);
 		
-		TimeSheet ts1 = new TimeSheet(u, e, date, 8, 16, at, ActionType.MONTH_PLAN);
+		TimeSheet ts1 = new TimeSheet(unit, e, date, 8, 16, at, ActionType.MONTH_PLAN);
 		timeSheetRepository.save(ts1);
 		
-		TimeSheet ts2 = new TimeSheet(u, e, date, 8, 12, at, ActionType.MONTH_PLAN_ADJUST);
-		ts2.setReferTo(ts1);
+		List<TimeSheet> monthTs = timeSheetRepository.getMonthTimeSheet(day, unit, ActionType.MONTH_PLAN);
+		assertTrue( 1 == monthTs.size());
+
+		List<TimeSheet> dayTs = timeSheetRepository.getDayTimeSheet(day, unit, ActionType.MONTH_PLAN);
+		assertTrue( 1 == dayTs.size());
+	}
+	
+	@Test
+	@Transactional
+	public void testUpdateTimeSheet() {
+		String day = "2012-02-14";
+		Date date = DateHelper.getDate(day);
+		Unit unit = unitRepository.getRoot("XX");
+		
+		Employee e = new Employee(new EmployeeId("0001"), "Alex Tang", date, date, date);
+		employeeRepository.save(e);
+		
+		AttendanceType at = new AttendanceType("Day", 8, 16);
+		attendanceTypeRepository.save(at);
+		
+		// Create 2 instance
+		TimeSheet ts11 = new TimeSheet(unit, e, date, 8, 16, at, ActionType.MONTH_PLAN);
+		timeSheetRepository.save(ts11);
+
+		TimeSheet ts12 = new TimeSheet(unit, e, date, 8, 16, at, ActionType.MONTH_PLAN);
+		timeSheetRepository.save(ts12);
+
+		// Update 1 instance and create new instance
+		ts11.setLastActionType(ActionType.MONTH_PLAN_ADJUST);
+		timeSheetRepository.save(ts11);
+		
+		TimeSheet ts2 = new TimeSheet(unit, e, date, 8, 12, at, ActionType.MONTH_PLAN_ADJUST);
 		timeSheetRepository.save(ts2);
 		
-		List<TimeSheet> tss1 = entityManager.createQuery("from TimeSheet ts where ts.actionType <= :actionType order by ts.employee.employeeId, ts.date, ts.actionType, ts.updatedAt")
-				.setParameter("actionType", TimeSheet.ActionType.MONTH_PLAN)
-				.getResultList();
+		List<TimeSheet> monthTs1 = timeSheetRepository.getMonthTimeSheet(day, unit, ActionType.MONTH_PLAN);
+		assertTrue( 2 == monthTs1.size());
 
-		assertTrue(1 == tss1.size());
+		List<TimeSheet> dayTs1 = timeSheetRepository.getDayTimeSheet(day, unit, ActionType.MONTH_PLAN);
+		assertTrue( 2 == dayTs1.size());
 
-		List<TimeSheet> tss2 = entityManager.createQuery("from TimeSheet ts where ts.actionType <= :actionType order by ts.employee.employeeId, ts.date, ts.actionType, ts.updatedAt")
-				.setParameter("actionType", TimeSheet.ActionType.MONTH_PLAN_ADJUST)
-				.getResultList();
+		List<TimeSheet> monthTs2 = timeSheetRepository.getMonthTimeSheet(day, unit, ActionType.MONTH_PLAN_ADJUST);
+		assertTrue( 2 == monthTs2.size());
 
-		assertTrue(2 == tss2.size());
+		List<TimeSheet> dayTs2 = timeSheetRepository.getDayTimeSheet(day, unit, ActionType.MONTH_PLAN_ADJUST);
+		assertTrue( 2 == dayTs2.size());
 		
-		List<TimeSheet> qs1 = timeSheetRepository.getMonthTimeSheet("2012-02-14", u, TimeSheet.ActionType.ACTUAL);
-		assertTrue(1 == qs1.size());
-		assertEquals(TimeSheet.ActionType.MONTH_PLAN_ADJUST, qs1.get(0).getActionType());
+		List<TimeSheet> monthTs3 = timeSheetRepository.getMonthTimeSheet(day, unit, ActionType.MONTH_PLAN_ADJUST);
+		assertTrue( 2 == monthTs3.size());
+
+		List<TimeSheet> dayTs3 = timeSheetRepository.getDayTimeSheet(day, unit, ActionType.MONTH_PLAN_ADJUST);
+		assertTrue( 2 == dayTs3.size());
+	}
+	
+	@Test
+	@Transactional
+	public void testDeleteTimeSheet() {
+		String day = "2012-02-14";
+		Date date = DateHelper.getDate(day);
+		Unit unit = unitRepository.getRoot("XX");
 		
-		ts2.setEnable(false);
-		timeSheetRepository.save(ts2);
+		Employee e = new Employee(new EmployeeId("0001"), "Alex Tang", date, date, date);
+		employeeRepository.save(e);
 		
-		List<TimeSheet> qs2 = timeSheetRepository.getMonthTimeSheet("2012-02-14", u, TimeSheet.ActionType.ACTUAL);
-		assertTrue(0 == qs2.size());
+		AttendanceType at = new AttendanceType("Day", 8, 16);
+		attendanceTypeRepository.save(at);
 		
-		timeSheetRepository.generateMonthTimeSheet("2012-02-14", u);
+		// Create 2 instance
+		TimeSheet ts11 = new TimeSheet(unit, e, date, 8, 16, at, ActionType.MONTH_PLAN);
+		timeSheetRepository.save(ts11);
+
+		TimeSheet ts12 = new TimeSheet(unit, e, date, 8, 16, at, ActionType.MONTH_PLAN);
+		timeSheetRepository.save(ts12);
+
+		// Delete 1 instance and create new instance
+		ts11.setLastActionType(ActionType.MONTH_PLAN_ADJUST);
+		timeSheetRepository.save(ts11);
+		
+		TimeSheet ts2 = new TimeSheet(unit, e, date, 8, 12, at, ActionType.MONTH_PLAN_ADJUST);
+		timeSheetRepository.disable(ts2);
+		
+		List<TimeSheet> monthTs1 = timeSheetRepository.getMonthTimeSheet(day, unit, ActionType.MONTH_PLAN);
+		assertTrue( 2 == monthTs1.size());
+
+		List<TimeSheet> dayTs1 = timeSheetRepository.getDayTimeSheet(day, unit, ActionType.MONTH_PLAN);
+		assertTrue( 2 == dayTs1.size());
+
+		List<TimeSheet> monthTs2 = timeSheetRepository.getMonthTimeSheet(day, unit, ActionType.MONTH_PLAN_ADJUST);
+		assertTrue( 1 == monthTs2.size());
+
+		List<TimeSheet> dayTs2 = timeSheetRepository.getDayTimeSheet(day, unit, ActionType.MONTH_PLAN_ADJUST);
+		assertTrue( 1 == dayTs2.size());
+		
+		List<TimeSheet> monthTs3 = timeSheetRepository.getMonthTimeSheet(day, unit, ActionType.MONTH_PLAN_ADJUST);
+		assertTrue( 1 == monthTs3.size());
+
+		List<TimeSheet> dayTs3 = timeSheetRepository.getDayTimeSheet(day, unit, ActionType.MONTH_PLAN_ADJUST);
+		assertTrue( 1 == dayTs3.size());
+		
+		
+		int cnt = entityManager.createQuery("delete from TimeSheet ts where ts.unit.id = :unitId " +
+								"and ts.date >= :beginDate and ts.date < :endDate and " +
+								"ts.actionType <= :actionType")
+					.setParameter("unitId", unit.getId())
+					.setParameter("beginDate", DateHelper.getDate("2012-02-01"))
+					.setParameter("endDate", DateHelper.getDate("2012-02-29"))
+					.setParameter("actionType", TimeSheet.ActionType.MONTH_PLAN_ADJUST)
+					.executeUpdate();
+		assertTrue(3 == cnt);
 	}
 	
 	@Autowired
@@ -163,9 +243,5 @@ public class TimeSheetRepositoryTest {
 		List<Map<String, Object>> rows = jdbcTemplate.queryForList(command.toSQL());
 		
 		assertTrue(0 == rows.size());
-
-		
-		
-		
 	}
 }

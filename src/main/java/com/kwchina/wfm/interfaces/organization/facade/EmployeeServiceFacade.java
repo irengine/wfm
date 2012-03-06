@@ -14,7 +14,7 @@ public interface EmployeeServiceFacade {
 	
 	Employee findById(Long id);
 	
-	String queryEmployeesDayTimeSheetWithJson(String day, Long unitId);
+	String queryEmployeesDayTimeSheetWithJson(QueryTimeSheetCommand command);
 	String queryEmployeesMonthTimeSheetWithJson(QueryTimeSheetCommand command);
 	
 	void generateEmployeesMonthTimeSheet(String date, Long unitId);

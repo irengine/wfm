@@ -1,6 +1,8 @@
 package com.kwchina.wfm.infrastructure.persistence;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -16,7 +18,6 @@ import com.kwchina.wfm.domain.model.organization.UnitRepository;
 import com.kwchina.wfm.domain.model.shift.ShiftType;
 import com.kwchina.wfm.interfaces.common.JacksonHelper;
 import com.kwchina.wfm.interfaces.common.PageHelper;
-import com.kwchina.wfm.interfaces.organization.facade.UnitServiceFacade;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({"/context-test.xml"})
@@ -176,17 +177,17 @@ public class UnitRepostioryTest {
 
 	}
 
-	@Autowired
-	UnitServiceFacade unitServiceFacade;
-	
-	@Test
-	@Transactional
-	public void testGetUnitJson() {
-		
-		unitServiceFacade.loadSampleData();
-		
-		Unit root = unitRepository.findRoot();
-		JacksonHelper.getJson(root);
-	}
+//	@Autowired
+//	UnitServiceFacade unitServiceFacade;
+//	
+//	@Test
+//	@Transactional
+//	public void testGetUnitJson() {
+//		
+//		unitServiceFacade.loadSampleData();
+//		
+//		Unit root = unitRepository.findRoot();
+//		JacksonHelper.getJson(root);
+//	}
 	
 }
