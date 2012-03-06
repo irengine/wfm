@@ -4,6 +4,6 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 	<import resource="classpath:context-infrastructure.xml"/>
-	<import resource="classpath:context-interfaces.xml"/>
+	<!-- import resource="classpath:context-interfaces.xml"/ -->
 
 </beans>
