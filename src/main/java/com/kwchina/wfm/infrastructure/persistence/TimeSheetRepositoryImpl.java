@@ -5,12 +5,14 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.kwchina.wfm.domain.model.employee.Employee;
@@ -24,6 +26,7 @@ import com.kwchina.wfm.domain.model.shift.ShiftPolicyFactory;
 import com.kwchina.wfm.domain.model.shift.ShiftType;
 import com.kwchina.wfm.domain.model.shift.ShiftTypeRepository;
 import com.kwchina.wfm.infrastructure.common.DateHelper;
+import com.kwchina.wfm.interfaces.organization.web.command.QueryActualTimeSheetCommand;
 
 @Repository
 public class TimeSheetRepositoryImpl extends BaseRepositoryImpl<TimeSheet> implements TimeSheetRepository {
@@ -138,6 +141,30 @@ public class TimeSheetRepositoryImpl extends BaseRepositoryImpl<TimeSheet> imple
 		}
 		
 		return new ArrayList<TimeSheet>(rts);
+	}
+	
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<Map<String, Object>> queryActualTimeSheet(QueryActualTimeSheetCommand command) {
+		
+		//TODO: refactory sql
+		List<Map<String, Object>> rows = jdbcTemplate.queryForList(command.toSQL());
+//		
+//		List<TimeSheet> ts = entityManager.createNativeQuery(command.toSQL())
+//				.getResultList();
+//		
+//		Set<TimeSheet> rts = new HashSet<TimeSheet>();
+//		for(TimeSheet t : ts) {
+//			if (t.isEnable())
+//				rts.add(t);
+//			if (null != t.getReferTo())
+//				rts.remove(t.getReferTo());
+//		}
+		
+		return rows;
 	}
 
 	@Override

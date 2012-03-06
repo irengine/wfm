@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
@@ -16,6 +17,7 @@ import javax.persistence.PersistenceContext;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +33,7 @@ import com.kwchina.wfm.domain.model.organization.UnitRepository;
 import com.kwchina.wfm.domain.model.shift.AttendanceType;
 import com.kwchina.wfm.domain.model.shift.AttendanceTypeRepository;
 import com.kwchina.wfm.infrastructure.common.DateHelper;
+import com.kwchina.wfm.interfaces.organization.web.command.QueryActualTimeSheetCommand;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({"/context-test.xml"})
@@ -140,5 +143,29 @@ public class TimeSheetRepositoryTest {
 		assertTrue(0 == qs2.size());
 		
 		timeSheetRepository.generateMonthTimeSheet("2012-02-14", u);
+	}
+	
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
+	
+	@Test
+	@Transactional
+	public void testQueryActualTimeSheet() {
+		QueryActualTimeSheetCommand command = new QueryActualTimeSheetCommand();
+		command.setUnitId(new Long(1));
+		command.setEmployeeId(new Long(1));
+		command.setBeginTime("2012-01-01");
+		command.setEndTime("2012-02-29");
+		command.setattendanceTypeIds("1,2,3,");
+		
+		System.out.println(command.toSQL());
+		
+		List<Map<String, Object>> rows = jdbcTemplate.queryForList(command.toSQL());
+		
+		assertTrue(0 == rows.size());
+
+		
+		
+		
 	}
 }

@@ -18,6 +18,7 @@ import com.kwchina.wfm.infrastructure.common.HttpHelper;
 import com.kwchina.wfm.interfaces.common.JacksonHelper;
 import com.kwchina.wfm.interfaces.common.QueryHelper;
 import com.kwchina.wfm.interfaces.organization.facade.EmployeeServiceFacade;
+import com.kwchina.wfm.interfaces.organization.web.command.QueryActualTimeSheetCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryTimeSheetCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveEmployeeCommand;
@@ -73,6 +74,12 @@ public class EmployeeController {
 	public void queryEmployeesMonthTimeSheet(HttpServletRequest request, HttpServletResponse response, @ModelAttribute QueryTimeSheetCommand command) {
 		
 		HttpHelper.output(response, employeeServiceFacade.queryEmployeesMonthTimeSheetWithJson(command.getDate(), command.getUnitId()));
+	}
+	
+	@RequestMapping(value = "/queryEmployeesActualTimeSheet", method = RequestMethod.GET)
+	public void queryEmployeesActualTimeSheet(HttpServletRequest request, HttpServletResponse response, @ModelAttribute QueryActualTimeSheetCommand command) {
+		
+		HttpHelper.output(response, employeeServiceFacade.queryEmployeesActualTimeSheetWithJson(command));
 	}
 	
 	@RequestMapping(value = "/generateEmployeesMonthTimeSheet", method = RequestMethod.GET)

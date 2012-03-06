@@ -34,6 +34,7 @@ import com.kwchina.wfm.interfaces.common.PageHelper;
 import com.kwchina.wfm.interfaces.common.QueryHelper;
 import com.kwchina.wfm.interfaces.organization.dto.TimeSheetDTO;
 import com.kwchina.wfm.interfaces.organization.web.command.ActionCommand;
+import com.kwchina.wfm.interfaces.organization.web.command.QueryActualTimeSheetCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveEmployeeCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveTimeSheetRecordCommand;
@@ -218,6 +219,13 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 			}
 		}
 		
+	}
+
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED)
+	public String queryEmployeesActualTimeSheetWithJson(QueryActualTimeSheetCommand command) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

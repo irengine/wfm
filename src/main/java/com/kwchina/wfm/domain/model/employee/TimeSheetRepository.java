@@ -1,9 +1,11 @@
 package com.kwchina.wfm.domain.model.employee;
 
 import java.util.List;
+import java.util.Map;
 
 import com.kwchina.wfm.domain.common.BaseRepository;
 import com.kwchina.wfm.domain.model.organization.Unit;
+import com.kwchina.wfm.interfaces.organization.web.command.QueryActualTimeSheetCommand;
 
 public interface TimeSheetRepository extends BaseRepository<TimeSheet> {
 
@@ -14,5 +16,7 @@ public interface TimeSheetRepository extends BaseRepository<TimeSheet> {
 	List<TimeSheet> getDayTimeSheet(String day, Unit unit);
 
 	void disable(TimeSheet ts);
+
+	List<Map<String, Object>> queryActualTimeSheet(QueryActualTimeSheetCommand command);
 
 }
