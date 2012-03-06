@@ -11,7 +11,7 @@ public interface TimeSheetRepository extends BaseRepository<TimeSheet> {
 
 	void generateMonthTimeSheet(String month, Unit unit);
 
-	List<TimeSheet> getMonthTimeSheet(String month, Unit unit);
+	List<TimeSheet> getMonthTimeSheet(String month, Unit unit, TimeSheet.ActionType actionType);
 
 	List<TimeSheet> getDayTimeSheet(String day, Unit unit);
 

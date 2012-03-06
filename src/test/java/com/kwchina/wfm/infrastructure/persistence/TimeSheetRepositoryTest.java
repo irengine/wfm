@@ -132,14 +132,14 @@ public class TimeSheetRepositoryTest {
 
 		assertTrue(2 == tss2.size());
 		
-		List<TimeSheet> qs1 = timeSheetRepository.getMonthTimeSheet("2012-02-14", u);
+		List<TimeSheet> qs1 = timeSheetRepository.getMonthTimeSheet("2012-02-14", u, TimeSheet.ActionType.ACTUAL);
 		assertTrue(1 == qs1.size());
 		assertEquals(TimeSheet.ActionType.MONTH_PLAN_ADJUST, qs1.get(0).getActionType());
 		
 		ts2.setEnable(false);
 		timeSheetRepository.save(ts2);
 		
-		List<TimeSheet> qs2 = timeSheetRepository.getMonthTimeSheet("2012-02-14", u);
+		List<TimeSheet> qs2 = timeSheetRepository.getMonthTimeSheet("2012-02-14", u, TimeSheet.ActionType.ACTUAL);
 		assertTrue(0 == qs2.size());
 		
 		timeSheetRepository.generateMonthTimeSheet("2012-02-14", u);

@@ -73,7 +73,7 @@ public class EmployeeController {
 	@RequestMapping(value = "/queryEmployeesMonthTimeSheet", method = RequestMethod.GET)
 	public void queryEmployeesMonthTimeSheet(HttpServletRequest request, HttpServletResponse response, @ModelAttribute QueryTimeSheetCommand command) {
 		
-		HttpHelper.output(response, employeeServiceFacade.queryEmployeesMonthTimeSheetWithJson(command.getDate(), command.getUnitId()));
+		HttpHelper.output(response, employeeServiceFacade.queryEmployeesMonthTimeSheetWithJson(command));
 	}
 	
 	@RequestMapping(value = "/queryEmployeesActualTimeSheet", method = RequestMethod.GET)

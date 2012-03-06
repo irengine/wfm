@@ -94,7 +94,7 @@ public class TimeSheetRepositoryImpl extends BaseRepositoryImpl<TimeSheet> imple
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<TimeSheet> getMonthTimeSheet(String month, Unit unit) {
+	public List<TimeSheet> getMonthTimeSheet(String month, Unit unit, TimeSheet.ActionType actionType) {
 		Date date = DateHelper.getDate(month);
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(date);
@@ -107,7 +107,7 @@ public class TimeSheetRepositoryImpl extends BaseRepositoryImpl<TimeSheet> imple
 				.setParameter("unitId", unit.getId())
 				.setParameter("beginDate", beginDate)
 				.setParameter("endDate", endDate)
-				.setParameter("actionType", TimeSheet.ActionType.MONTH_PLAN_ADJUST)
+				.setParameter("actionType", actionType)
 				.getResultList();
 
 		Set<TimeSheet> rts = new HashSet<TimeSheet>();

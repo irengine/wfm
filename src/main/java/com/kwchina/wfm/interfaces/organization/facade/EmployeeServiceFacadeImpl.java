@@ -36,6 +36,7 @@ import com.kwchina.wfm.interfaces.organization.dto.TimeSheetDTO;
 import com.kwchina.wfm.interfaces.organization.web.command.ActionCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryActualTimeSheetCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryCommand;
+import com.kwchina.wfm.interfaces.organization.web.command.QueryTimeSheetCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveEmployeeCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveTimeSheetRecordCommand;
 
@@ -145,14 +146,18 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 
 	@Override
 	@Transactional(propagation=Propagation.REQUIRED)
-	public String queryEmployeesMonthTimeSheetWithJson(String month, Long unitId) {
+	public String queryEmployeesMonthTimeSheetWithJson(QueryTimeSheetCommand command) {
+		Long unitId = command.getUnitId();
+		String month = command.getDate();
+		TimeSheet.ActionType actionType = command.getActionType();
+		
 		Unit unit = unitRepository.findById(unitId);
 		List<Date> days = DateHelper.getDaysOfMonth(month);
-		List<TimeSheet> records = timeSheetRepository.getMonthTimeSheet(month, unit);
+		List<TimeSheet> records = timeSheetRepository.getMonthTimeSheet(month, unit, actionType);
 		
 		if (0 == records.size()) {
 			timeSheetRepository.generateMonthTimeSheet(month, unit);
-			records = timeSheetRepository.getMonthTimeSheet(month, unit);
+			records = timeSheetRepository.getMonthTimeSheet(month, unit, actionType);
 		}
 		
 		TimeSheetDTO ts = new TimeSheetDTO();
@@ -183,11 +188,10 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 	@Transactional(propagation=Propagation.REQUIRED)
 	public void generateEmployeesMonthTimeSheet(String month, Long unitId) {
 		Unit unit = unitRepository.findById(unitId);
-		List<TimeSheet> records = timeSheetRepository.getMonthTimeSheet(month, unit);
+		List<TimeSheet> records = timeSheetRepository.getMonthTimeSheet(month, unit, TimeSheet.ActionType.MONTH_PLAN);
 		
 		if (0 == records.size()) {
 			timeSheetRepository.generateMonthTimeSheet(month, unit);
-			records = timeSheetRepository.getMonthTimeSheet(month, unit);
 		}
 	}
 
@@ -224,8 +228,7 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 	@Override
 	@Transactional(propagation=Propagation.REQUIRED)
 	public String queryEmployeesActualTimeSheetWithJson(QueryActualTimeSheetCommand command) {
-		// TODO Auto-generated method stub
-		return null;
+		return JacksonHelper.getJson(timeSheetRepository.queryActualTimeSheet(command));
 	}
 
 }
