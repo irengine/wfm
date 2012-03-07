@@ -17,6 +17,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -230,18 +231,39 @@ public class TimeSheetRepositoryTest {
 	
 	@Test
 	@Transactional
+	@Rollback(false)
 	public void testQueryActualTimeSheet() {
+		String day = "2012-02-14";
+		Date date = DateHelper.getDate(day);
+		Unit unit = unitRepository.getRoot("XX");
+		
+		Employee e = new Employee(new EmployeeId("0001"), "Alex Tang", date, date, date);
+		employeeRepository.save(e);
+		
+		AttendanceType at1 = new AttendanceType("Day1", 8, 16);
+		attendanceTypeRepository.save(at1);
+		AttendanceType at2 = new AttendanceType("Day2", 8, 16);
+		attendanceTypeRepository.save(at2);
+		AttendanceType at3 = new AttendanceType("Day3", 8, 16);
+		attendanceTypeRepository.save(at3);
+		
+		
 		QueryActualTimeSheetCommand command = new QueryActualTimeSheetCommand();
-		command.setUnitId(new Long(1));
-		command.setEmployeeId(new Long(1));
+		command.setUnitId(unit.getId());
+		command.setEmployeeId(e.getId());
 		command.setBeginTime("2012-01-01");
 		command.setEndTime("2012-02-29");
-		command.setattendanceTypeIds("1,2,3,");
+		command.setattendanceTypeIds(String.format("%d,%d,%d,", at1.getId(), at2.getId(), at3.getId()));
 		
 		System.out.println(command.toSQL());
 		
 		List<Map<String, Object>> rows = jdbcTemplate.queryForList(command.toSQL());
+		assertTrue(3 == rows.size());
 		
-		assertTrue(0 == rows.size());
+		Employee ex = new Employee(new EmployeeId("0002"), "Alex Tang", date, date, date);
+		employeeRepository.save(ex);
+		
+		List<Map<String, Object>> rowsEx = jdbcTemplate.queryForList(command.toSQL());
+		assertTrue(6 == rowsEx.size());
 	}
 }

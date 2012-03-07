@@ -49,9 +49,6 @@ public class QueryActualTimeSheetCommand {
 	}
 	
 	public String toSQL() {
-		String syntax = "select ts.employeeId, e.employeeId as employeeCode, e.name as employeeName, ts.attendanceTypeId, ats.name as attendanceTypeName, count(ts.attendanceTypeId) as days " +
-				"from t_timesheet ts inner join t_employees e on ts.employeeId = e.id " +
-				"inner join t_attendance_types ats on ts.attendanceTypeId = ats.id ";
 		List<String> conditions = new ArrayList<String>();
 		
 		if (!(null == this.unitId || this.unitId.equals(0))) {
@@ -69,13 +66,22 @@ public class QueryActualTimeSheetCommand {
 		if (!StringUtils.isEmpty(this.endTime)) {
 			conditions.add(String.format("ts.date <= '%s'", endTime));
 		}
-
+		
+		String tsConditions = " where ts.enable = true and ts.lastActionType is null and " + StringUtils.join(conditions, " AND ");
+		
+		String atsIds = "";
 		if (!StringUtils.isEmpty(this.attendanceTypeIds)) {
-			conditions.add(String.format("ts.attendanceTypeId in (%s0)", this.attendanceTypeIds));
+			atsIds = String.format("where ats.id in (%s0)", this.attendanceTypeIds);
 		}
 		
-		if (conditions.size() > 0)
-			syntax = syntax + " where ts.enable = true and ts.lastActionType is null and " + StringUtils.join(conditions, " AND ")  + " group by ts.employeeId, e.employeeId, e.name, ts.attendanceTypeId, ats.name";
-		return syntax;
+		String syntax = "select x.*, count(ts.attendanceTypeId) as days " +
+				"from (select e.Id as employeeId, e.employeeId as employeeCode, e.name as employeeName, " +
+					"ats.Id as attendanceTypeId, ats.name as attendanceTypeName " +
+					"from t_attendance_types ats, t_employees e " +
+					"%s) x " +
+				"left join (select *  from t_timesheet ts %s) ts on x.employeeId = ts.employeeId and x.attendanceTypeId = ts.attendanceTypeId " +
+				"group by employeeId, employeeCode, employeeName, attendanceTypeId, attendanceTypeName";
+		
+		return String.format(syntax, atsIds, tsConditions);
 	}
 }
