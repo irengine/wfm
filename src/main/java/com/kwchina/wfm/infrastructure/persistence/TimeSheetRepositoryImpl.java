@@ -17,6 +17,7 @@ import com.kwchina.wfm.domain.model.employee.EmployeeRepository;
 import com.kwchina.wfm.domain.model.employee.TimeSheet;
 import com.kwchina.wfm.domain.model.employee.TimeSheetRepository;
 import com.kwchina.wfm.domain.model.organization.Unit;
+import com.kwchina.wfm.domain.model.organization.UnitRepository;
 import com.kwchina.wfm.domain.model.shift.AttendanceType;
 import com.kwchina.wfm.domain.model.shift.ShiftPolicy;
 import com.kwchina.wfm.domain.model.shift.ShiftPolicyFactory;
@@ -30,6 +31,9 @@ public class TimeSheetRepositoryImpl extends BaseRepositoryImpl<TimeSheet> imple
 	
 	@PersistenceContext
 	private EntityManager entityManager;
+	
+	@Autowired
+	UnitRepository unitRepository;
 	
 	@Autowired
 	EmployeeRepository employeeRepository;
@@ -134,8 +138,14 @@ public class TimeSheetRepositoryImpl extends BaseRepositoryImpl<TimeSheet> imple
 	
 	@Override
 	public List<Map<String, Object>> queryActualTimeSheet(QueryActualTimeSheetCommand command) {
-		
-		List<Map<String, Object>> rows = jdbcTemplate.queryForList(command.toSQL());
+		Long leftId = null;
+		Long rightId = null;
+		if (!(null == command.getUnitId() || command.getUnitId().equals(0))) {
+			Unit unit = unitRepository.findById(command.getUnitId());
+			leftId = unit.getLeft();
+			rightId = unit.getRight();
+		}
+		List<Map<String, Object>> rows = jdbcTemplate.queryForList(command.toSQL(leftId, rightId));
 		
 		return rows;
 	}

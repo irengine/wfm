@@ -48,12 +48,13 @@ public class QueryActualTimeSheetCommand {
 		this.attendanceTypeIds = attendanceTypeIds;
 	}
 	
-	public String toSQL() {
+	public String toSQL(Long leftId, Long rightId) {
 		List<String> firstConditions = new ArrayList<String>();
 		List<String> secondConditions = new ArrayList<String>();
 		
 		if (!(null == this.unitId || this.unitId.equals(0))) {
-			secondConditions.add(String.format("ts.unitId = %d", this.unitId));
+			firstConditions.add(String.format("u.leftId >= %d and u.rightId <= %d", leftId, rightId));
+			secondConditions.add(String.format("u.leftId >= %d and u.rightId <= %d", leftId, rightId));
 		}
 		
 		if (!(null == this.employeeId || this.employeeId.equals(0))) {
@@ -81,9 +82,9 @@ public class QueryActualTimeSheetCommand {
 		String syntax = "select x.*, count(ts.attendanceTypeId) as days " +
 				"from (select e.Id as employeeId, e.employeeId as employeeCode, e.name as employeeName, " +
 					"ats.Id as attendanceTypeId, ats.name as attendanceTypeName " +
-					"from t_attendance_types ats, t_employees e " +
+					"from t_attendance_types ats, t_employees e inner join t_units u on e.unitId = u.id" +
 					"%s) x " +
-				"left join (select *  from t_timesheet ts %s) ts on x.employeeId = ts.employeeId and x.attendanceTypeId = ts.attendanceTypeId " +
+				"left join (select ts.*  from t_timesheet ts inner join t_units u on ts.unitId = u.id %s) ts on x.employeeId = ts.employeeId and x.attendanceTypeId = ts.attendanceTypeId " +
 				"group by employeeId, employeeCode, employeeName, attendanceTypeId, attendanceTypeName";
 		
 		return String.format(syntax, firstCondition, secondCondition);

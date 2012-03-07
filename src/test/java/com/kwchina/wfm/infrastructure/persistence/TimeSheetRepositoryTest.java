@@ -4,6 +4,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -25,6 +26,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.kwchina.wfm.domain.model.employee.Employee;
 import com.kwchina.wfm.domain.model.employee.EmployeeId;
 import com.kwchina.wfm.domain.model.employee.EmployeeRepository;
+import com.kwchina.wfm.domain.model.employee.Job;
+import com.kwchina.wfm.domain.model.employee.JobPosition;
+import com.kwchina.wfm.domain.model.employee.JobStatus;
 import com.kwchina.wfm.domain.model.employee.TimeSheet;
 import com.kwchina.wfm.domain.model.employee.TimeSheet.ActionType;
 import com.kwchina.wfm.domain.model.employee.TimeSheetRepository;
@@ -238,6 +242,8 @@ public class TimeSheetRepositoryTest {
 		Unit unit = unitRepository.getRoot("XX");
 		
 		Employee e = new Employee(new EmployeeId("0001"), "Alex Tang", date, date, date);
+		e.setJob(new Job(unit, null, Collections.<JobPosition>emptyList(), JobStatus.UNKNOWN, new Date()));
+		e.getJob().setUnit(unit);
 		employeeRepository.save(e);
 		
 		AttendanceType at1 = new AttendanceType("Day1", 8, 16);
@@ -254,19 +260,20 @@ public class TimeSheetRepositoryTest {
 		command.setEndTime("2012-02-29");
 		command.setattendanceTypeIds(String.format("%d,%d,%d,", at1.getId(), at2.getId(), at3.getId()));
 		
-		System.out.println(command.toSQL());
+		System.out.println(command.toSQL(unit.getLeft(), unit.getRight()));
 		
-		List<Map<String, Object>> rows = jdbcTemplate.queryForList(command.toSQL());
+		List<Map<String, Object>> rows = jdbcTemplate.queryForList(command.toSQL(unit.getLeft(), unit.getRight()));
 		assertTrue(3 == rows.size());
 		
 		Employee ex = new Employee(new EmployeeId("0002"), "Alex Tang", date, date, date);
+		ex.setJob(new Job(unit, null, Collections.<JobPosition>emptyList(), JobStatus.UNKNOWN, new Date()));
 		employeeRepository.save(ex);
 		
-		List<Map<String, Object>> rowsEx = jdbcTemplate.queryForList(command.toSQL());
+		List<Map<String, Object>> rowsEx = jdbcTemplate.queryForList(command.toSQL(unit.getLeft(), unit.getRight()));
 		assertTrue(6 == rowsEx.size());
 
 		command.setEmployeeId(e.getId());
-		List<Map<String, Object>> rowsEx2 = jdbcTemplate.queryForList(command.toSQL());
+		List<Map<String, Object>> rowsEx2 = jdbcTemplate.queryForList(command.toSQL(unit.getLeft(), unit.getRight()));
 		assertTrue(3 == rowsEx2.size());
 	}
 }
