@@ -49,7 +49,7 @@ public class QueryActualTimeSheetCommand {
 	}
 	
 	public String toSQL() {
-		String syntax = "select ts.employeeId, e.name as employeeName, ts.attendanceTypeId, ats.name as attendanceTypeName, count(ts.attendanceTypeId) as days " +
+		String syntax = "select ts.employeeId, e.employeeId as employeeCode, e.name as employeeName, ts.attendanceTypeId, ats.name as attendanceTypeName, count(ts.attendanceTypeId) as days " +
 				"from t_timesheet ts inner join t_employees e on ts.employeeId = e.id " +
 				"inner join t_attendance_types ats on ts.attendanceTypeId = ats.id ";
 		List<String> conditions = new ArrayList<String>();
@@ -75,7 +75,7 @@ public class QueryActualTimeSheetCommand {
 		}
 		
 		if (conditions.size() > 0)
-			syntax = syntax + " where ts.enable = true and ts.lastActionType is null and " + StringUtils.join(conditions, " AND ")  + " group by ts.employeeId, e.name, ts.attendanceTypeId, ats.name";
+			syntax = syntax + " where ts.enable = true and ts.lastActionType is null and " + StringUtils.join(conditions, " AND ")  + " group by ts.employeeId, e.employeeId, e.name, ts.attendanceTypeId, ats.name";
 		return syntax;
 	}
 }
