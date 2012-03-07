@@ -70,13 +70,12 @@ public class QueryActualTimeSheetCommand {
 			secondConditions.add(String.format("ts.date <= '%s'", endTime));
 		}
 		
-		String secondCondition = " where ts.enable = true and ts.lastActionType is null and " + StringUtils.join(secondConditions, " AND ");
-		
 		if (!StringUtils.isEmpty(this.attendanceTypeIds)) {
 			firstConditions.add(String.format("ats.id in (%s0)", this.attendanceTypeIds));
 		}
 		
-		String firstCondition = (0 == firstConditions.size()) ? "" : " where " + StringUtils.join(firstConditions, " AND ");
+		String firstCondition = (0 == firstConditions.size()) ? " where e.enable = 1 " : " where e.enable = 1 and " + StringUtils.join(firstConditions, " AND ");
+		String secondCondition = (0 == secondConditions.size()) ? " where ts.enable = true and ts.lastActionType is null " : " where ts.enable = true and ts.lastActionType is null and " + StringUtils.join(secondConditions, " AND ");
 		
 		
 		String syntax = "select x.*, count(ts.attendanceTypeId) as days " +
