@@ -250,7 +250,6 @@ public class TimeSheetRepositoryTest {
 		
 		QueryActualTimeSheetCommand command = new QueryActualTimeSheetCommand();
 		command.setUnitId(unit.getId());
-		command.setEmployeeId(e.getId());
 		command.setBeginTime("2012-01-01");
 		command.setEndTime("2012-02-29");
 		command.setattendanceTypeIds(String.format("%d,%d,%d,", at1.getId(), at2.getId(), at3.getId()));
@@ -265,5 +264,9 @@ public class TimeSheetRepositoryTest {
 		
 		List<Map<String, Object>> rowsEx = jdbcTemplate.queryForList(command.toSQL());
 		assertTrue(6 == rowsEx.size());
+
+		command.setEmployeeId(e.getId());
+		List<Map<String, Object>> rowsEx2 = jdbcTemplate.queryForList(command.toSQL());
+		assertTrue(3 == rowsEx2.size());
 	}
 }

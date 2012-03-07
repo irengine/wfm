@@ -49,30 +49,34 @@ public class QueryActualTimeSheetCommand {
 	}
 	
 	public String toSQL() {
-		List<String> conditions = new ArrayList<String>();
+		List<String> firstConditions = new ArrayList<String>();
+		List<String> secondConditions = new ArrayList<String>();
 		
 		if (!(null == this.unitId || this.unitId.equals(0))) {
-			conditions.add(String.format("ts.unitId = %d", this.unitId));
+			secondConditions.add(String.format("ts.unitId = %d", this.unitId));
 		}
 		
 		if (!(null == this.employeeId || this.employeeId.equals(0))) {
-			conditions.add(String.format("ts.employeeId = %d", this.employeeId));
+			firstConditions.add(String.format("e.id = %d", this.employeeId));
+			secondConditions.add(String.format("ts.employeeId = %d", this.employeeId));
 		}
 		
 		if (!StringUtils.isEmpty(this.beginTime)) {
-			conditions.add(String.format("ts.date >= '%s'", beginTime));
+			secondConditions.add(String.format("ts.date >= '%s'", beginTime));
 		}
 
 		if (!StringUtils.isEmpty(this.endTime)) {
-			conditions.add(String.format("ts.date <= '%s'", endTime));
+			secondConditions.add(String.format("ts.date <= '%s'", endTime));
 		}
 		
-		String tsConditions = " where ts.enable = true and ts.lastActionType is null and " + StringUtils.join(conditions, " AND ");
+		String secondCondition = " where ts.enable = true and ts.lastActionType is null and " + StringUtils.join(secondConditions, " AND ");
 		
-		String atsIds = "";
 		if (!StringUtils.isEmpty(this.attendanceTypeIds)) {
-			atsIds = String.format("where ats.id in (%s0)", this.attendanceTypeIds);
+			firstConditions.add(String.format("ats.id in (%s0)", this.attendanceTypeIds));
 		}
+		
+		String firstCondition = (0 == firstConditions.size()) ? "" : " where " + StringUtils.join(firstConditions, " AND ");
+		
 		
 		String syntax = "select x.*, count(ts.attendanceTypeId) as days " +
 				"from (select e.Id as employeeId, e.employeeId as employeeCode, e.name as employeeName, " +
@@ -82,6 +86,6 @@ public class QueryActualTimeSheetCommand {
 				"left join (select *  from t_timesheet ts %s) ts on x.employeeId = ts.employeeId and x.attendanceTypeId = ts.attendanceTypeId " +
 				"group by employeeId, employeeCode, employeeName, attendanceTypeId, attendanceTypeName";
 		
-		return String.format(syntax, atsIds, tsConditions);
+		return String.format(syntax, firstCondition, secondCondition);
 	}
 }
