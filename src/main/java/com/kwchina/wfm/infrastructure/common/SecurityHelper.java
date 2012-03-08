@@ -1,5 +1,8 @@
 package com.kwchina.wfm.infrastructure.common;
 
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+
 public class SecurityHelper {
 
 	private final static String[] hexDigits = { "0", "1", "2", "3", "4", "5",
@@ -34,5 +37,17 @@ public class SecurityHelper {
 		catch(Exception e) {
 			return null;
 		}
+	}
+	
+	public static String getCurrentUserName() {
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		UserDetails userDetails = null;
+		if (principal instanceof UserDetails) {
+		  userDetails = (UserDetails) principal;
+		  if (null != userDetails)
+			  return userDetails.getUsername();
+		}
+
+		return null;
 	}
 }

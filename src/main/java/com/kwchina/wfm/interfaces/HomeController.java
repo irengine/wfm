@@ -11,6 +11,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.kwchina.wfm.infrastructure.common.SecurityHelper;
+
 /**
  * Handles requests for the application home page.
  */
@@ -24,6 +26,7 @@ public class HomeController {
 	 */
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(Locale locale, Model model) {
+		logger.info("Current user is " + SecurityHelper.getCurrentUserName());
 		logger.info("Welcome home! the client locale is "+ locale.toString());
 		
 		Date date = new Date();

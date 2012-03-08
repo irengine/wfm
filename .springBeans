@@ -10,6 +10,7 @@
 		<config>src/test/resources/context-test.xml</config>
 		<config>src/main/resources/context-application.xml</config>
 		<config>src/main/resources/context-domain.xml</config>
+		<config>src/main/resources/context-interfaces-security.xml</config>
 	</configs>
 	<configSets>
 	</configSets>
