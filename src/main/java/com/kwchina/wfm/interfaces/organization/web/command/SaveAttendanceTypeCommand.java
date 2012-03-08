@@ -10,6 +10,8 @@ public class SaveAttendanceTypeCommand extends ActionCommand {
 	private int beginTime;
 	private int endTime;
 	private Map<String, String> properties;
+	private int displayIndex = 0;
+	private String displayName;
 	
 	public Long getId() {
 		return Id;
@@ -40,6 +42,18 @@ public class SaveAttendanceTypeCommand extends ActionCommand {
 	}
 	public void setProperties(Map<String, String> properties) {
 		this.properties = properties;
+	}
+	public int getDisplayIndex() {
+		return displayIndex;
+	}
+	public void setDisplayIndex(int displayIndex) {
+		this.displayIndex = displayIndex;
+	}
+	public String getDisplayName() {
+		return displayName;
+	}
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
 	}
 	
 }
