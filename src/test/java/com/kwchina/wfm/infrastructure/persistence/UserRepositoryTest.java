@@ -29,15 +29,15 @@ public class UserRepositoryTest {
 	@Test
 	@Transactional
 	public void testValidatePassword() {
-		User u = new User("xyz", "XuYuZu", "xyz@kwchina.com");
-		u.setPassword("123456");
-		assertTrue(u.validatePassword("123456"));
+		User u = new User("sysAdmin", "System Administrator", "sa@kwchina.com");
+		u.setPassword("P@ssword");
+		assertTrue(u.validatePassword("P@ssword"));
 		
 		userRepository.save(u);
 		assertNotNull(u.getId());
 		
 		User n = userRepository.findById(u.getId());
-		n.validatePassword("123456");
+		n.validatePassword("P@ssword");
 	}
 	
 	// TODO: add more unit test

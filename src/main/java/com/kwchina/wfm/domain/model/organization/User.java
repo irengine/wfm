@@ -69,6 +69,10 @@ public class User implements com.kwchina.wfm.domain.common.Entity<User> {
 	})
     private Set<Preference> preferences = new HashSet<Preference>();
 
+	@ElementCollection
+	@CollectionTable(name="T_USER_ROLE", joinColumns=@JoinColumn(name="userId"))
+    private Set<String> roles = new HashSet<String>();
+
 	@Column(nullable=false)
 	private boolean enable;
 	
@@ -183,6 +187,14 @@ public class User implements com.kwchina.wfm.domain.common.Entity<User> {
 	 */
 	public void setPreferences(Set<Preference> preferences) {
 		this.preferences = preferences;
+	}
+
+	public Set<String> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(Set<String> roles) {
+		this.roles = roles;
 	}
 
 	/**

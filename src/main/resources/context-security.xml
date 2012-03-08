@@ -34,7 +34,7 @@
 								         FROM   t_users
 								         WHERE  code = ?"
 				authorities-by-username-query="SELECT code, 'Admin' 
-								         FROM   t_users
+								         FROM   t_users INNER JOIN t_user_role ON t_users.id = t_user_role.userId
 								         WHERE  code = ?" />
 			<password-encoder ref="customPasswordEncoder" />
 		</authentication-provider>

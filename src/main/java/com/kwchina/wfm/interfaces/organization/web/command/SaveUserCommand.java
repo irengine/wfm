@@ -1,5 +1,6 @@
 package com.kwchina.wfm.interfaces.organization.web.command;
 
+
 public class SaveUserCommand extends ActionCommand {
 
 	private Long id;
@@ -8,6 +9,7 @@ public class SaveUserCommand extends ActionCommand {
 	private String password;
 	private String email;
 	private String unitIds;
+	private String roleIds;
 	
 	public SaveUserCommand() {
 		
@@ -48,5 +50,11 @@ public class SaveUserCommand extends ActionCommand {
 	}
 	public void setUnitIds(String unitIds) {
 		this.unitIds = unitIds;
+	}
+	public String getRoleIds() {
+		return roleIds;
+	}
+	public void setRoleIds(String roleIds) {
+		this.roleIds = roleIds;
 	}
 }

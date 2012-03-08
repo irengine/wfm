@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +58,14 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
 			}
 			
 			user.setUnits(units);
+			
+			Set<String> roles = new LinkedHashSet<String>();
+			String[] rs = StringUtils.split(command.getRoleIds(), ",");
+			for(String r: rs) {
+				roles.add(r);
+			}
+			
+			user.setRoles(roles);
 			
 			userRepository.save(user);
 		}
