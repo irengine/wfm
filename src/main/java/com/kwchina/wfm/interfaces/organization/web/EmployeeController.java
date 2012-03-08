@@ -99,4 +99,9 @@ public class EmployeeController {
 		employeeServiceFacade.saveTimeSheetRecord(command);
 	}
 
+	@RequestMapping(value = "/calculateVacation", method = RequestMethod.GET)
+	public void calculateVacation(HttpServletRequest request, HttpServletResponse response) {
+
+	}
+
 }
