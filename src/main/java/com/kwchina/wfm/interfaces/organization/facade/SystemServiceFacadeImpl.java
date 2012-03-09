@@ -194,6 +194,8 @@ public class SystemServiceFacadeImpl implements SystemServiceFacade {
 			attendanceType.setName(command.getName());
 			attendanceType.setBeginTime(command.getBeginTime());
 			attendanceType.setEndTime(command.getEndTime());
+			attendanceType.setDisplayIndex(command.getDisplayIndex());
+			attendanceType.setDisplayName(command.getDisplayName());
 			
 			Set<Preference> preferences = new HashSet<Preference>();
 			for(Map.Entry<String, String> property : command.getProperties().entrySet()) {
