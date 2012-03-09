@@ -24,6 +24,7 @@ import com.kwchina.wfm.domain.model.shift.ShiftPolicyFactory;
 import com.kwchina.wfm.domain.model.shift.ShiftType;
 import com.kwchina.wfm.domain.model.shift.ShiftTypeRepository;
 import com.kwchina.wfm.infrastructure.common.DateHelper;
+import com.kwchina.wfm.interfaces.organization.web.command.QueryAbsentTimeSheetCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryActualTimeSheetCommand;
 
 @Repository
@@ -138,6 +139,20 @@ public class TimeSheetRepositoryImpl extends BaseRepositoryImpl<TimeSheet> imple
 	
 	@Override
 	public List<Map<String, Object>> queryActualTimeSheet(QueryActualTimeSheetCommand command) {
+		Long leftId = null;
+		Long rightId = null;
+		if (!(null == command.getUnitId() || command.getUnitId().equals(0))) {
+			Unit unit = unitRepository.findById(command.getUnitId());
+			leftId = unit.getLeft();
+			rightId = unit.getRight();
+		}
+		List<Map<String, Object>> rows = jdbcTemplate.queryForList(command.toSQL(leftId, rightId));
+		
+		return rows;
+	}
+
+	@Override
+	public List<Map<String, Object>> queryAbsentTimeSheet(QueryAbsentTimeSheetCommand command) {
 		Long leftId = null;
 		Long rightId = null;
 		if (!(null == command.getUnitId() || command.getUnitId().equals(0))) {

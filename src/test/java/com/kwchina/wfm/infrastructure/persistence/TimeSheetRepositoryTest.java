@@ -18,7 +18,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +36,7 @@ import com.kwchina.wfm.domain.model.organization.UnitRepository;
 import com.kwchina.wfm.domain.model.shift.AttendanceType;
 import com.kwchina.wfm.domain.model.shift.AttendanceTypeRepository;
 import com.kwchina.wfm.infrastructure.common.DateHelper;
+import com.kwchina.wfm.interfaces.organization.web.command.QueryAbsentTimeSheetCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryActualTimeSheetCommand;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -235,7 +235,6 @@ public class TimeSheetRepositoryTest {
 	
 	@Test
 	@Transactional
-	@Rollback(false)
 	public void testQueryActualTimeSheet() {
 		String day = "2012-02-14";
 		Date date = DateHelper.getDate(day);
@@ -275,5 +274,16 @@ public class TimeSheetRepositoryTest {
 		command.setEmployeeId(e.getId());
 		List<Map<String, Object>> rowsEx2 = jdbcTemplate.queryForList(command.toSQL(unit.getLeft(), unit.getRight()));
 		assertTrue(3 == rowsEx2.size());
+
+		QueryAbsentTimeSheetCommand cmd1 = new QueryAbsentTimeSheetCommand();
+		cmd1.setUnitId(unit.getId());
+		cmd1.setBeginTime("2012-01-01");
+		cmd1.setEndTime("2012-02-29");
+		cmd1.setattendanceTypeIds(String.format("%d,%d,%d,", at1.getId(), at2.getId(), at3.getId()));
+		
+		System.out.println(cmd1.toSQL(unit.getLeft(), unit.getRight()));
+
 	}
+	
+	
 }

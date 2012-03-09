@@ -34,6 +34,7 @@ import com.kwchina.wfm.interfaces.common.PageHelper;
 import com.kwchina.wfm.interfaces.common.QueryHelper;
 import com.kwchina.wfm.interfaces.organization.dto.TimeSheetDTO;
 import com.kwchina.wfm.interfaces.organization.web.command.ActionCommand;
+import com.kwchina.wfm.interfaces.organization.web.command.QueryAbsentTimeSheetCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryActualTimeSheetCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryTimeSheetCommand;
@@ -235,4 +236,9 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 		return JacksonHelper.getJson(timeSheetRepository.queryActualTimeSheet(command));
 	}
 
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED)
+	public String queryEmployeesAbsentTimeSheetWithJson(QueryAbsentTimeSheetCommand command) {
+		return JacksonHelper.getJson(timeSheetRepository.queryAbsentTimeSheet(command));
+	}
 }
