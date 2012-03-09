@@ -61,7 +61,7 @@ public class User implements com.kwchina.wfm.domain.common.Entity<User> {
         )
 	private Collection<Unit> units = new LinkedHashSet<Unit>();
     
-	@ElementCollection
+	@ElementCollection(fetch=FetchType.EAGER)
 	@CollectionTable(name="T_USER_PREFERENCES", joinColumns=@JoinColumn(name="userId"))
 	@AttributeOverrides({
 		@AttributeOverride(name="key", column=@Column(name="xkey")),
@@ -69,7 +69,7 @@ public class User implements com.kwchina.wfm.domain.common.Entity<User> {
 	})
     private Set<Preference> preferences = new HashSet<Preference>();
 
-	@ElementCollection
+	@ElementCollection(fetch=FetchType.EAGER)
 	@CollectionTable(name="T_USER_ROLE", joinColumns=@JoinColumn(name="userId"))
     private Set<String> roles = new HashSet<String>();
 
