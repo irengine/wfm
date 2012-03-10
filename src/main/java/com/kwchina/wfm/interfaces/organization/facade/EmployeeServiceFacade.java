@@ -5,6 +5,7 @@ import com.kwchina.wfm.interfaces.organization.web.command.QueryAbsentTimeSheetC
 import com.kwchina.wfm.interfaces.organization.web.command.QueryActualTimeSheetCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryTimeSheetCommand;
+import com.kwchina.wfm.interfaces.organization.web.command.QueryVacationCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveEmployeeCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveTimeSheetRecordCommand;
 
@@ -22,4 +23,6 @@ public interface EmployeeServiceFacade {
 	void saveTimeSheetRecord(SaveTimeSheetRecordCommand command);
 	String queryEmployeesActualTimeSheetWithJson(QueryActualTimeSheetCommand command);
 	String queryEmployeesAbsentTimeSheetWithJson(QueryAbsentTimeSheetCommand command);
+	
+	void calculateVacation(QueryVacationCommand command);
 }

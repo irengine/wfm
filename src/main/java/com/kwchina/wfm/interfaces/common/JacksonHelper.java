@@ -25,7 +25,7 @@ public class JacksonHelper {
 		
 	}
     
-    @JsonIgnoreProperties({"preferences"})
+    @JsonIgnoreProperties({"preferences", "vacations"})
     @JsonPropertyOrder(value={})
     private interface CommonEmployeeFilter {
     	

@@ -23,6 +23,7 @@ import com.kwchina.wfm.interfaces.organization.web.command.QueryAbsentTimeSheetC
 import com.kwchina.wfm.interfaces.organization.web.command.QueryActualTimeSheetCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryTimeSheetCommand;
+import com.kwchina.wfm.interfaces.organization.web.command.QueryVacationCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveEmployeeCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveTimeSheetRecordCommand;
 
@@ -107,8 +108,9 @@ public class EmployeeController {
 	}
 
 	@RequestMapping(value = "/calculateVacation", method = RequestMethod.GET)
-	public void calculateVacation(HttpServletRequest request, HttpServletResponse response) {
+	public void calculateVacation(HttpServletResponse response, @ModelAttribute QueryVacationCommand command) {
 
+		employeeServiceFacade.calculateVacation(command);
 	}
 
 }

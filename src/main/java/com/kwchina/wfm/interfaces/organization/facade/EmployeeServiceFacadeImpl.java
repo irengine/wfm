@@ -38,6 +38,7 @@ import com.kwchina.wfm.interfaces.organization.web.command.QueryAbsentTimeSheetC
 import com.kwchina.wfm.interfaces.organization.web.command.QueryActualTimeSheetCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryTimeSheetCommand;
+import com.kwchina.wfm.interfaces.organization.web.command.QueryVacationCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveEmployeeCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveTimeSheetRecordCommand;
 
@@ -240,5 +241,12 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 	@Transactional(propagation=Propagation.REQUIRED)
 	public String queryEmployeesAbsentTimeSheetWithJson(QueryAbsentTimeSheetCommand command) {
 		return JacksonHelper.getJson(timeSheetRepository.queryAbsentTimeSheet(command));
+	}
+	
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED)
+	public void calculateVacation(QueryVacationCommand command) {
+		AttendanceType at = attendanceTypeRepository.findByName("");
+		employeeRepository.calculateVacation(DateHelper.getDate(command.getDate()), at.getId());
 	}
 }

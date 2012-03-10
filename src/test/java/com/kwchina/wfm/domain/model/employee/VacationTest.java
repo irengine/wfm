@@ -6,9 +6,15 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeFieldType;
 import org.joda.time.Period;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.kwchina.wfm.infrastructure.common.DateHelper;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration({"/context-test.xml"})
 public class VacationTest {
 
 	@Test
@@ -46,6 +52,12 @@ public class VacationTest {
 			days = 15;
 		
 		return days;
+	}
+	
+	@Test
+	@Transactional
+	public void testCreateTable() {
+		
 	}
 
 }

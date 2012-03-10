@@ -146,6 +146,12 @@ public class EmployeeRepositoryTest {
 	public void testfindAllEmployees() {
 		employeeRepository.findAllByUnitId(new Long(1));
 	}
+	
+	@Test
+	@Transactional
+	public void testCreateVacation() {
+		employeeRepository.calculateVacation(DateHelper.getDate("2012-01-01"), new Long(1));
+	}
 
 
 }

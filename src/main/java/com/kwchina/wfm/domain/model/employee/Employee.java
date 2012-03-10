@@ -81,6 +81,10 @@ public class Employee implements com.kwchina.wfm.domain.common.Entity<Employee> 
 	})
     private Set<Preference> preferences;
 	
+	@ElementCollection
+	@CollectionTable(name="T_EMPLOYEE_VACATIONS", joinColumns=@JoinColumn(name="employeeId"))
+    private Set<Vacation> vacations;
+	
 	@Column(nullable=false)
 	private boolean enable;
 	
@@ -167,6 +171,14 @@ public class Employee implements com.kwchina.wfm.domain.common.Entity<Employee> 
 
 	public void setPreferences(Set<Preference> preferences) {
 		this.preferences = preferences;
+	}
+
+	public Set<Vacation> getVacations() {
+		return vacations;
+	}
+
+	public void setVacations(Set<Vacation> vacations) {
+		this.vacations = vacations;
 	}
 
 	public boolean isEnable() {
