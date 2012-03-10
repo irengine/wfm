@@ -10,7 +10,7 @@
 	<context:component-scan base-package="com.kwchina.wfm" />
 	<global-method-security pre-post-annotations="enabled" />
 
-	<http use-expressions="true" auto-config='true'>
+	<http use-expressions="true" auto-config='false'>
 		<intercept-url pattern="/" access="permitAll" />
 		<intercept-url pattern="/login.jsp" access="permitAll" />
 		<intercept-url pattern="/logout.jsp" access="permitAll" />
@@ -19,7 +19,7 @@
 		<intercept-url pattern="/loadUnits" access="isAuthenticated() and hasRole('sysAdmin')" />
 		 -->
 		<intercept-url pattern="/**" access="isAuthenticated()" />
-		<form-login authentication-failure-url="/login.jsp?login_error=1" default-target-url="/"/>
+		<form-login login-page="/login.jsp" authentication-failure-url="/login.jsp?login_error=1" default-target-url="/"/>
 		<logout invalidate-session="true" logout-success-url="/" />
 	</http>
 
