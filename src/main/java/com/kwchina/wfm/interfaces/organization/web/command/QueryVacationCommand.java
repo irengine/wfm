@@ -36,16 +36,15 @@ public class QueryVacationCommand {
 		
 		if (!(null == this.unitId || this.unitId.equals(0))) {
 			firstConditions.add(String.format("u.leftId >= %d and u.rightId <= %d", leftId, rightId));
-			secondConditions.add(String.format("u.leftId >= %d and u.rightId <= %d", leftId, rightId));
 		}
 		
 		if (!(null == this.getEmployeeId() || this.getEmployeeId().equals(0))) {
 			firstConditions.add(String.format("e.id = %d", this.getEmployeeId()));
-			secondConditions.add(String.format("ts.employeeId = %d", this.getEmployeeId()));
+			secondConditions.add(String.format("v.employeeId = %d", this.getEmployeeId()));
 		}
 		
 		if (!StringUtils.isEmpty(this.date)) {
-			secondConditions.add(String.format("ts.date >= '%s' and ts.date < date_add('%s', INTERVAL 1 YEAR)", date));
+			secondConditions.add(String.format("v.month >= '%s' and v.month < date_add('%s', INTERVAL 1 YEAR)", date, date));
 		}
 		
 		String firstCondition = (0 == firstConditions.size()) ? " where e.enable = 1 " : " where e.enable = 1 and " + StringUtils.join(firstConditions, " AND ");

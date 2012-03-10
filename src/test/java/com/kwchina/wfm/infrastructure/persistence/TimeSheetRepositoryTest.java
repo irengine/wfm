@@ -285,6 +285,8 @@ public class TimeSheetRepositoryTest {
 		System.out.println(cmd1.toSQL(unit.getLeft(), unit.getRight()));
 		
 		QueryVacationCommand xCmd  = new QueryVacationCommand();
+		xCmd.setUnitId(unit.getId());
+		xCmd.setDate("2012-01-01");
 		System.out.println(xCmd.toSQL(unit.getLeft(), unit.getRight()));
 
 	}
