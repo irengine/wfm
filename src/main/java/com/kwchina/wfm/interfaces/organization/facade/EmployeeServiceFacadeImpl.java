@@ -246,7 +246,13 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 	@Override
 	@Transactional(propagation=Propagation.REQUIRED)
 	public void calculateVacation(QueryVacationCommand command) {
-		AttendanceType at = attendanceTypeRepository.findByName("");
+		AttendanceType at = attendanceTypeRepository.findByName("年假");
 		employeeRepository.calculateVacation(DateHelper.getDate(command.getDate()), at.getId());
+	}
+	
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED)
+	public String queryEmployeesVacationWithJson(QueryVacationCommand command) {
+		return JacksonHelper.getJson(employeeRepository.queryVacation(command));
 	}
 }

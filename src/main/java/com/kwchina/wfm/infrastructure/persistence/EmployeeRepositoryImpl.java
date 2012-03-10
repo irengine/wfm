@@ -2,6 +2,7 @@ package com.kwchina.wfm.infrastructure.persistence;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -12,13 +13,19 @@ import org.springframework.stereotype.Repository;
 
 import com.kwchina.wfm.domain.model.employee.Employee;
 import com.kwchina.wfm.domain.model.employee.EmployeeRepository;
+import com.kwchina.wfm.domain.model.organization.Unit;
+import com.kwchina.wfm.domain.model.organization.UnitRepository;
 import com.kwchina.wfm.infrastructure.common.DateHelper;
+import com.kwchina.wfm.interfaces.organization.web.command.QueryVacationCommand;
 
 @Repository
 public class EmployeeRepositoryImpl extends BaseRepositoryImpl<Employee> implements EmployeeRepository {
 	
 	@PersistenceContext
 	private EntityManager entityManager;
+	
+	@Autowired
+	UnitRepository unitRepository;
 	
 	public void disable(Employee employee) {
 	
@@ -80,5 +87,19 @@ public class EmployeeRepositoryImpl extends BaseRepositoryImpl<Employee> impleme
 				DateHelper.getString(currentMonth));
 		
 		jdbcTemplate.batchUpdate(new String [] {deleteSql, createSql, updateSql});
+	}
+	
+	@Override
+	public List<Map<String, Object>> queryVacation(QueryVacationCommand command) {
+		Long leftId = null;
+		Long rightId = null;
+		if (!(null == command.getUnitId() || command.getUnitId().equals(0))) {
+			Unit unit = unitRepository.findById(command.getUnitId());
+			leftId = unit.getLeft();
+			rightId = unit.getRight();
+		}
+		List<Map<String, Object>> rows = jdbcTemplate.queryForList(command.toSQL(leftId, rightId));
+		
+		return rows;
 	}
 }

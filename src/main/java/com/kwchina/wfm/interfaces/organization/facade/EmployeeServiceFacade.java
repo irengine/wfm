@@ -25,4 +25,5 @@ public interface EmployeeServiceFacade {
 	String queryEmployeesAbsentTimeSheetWithJson(QueryAbsentTimeSheetCommand command);
 	
 	void calculateVacation(QueryVacationCommand command);
+	String queryEmployeesVacationWithJson(QueryVacationCommand command);
 }

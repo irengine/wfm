@@ -113,4 +113,9 @@ public class EmployeeController {
 		employeeServiceFacade.calculateVacation(command);
 	}
 
+	@RequestMapping(value = "/queryEmployeesVacation", method = RequestMethod.GET)
+	public void queryEmployeesVacation(HttpServletRequest request, HttpServletResponse response, @ModelAttribute QueryVacationCommand command) {
+		
+		HttpHelper.output(response, employeeServiceFacade.queryEmployeesVacationWithJson(command));
+	}
 }

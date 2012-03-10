@@ -38,6 +38,7 @@ import com.kwchina.wfm.domain.model.shift.AttendanceTypeRepository;
 import com.kwchina.wfm.infrastructure.common.DateHelper;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryAbsentTimeSheetCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryActualTimeSheetCommand;
+import com.kwchina.wfm.interfaces.organization.web.command.QueryVacationCommand;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({"/context-test.xml"})
@@ -282,6 +283,9 @@ public class TimeSheetRepositoryTest {
 		cmd1.setattendanceTypeIds(String.format("%d,%d,%d,", at1.getId(), at2.getId(), at3.getId()));
 		
 		System.out.println(cmd1.toSQL(unit.getLeft(), unit.getRight()));
+		
+		QueryVacationCommand xCmd  = new QueryVacationCommand();
+		System.out.println(xCmd.toSQL(unit.getLeft(), unit.getRight()));
 
 	}
 	
