@@ -34,15 +34,30 @@ public class ShiftTypeRepositoryImpl extends BaseRepositoryImpl<ShiftType> imple
 	@Override
 	public CustomShiftPolicy getCustomShiftPolicy(String parameters) {
 		String[] ps = StringUtils.split(parameters, ";");
-		Date startDate = DateHelper.getDate(ps[0]);
-		int offset = Integer.parseInt(ps[1]);
-		String[] ats = StringUtils.split(ps[2], ",");
-		List<AttendanceType> attendanceTypes = new ArrayList<AttendanceType>();
-		for(String at : ats) {
-			attendanceTypes.add(attendanceTypeRepository.findByName(at));
+		if (ps.length == 3) {
+			Date startDate = DateHelper.getDate(ps[0]);
+			int offset = Integer.parseInt(ps[1]);
+			String[] ats = StringUtils.split(ps[2], ",");
+			List<AttendanceType> attendanceTypes = new ArrayList<AttendanceType>();
+			for(String at : ats) {
+				attendanceTypes.add(attendanceTypeRepository.findByName(at));
+			}
+			
+			return new CustomShiftPolicy(startDate, offset, attendanceTypes);
+		}
+		else if (ps.length == 4) {
+			Date startDate = DateHelper.getDate(ps[0]);
+			int offset = Integer.parseInt(ps[2]);
+			String[] ats = StringUtils.split(ps[3], ",");
+			List<AttendanceType> attendanceTypes = new ArrayList<AttendanceType>();
+			for(String at : ats) {
+				attendanceTypes.add(attendanceTypeRepository.findByName(at));
+			}
+			
+			return new CustomShiftPolicy(startDate, offset, attendanceTypes);
 		}
 		
-		return new CustomShiftPolicy(startDate, offset, attendanceTypes);
+		return null;
 	}
 
 	@Override
