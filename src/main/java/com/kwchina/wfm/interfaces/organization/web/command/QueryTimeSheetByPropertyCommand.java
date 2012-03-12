@@ -72,7 +72,7 @@ public class QueryTimeSheetByPropertyCommand {
 		}
 		
 		if (!StringUtils.isEmpty(this.attendanceTypeIds)) {
-			firstConditions.add(String.format("ats.id in (%s0)", this.attendanceTypeIds));
+			firstConditions.add(String.format("ats.id in (%s)", this.attendanceTypeIds));
 		}
 		
 		String firstCondition = (0 == firstConditions.size()) ? " where e.enable = 1 " : " where e.enable = 1 and " + StringUtils.join(firstConditions, " AND ");

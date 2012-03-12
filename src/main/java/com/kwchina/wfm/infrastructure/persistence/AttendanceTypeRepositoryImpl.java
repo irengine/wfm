@@ -35,15 +35,16 @@ public class AttendanceTypeRepositoryImpl extends BaseRepositoryImpl<AttendanceT
 	@SuppressWarnings("unchecked")
 	public List<AttendanceType> findByProperty(String key, String value) {
 		
-		Preference p = new Preference(key, value);
 		List<AttendanceType> all = entityManager.createQuery("select at from AttendanceType at where at.enable = true")
 				.getResultList();
 
 		List<AttendanceType> ats = new ArrayList<AttendanceType>();
 		for (AttendanceType at : all) {
-			if (at.getPreferences().contains(p)) {
-				ats.add(at);
-			}
+			
+			for (Preference p : at.getPreferences())
+				if (p.getKey().equals(key) && p.getValue().equals(value)) {
+					ats.add(at);
+				}
 				
 		}
 		
