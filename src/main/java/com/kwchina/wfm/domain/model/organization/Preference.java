@@ -19,7 +19,7 @@ public class Preference implements ValueObject<Preference> {
 	private String scope;
 	
 	public Preference() {
-		
+		this.scope = "";
 	}
 	
 	public Preference(String key, String value) {

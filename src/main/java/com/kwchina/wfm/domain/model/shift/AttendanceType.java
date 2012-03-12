@@ -54,8 +54,11 @@ public class AttendanceType implements com.kwchina.wfm.domain.common.Entity<Atte
 	})
     private Set<Preference> preferences;
 	
+	@Column(nullable=false)
+	private boolean enable;
+	
 	public AttendanceType() {
-		
+		this.enable = true;
 	}
 	
 	public AttendanceType(String name, int beginTime, int endTime) {
@@ -63,6 +66,7 @@ public class AttendanceType implements com.kwchina.wfm.domain.common.Entity<Atte
 		this.beginTime = beginTime;
 		this.endTime = endTime;
 		this.preferences = Collections.<Preference>emptySet();
+		this.enable = true;
 	}
 	
 	public Long getId() {
@@ -119,6 +123,14 @@ public class AttendanceType implements com.kwchina.wfm.domain.common.Entity<Atte
 
 	public void setPreferences(Set<Preference> preferences) {
 		this.preferences = preferences;
+	}
+
+	public boolean isEnable() {
+		return enable;
+	}
+
+	public void setEnable(boolean enable) {
+		this.enable = enable;
 	}
 
 	@Override

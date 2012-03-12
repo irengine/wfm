@@ -1,7 +1,7 @@
 package com.kwchina.wfm.interfaces.organization.facade;
 
 import com.kwchina.wfm.domain.model.employee.Employee;
-import com.kwchina.wfm.interfaces.organization.web.command.QueryAbsentTimeSheetCommand;
+import com.kwchina.wfm.interfaces.organization.web.command.QueryTimeSheetByPropertyCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryActualTimeSheetCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryTimeSheetCommand;
@@ -22,8 +22,10 @@ public interface EmployeeServiceFacade {
 	void generateEmployeesMonthTimeSheet(String date, Long unitId);
 	void saveTimeSheetRecord(SaveTimeSheetRecordCommand command);
 	String queryEmployeesActualTimeSheetWithJson(QueryActualTimeSheetCommand command);
-	String queryEmployeesAbsentTimeSheetWithJson(QueryAbsentTimeSheetCommand command);
 	
 	void calculateVacation(QueryVacationCommand command);
 	String queryEmployeesVacationWithJson(QueryVacationCommand command);
+
+	String queryEmployeesAbsentTimeSheetWithJson(QueryTimeSheetByPropertyCommand command);
+	String queryEmployeesOverTimeTimeSheetWithJson(QueryTimeSheetByPropertyCommand command);
 }

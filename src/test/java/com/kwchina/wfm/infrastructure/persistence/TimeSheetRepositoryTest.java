@@ -36,7 +36,7 @@ import com.kwchina.wfm.domain.model.organization.UnitRepository;
 import com.kwchina.wfm.domain.model.shift.AttendanceType;
 import com.kwchina.wfm.domain.model.shift.AttendanceTypeRepository;
 import com.kwchina.wfm.infrastructure.common.DateHelper;
-import com.kwchina.wfm.interfaces.organization.web.command.QueryAbsentTimeSheetCommand;
+import com.kwchina.wfm.interfaces.organization.web.command.QueryTimeSheetByPropertyCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryActualTimeSheetCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryVacationCommand;
 
@@ -276,7 +276,7 @@ public class TimeSheetRepositoryTest {
 		List<Map<String, Object>> rowsEx2 = jdbcTemplate.queryForList(command.toSQL(unit.getLeft(), unit.getRight()));
 		assertTrue(3 == rowsEx2.size());
 
-		QueryAbsentTimeSheetCommand cmd1 = new QueryAbsentTimeSheetCommand();
+		QueryTimeSheetByPropertyCommand cmd1 = new QueryTimeSheetByPropertyCommand();
 		cmd1.setUnitId(unit.getId());
 		cmd1.setBeginTime("2012-01-01");
 		cmd1.setEndTime("2012-02-29");

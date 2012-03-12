@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
-public class QueryAbsentTimeSheetCommand {
+public class QueryTimeSheetByPropertyCommand {
 
 	/*
 	 * unitId=3&employeeId=2&beginTime=2012-02-01&endTime=2012-02-20&attendanceTypes=日班,中班,公休,
@@ -15,7 +15,8 @@ public class QueryAbsentTimeSheetCommand {
 	private Long employeeId;
 	private String beginTime;
 	private String endTime;
-	private String attendanceTypeIds;
+	private String propertyName;
+	private String attendanceTypeIds;	// internal user
 	
 	public Long getUnitId() {
 		return unitId;
@@ -88,5 +89,11 @@ public class QueryAbsentTimeSheetCommand {
 				"group by employeeId, employeeCode, employeeName, attendanceTypeId, attendanceTypeName, xyear, xmonth";
 		
 		return String.format(syntax, firstCondition, secondCondition);
+	}
+	public String getPropertyName() {
+		return propertyName;
+	}
+	public void setPropertyName(String propertyName) {
+		this.propertyName = propertyName;
 	}
 }

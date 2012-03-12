@@ -6,7 +6,7 @@ import java.util.Map;
 import com.kwchina.wfm.domain.common.BaseRepository;
 import com.kwchina.wfm.domain.model.employee.TimeSheet.ActionType;
 import com.kwchina.wfm.domain.model.organization.Unit;
-import com.kwchina.wfm.interfaces.organization.web.command.QueryAbsentTimeSheetCommand;
+import com.kwchina.wfm.interfaces.organization.web.command.QueryTimeSheetByPropertyCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryActualTimeSheetCommand;
 
 public interface TimeSheetRepository extends BaseRepository<TimeSheet> {
@@ -17,7 +17,7 @@ public interface TimeSheetRepository extends BaseRepository<TimeSheet> {
 	List<TimeSheet> getDayTimeSheet(String day, Unit unit, ActionType actionType);
 
 	List<Map<String, Object>> queryActualTimeSheet(QueryActualTimeSheetCommand command);
-	List<Map<String, Object>> queryAbsentTimeSheet(QueryAbsentTimeSheetCommand command);
+	List<Map<String, Object>> queryTimeSheetByProperty(QueryTimeSheetByPropertyCommand command);
 
 	void disable(TimeSheet ts);
 

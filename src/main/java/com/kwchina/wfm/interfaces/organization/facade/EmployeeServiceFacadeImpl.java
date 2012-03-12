@@ -34,7 +34,7 @@ import com.kwchina.wfm.interfaces.common.PageHelper;
 import com.kwchina.wfm.interfaces.common.QueryHelper;
 import com.kwchina.wfm.interfaces.organization.dto.TimeSheetDTO;
 import com.kwchina.wfm.interfaces.organization.web.command.ActionCommand;
-import com.kwchina.wfm.interfaces.organization.web.command.QueryAbsentTimeSheetCommand;
+import com.kwchina.wfm.interfaces.organization.web.command.QueryTimeSheetByPropertyCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryActualTimeSheetCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryTimeSheetCommand;
@@ -239,9 +239,30 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 
 	@Override
 	@Transactional(propagation=Propagation.REQUIRED)
-	public String queryEmployeesAbsentTimeSheetWithJson(QueryAbsentTimeSheetCommand command) {
-		return JacksonHelper.getJson(timeSheetRepository.queryAbsentTimeSheet(command));
+	public String queryEmployeesAbsentTimeSheetWithJson(QueryTimeSheetByPropertyCommand command) {
+		List<AttendanceType> ats = attendanceTypeRepository.findByProperty(command.getPropertyName(), "true");
+		List<String> atIds = new ArrayList<String>();
+		for (AttendanceType at : ats) {
+			atIds.add(at.getId().toString());
+		}
+		command.setattendanceTypeIds(StringUtils.join(atIds, ","));
+		
+		return JacksonHelper.getJson(timeSheetRepository.queryTimeSheetByProperty(command));
 	}
+	
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED)
+	public String queryEmployeesOverTimeTimeSheetWithJson(QueryTimeSheetByPropertyCommand command) {
+		List<AttendanceType> ats = attendanceTypeRepository.findByProperty(command.getPropertyName(), "true");
+		List<String> atIds = new ArrayList<String>();
+		for (AttendanceType at : ats) {
+			atIds.add(at.getId().toString());
+		}
+		command.setattendanceTypeIds(StringUtils.join(atIds, ","));
+		
+		return JacksonHelper.getJson(timeSheetRepository.queryTimeSheetByProperty(command));
+	}
+
 	
 	@Override
 	@Transactional(propagation=Propagation.REQUIRED)

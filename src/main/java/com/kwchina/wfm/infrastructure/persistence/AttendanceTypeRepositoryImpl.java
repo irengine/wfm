@@ -1,11 +1,15 @@
 package com.kwchina.wfm.infrastructure.persistence;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
 import org.springframework.stereotype.Repository;
 
+import com.kwchina.wfm.domain.model.organization.Preference;
 import com.kwchina.wfm.domain.model.shift.AttendanceType;
 import com.kwchina.wfm.domain.model.shift.AttendanceTypeRepository;
 
@@ -25,6 +29,34 @@ public class AttendanceTypeRepositoryImpl extends BaseRepositoryImpl<AttendanceT
 		catch (NoResultException nre) {
 			return null;
 		}
+	}
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<AttendanceType> findByProperty(String key, String value) {
+		
+		Preference p = new Preference(key, value);
+		List<AttendanceType> all = entityManager.createQuery("select at from AttendanceType at where at.enable = true")
+				.getResultList();
+
+		List<AttendanceType> ats = new ArrayList<AttendanceType>();
+		for (AttendanceType at : all) {
+			if (at.getPreferences().contains(p)) {
+				ats.add(at);
+			}
+				
+		}
+		
+		return ats;
+	}
+	
+	@Override
+	public void disable(AttendanceType at) {
+		
+		at.setEnable(false);
+
+		entityManager.persist(at);
+		entityManager.flush();
 	}
 
 }

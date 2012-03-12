@@ -19,7 +19,7 @@ import com.kwchina.wfm.infrastructure.common.HttpHelper;
 import com.kwchina.wfm.interfaces.common.JacksonHelper;
 import com.kwchina.wfm.interfaces.common.QueryHelper;
 import com.kwchina.wfm.interfaces.organization.facade.EmployeeServiceFacade;
-import com.kwchina.wfm.interfaces.organization.web.command.QueryAbsentTimeSheetCommand;
+import com.kwchina.wfm.interfaces.organization.web.command.QueryTimeSheetByPropertyCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryActualTimeSheetCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryTimeSheetCommand;
@@ -90,7 +90,13 @@ public class EmployeeController {
 	}
 
 	@RequestMapping(value = "/queryEmployeesAbsentTimeSheet", method = RequestMethod.GET)
-	public void queryEmployeesAbsentTimeSheet(HttpServletRequest request, HttpServletResponse response, @ModelAttribute QueryAbsentTimeSheetCommand command) {
+	public void queryEmployeesAbsentTimeSheet(HttpServletRequest request, HttpServletResponse response, @ModelAttribute QueryTimeSheetByPropertyCommand command) {
+		
+		HttpHelper.output(response, employeeServiceFacade.queryEmployeesAbsentTimeSheetWithJson(command));
+	}
+
+	@RequestMapping(value = "/queryEmployeesOverTimeSheet", method = RequestMethod.GET)
+	public void queryEmployeesOverTimeSheet(HttpServletRequest request, HttpServletResponse response, @ModelAttribute QueryTimeSheetByPropertyCommand command) {
 		
 		HttpHelper.output(response, employeeServiceFacade.queryEmployeesAbsentTimeSheetWithJson(command));
 	}
