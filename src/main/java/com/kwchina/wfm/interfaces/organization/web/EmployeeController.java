@@ -57,7 +57,7 @@ public class EmployeeController {
 		else
 			employee =employeeServiceFacade.findById(Long.parseLong(request.getParameter("id")));
 		
-		HttpHelper.output(response, JacksonHelper.getUserJsonWithFilters(employee));
+		HttpHelper.output(response, JacksonHelper.getEmployeeJsonWithFilters(employee));
 	}
 	
 	@RequestMapping(value = "/saveEmployee", method = RequestMethod.POST)
