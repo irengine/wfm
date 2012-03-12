@@ -65,7 +65,11 @@ public class UnitServiceFacadeImpl implements UnitServiceFacade {
 		
 		Unit root = unitRepository.findRoot();
 		
-		UnitDTO uo = new UnitDTO(root, user.getUnits());
+		UnitDTO uo = null;
+		if (name.equals("sysAdmin"))
+			uo = new UnitDTO(root);
+		else
+			uo = new UnitDTO(root, user.getUnits());
 		List<UnitDTO> uos = new ArrayList<UnitDTO>();
 		uos.add(uo); 
 		

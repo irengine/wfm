@@ -70,14 +70,14 @@ public class UnitDTO {
 
 	public void copy(Unit unit, Collection<Unit> units)
 	{
-		if (isInclude(unit, units)) {
-			setId(unit.getId().toString());
-			setData(unit.getName());
-			for(Unit child : unit.getChildren()) {
-				UnitDTO unitDTO = new UnitDTO((Unit)child);
-				addChild(unitDTO);
-			}
+		setId(unit.getId().toString());
+		setData(unit.getName());
+		for(Unit child : unit.getChildren()) {
+			if (isInclude(child, units)) {
+			UnitDTO unitDTO = new UnitDTO((Unit)child);
+			addChild(unitDTO);
 		}
+	}
 	}
 	
 	private boolean isInclude(Unit unit, Collection<Unit> units) {
