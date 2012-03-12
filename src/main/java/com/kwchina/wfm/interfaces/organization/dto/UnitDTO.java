@@ -16,8 +16,12 @@ public class UnitDTO {
 		
 	}
 	
-	public UnitDTO(Unit unit) {
-		copy(unit);
+	public UnitDTO(Unit root) {
+		copy(root);
+	}
+
+	public UnitDTO(Unit root, Collection<Unit> units) {
+		copy(root, units);
 	}
 
 	public void setId(String id) {
@@ -60,9 +64,31 @@ public class UnitDTO {
 		setData(unit.getName());
 		for(Unit child : unit.getChildren()) {
 			UnitDTO unitDTO = new UnitDTO((Unit)child);
-//			unitDTO.copy((Unit)child);
 			addChild(unitDTO);
 		}
 	}
+
+	public void copy(Unit unit, Collection<Unit> units)
+	{
+		if (isInclude(unit, units)) {
+			setId(unit.getId().toString());
+			setData(unit.getName());
+			for(Unit child : unit.getChildren()) {
+				UnitDTO unitDTO = new UnitDTO((Unit)child);
+				addChild(unitDTO);
+			}
+		}
+	}
 	
+	private boolean isInclude(Unit unit, Collection<Unit> units) {
+		
+		for (Unit u : units) {
+			if (u.getId().equals(unit.getId()))
+				return true;
+		}
+		
+		return false;
+	}
+
 }
+

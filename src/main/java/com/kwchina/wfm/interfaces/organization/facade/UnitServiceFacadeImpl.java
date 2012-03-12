@@ -10,8 +10,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.kwchina.wfm.domain.model.organization.Unit;
 import com.kwchina.wfm.domain.model.organization.UnitRepository;
+import com.kwchina.wfm.domain.model.organization.User;
+import com.kwchina.wfm.domain.model.organization.UserRepository;
 import com.kwchina.wfm.domain.model.shift.ShiftType;
 import com.kwchina.wfm.domain.model.shift.ShiftTypeRepository;
+import com.kwchina.wfm.infrastructure.common.SecurityHelper;
 import com.kwchina.wfm.interfaces.common.JacksonHelper;
 import com.kwchina.wfm.interfaces.organization.dto.UnitDTO;
 import com.kwchina.wfm.interfaces.organization.web.command.ActionCommand;
@@ -22,6 +25,9 @@ public class UnitServiceFacadeImpl implements UnitServiceFacade {
 
 	@Autowired
 	UnitRepository unitRepository;
+
+	@Autowired
+	UserRepository userRepository;
 	
 	@Autowired
 	ShiftTypeRepository shiftTypeRepository;
@@ -54,9 +60,12 @@ public class UnitServiceFacadeImpl implements UnitServiceFacade {
 	
 	@Transactional(propagation=Propagation.SUPPORTS)
 	public String getUnitsWithJson() {
+		String name = SecurityHelper.getCurrentUserName();
+		User user = userRepository.findByName(name);
+		
 		Unit root = unitRepository.findRoot();
 		
-		UnitDTO uo = new UnitDTO(root);
+		UnitDTO uo = new UnitDTO(root, user.getUnits());
 		List<UnitDTO> uos = new ArrayList<UnitDTO>();
 		uos.add(uo); 
 		

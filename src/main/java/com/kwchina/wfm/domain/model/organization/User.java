@@ -19,6 +19,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -28,6 +30,9 @@ import com.kwchina.wfm.infrastructure.common.SecurityHelper;
 
 @Entity
 @Table(name="T_USERS")
+@NamedQueries({
+	@NamedQuery(name = "user.findByName", query = "SELECT u FROM User u WHERE u.name = :name")
+})
 public class User implements com.kwchina.wfm.domain.common.Entity<User> {
 
 	@Id
