@@ -208,8 +208,7 @@ public class SystemServiceFacadeImpl implements SystemServiceFacade {
 			String[] ids = StringUtils.split(command.getIds(), ActionCommand.ID_SEPARATOR);
 			for (String id : ids) {
 				AttendanceType attendanceType = attendanceTypeRepository.findById(Long.parseLong(id));
-				// TODO: logical delete
-				attendanceTypeRepository.remove(attendanceType);
+				attendanceTypeRepository.disable(attendanceType);
 			}
 		}
 		
