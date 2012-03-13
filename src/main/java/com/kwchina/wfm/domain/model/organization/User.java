@@ -31,7 +31,7 @@ import com.kwchina.wfm.infrastructure.common.SecurityHelper;
 @Entity
 @Table(name="T_USERS")
 @NamedQueries({
-	@NamedQuery(name = "user.findByName", query = "SELECT u FROM User u WHERE u.name = :name")
+	@NamedQuery(name = "user.findByName", query = "SELECT u FROM User u WHERE u.code = :name")
 })
 public class User implements com.kwchina.wfm.domain.common.Entity<User> {
 
