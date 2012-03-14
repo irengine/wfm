@@ -124,11 +124,13 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 			Job job = new Job(unit, null, null, JobStatus.UNKNOWN, new Date());
 			employee.setJob(job);
 			
-			Set<Preference> preferences = new HashSet<Preference>();
-			for(Map.Entry<String, String> property : command.getProperties().entrySet()) {
-				preferences.add(new Preference(property.getKey(), property.getValue()));
+			if (null != command.getProperties()) {
+				Set<Preference> preferences = new HashSet<Preference>();
+				for(Map.Entry<String, String> property : command.getProperties().entrySet()) {
+					preferences.add(new Preference(property.getKey(), property.getValue()));
+				}
+				employee.setPreferences(preferences);
 			}
-			employee.setPreferences(preferences);
 			
 			employeeRepository.save(employee);
 		}
