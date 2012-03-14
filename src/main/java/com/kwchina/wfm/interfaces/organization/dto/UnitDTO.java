@@ -21,6 +21,9 @@ public class UnitDTO {
 	}
 
 	public UnitDTO(Unit root, Collection<Unit> units) {
+		setId(root.getId().toString());
+		setData(root.getName());
+		
 		copy(root, null, units);
 	}
 
@@ -84,8 +87,6 @@ public class UnitDTO {
 		if (null == parentDTO)
 			parentDTO = this;
 		
-		setId(unit.getId().toString());
-		setData(unit.getName());
 		for(Unit child : unit.getChildren()) {
 			if (isInclude(child, units)) {
 				UnitDTO unitDTO = new UnitDTO(child, units);
