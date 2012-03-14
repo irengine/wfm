@@ -106,6 +106,7 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 			
 			employee.setEmployeeId(new EmployeeId(command.getEmployeeId()));
 			employee.setName(command.getName());
+			employee.setGender(command.getGender());
 			employee.setBeginDateOfJob(command.getBeginDateOfJob());
 			employee.setBeginDateOfWork(command.getBeginDateOfWork());
 			employee.setBirthday(command.getBirthday());

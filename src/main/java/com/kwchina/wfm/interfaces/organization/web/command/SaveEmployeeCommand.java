@@ -6,11 +6,14 @@ import java.util.Map;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
+import com.kwchina.wfm.domain.model.employee.Employee.Gender;
+
 public class SaveEmployeeCommand extends ActionCommand {
 
 	private Long id;
 	private String employeeId;
 	private String name;
+	private Gender gender;
 	@DateTimeFormat(iso=ISO.DATE)
 	private Date birthday;
 	@DateTimeFormat(iso=ISO.DATE)
@@ -43,6 +46,14 @@ public class SaveEmployeeCommand extends ActionCommand {
 	public void setName(String name) {
 		this.name = name;
 	}
+	public Gender getGender() {
+		return gender;
+	}
+
+	public void setGender(Gender gender) {
+		this.gender = gender;
+	}
+
 	public Date getBirthday() {
 		return birthday;
 	}

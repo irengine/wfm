@@ -11,6 +11,8 @@ import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -26,6 +28,7 @@ import javax.persistence.TemporalType;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
+import com.kwchina.wfm.domain.common.ValueObject;
 import com.kwchina.wfm.domain.model.organization.Preference;
 import com.kwchina.wfm.domain.model.organization.Unit;
 import com.kwchina.wfm.domain.model.shift.ShiftType;
@@ -50,6 +53,20 @@ public class Employee implements com.kwchina.wfm.domain.common.Entity<Employee> 
 	
 	@Column(nullable=false)
 	private String name;
+	
+	@Column(nullable=false)
+	@Enumerated(EnumType.STRING)
+	private Gender gender;
+	
+	public enum Gender implements ValueObject<Gender> {
+		MALE,
+		FEMALE;
+
+		@Override
+		public boolean sameValueAs(Gender other) {
+			return other != null && this.equals(other);
+		}
+	}
 	
 	@Column(nullable=false)
 	@Temporal(TemporalType.DATE)
@@ -92,6 +109,7 @@ public class Employee implements com.kwchina.wfm.domain.common.Entity<Employee> 
 		this.enable = true;
 	}
 	
+	// TODO: add gender to construct
 	public Employee(EmployeeId employeeId, String name, Date birthday, Date beginDateOfWork, Date beginDateOfJob) {
 		this.employeeId = employeeId;
 		this.name = name;
@@ -125,6 +143,14 @@ public class Employee implements com.kwchina.wfm.domain.common.Entity<Employee> 
 		this.name = name;
 	}
 	
+	public Gender getGender() {
+		return gender;
+	}
+
+	public void setGender(Gender gender) {
+		this.gender = gender;
+	}
+
 	public Date getBirthday() {
 		return birthday;
 	}
