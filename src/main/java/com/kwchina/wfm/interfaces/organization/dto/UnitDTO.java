@@ -21,7 +21,7 @@ public class UnitDTO {
 	}
 
 	public UnitDTO(Unit root, Collection<Unit> units) {
-		copy(root, units);
+		copy(root, null, units);
 	}
 
 	public void setId(String id) {
@@ -53,31 +53,48 @@ public class UnitDTO {
 		this.children.add(unitDTO);
 	}
 	
+	public void addChild(UnitDTO parentDTO, UnitDTO unitDTO)
+	{
+		parentDTO.children.add(unitDTO);
+	}
+	
 	public void removeChild(UnitDTO unitDTO)
 	{
 		this.children.remove(unitDTO);
 	}
 	
+	/*
+	 * Copy all units into tree
+	 */
 	public void copy(Unit unit)
 	{
 		setId(unit.getId().toString());
 		setData(unit.getName());
 		for(Unit child : unit.getChildren()) {
-			UnitDTO unitDTO = new UnitDTO((Unit)child);
+			UnitDTO unitDTO = new UnitDTO(child);
 			addChild(unitDTO);
 		}
 	}
 
-	public void copy(Unit unit, Collection<Unit> units)
+	/*
+	 * Only copy unit in mapping into tree
+	 */
+	public void copy(Unit unit, UnitDTO parentDTO, Collection<Unit> units)
 	{
+		if (null == parentDTO)
+			parentDTO = this;
+		
 		setId(unit.getId().toString());
 		setData(unit.getName());
 		for(Unit child : unit.getChildren()) {
 			if (isInclude(child, units)) {
-			UnitDTO unitDTO = new UnitDTO((Unit)child);
-			addChild(unitDTO);
+				UnitDTO unitDTO = new UnitDTO(child, units);
+				addChild(parentDTO, unitDTO);
+			}
+			else {
+				copy(child, parentDTO, units);
+			}
 		}
-	}
 	}
 	
 	private boolean isInclude(Unit unit, Collection<Unit> units) {
