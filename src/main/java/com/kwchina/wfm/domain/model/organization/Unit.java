@@ -47,7 +47,7 @@ public class Unit implements com.kwchina.wfm.domain.common.Entity<Unit> {
 	@Column(name="rightId", nullable=false)
 	private Long right = 0L;
 	
-	@Column(unique = true)
+	@Column(nullable=false)
 	private String name;
 	
     @ManyToMany(
@@ -174,7 +174,7 @@ public class Unit implements com.kwchina.wfm.domain.common.Entity<Unit> {
 
 	@Override
 	public boolean sameIdentityAs(final Unit other) {
-		return other != null && name.equals(other.name);
+		return other != null && id.equals(other.id);
 	}
 
 	@Override
@@ -193,6 +193,6 @@ public class Unit implements com.kwchina.wfm.domain.common.Entity<Unit> {
 	 */
 	@Override
 	public int hashCode() {
-		return name.hashCode();
+		return id.hashCode();
 	}
 }
