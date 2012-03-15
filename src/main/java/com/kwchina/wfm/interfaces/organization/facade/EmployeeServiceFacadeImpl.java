@@ -217,7 +217,11 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 				TimeSheet ts = timeSheetRepository.findById(command.getId());
 				ts.setLastActionType(command.getActionType());
 				timeSheetRepository.save(ts);
-				record = new TimeSheet(unit, employee, command.getDate(), command.getBeginTime(), command.getEndTime(), attendanceType, command.getActionType());
+				
+				int beginTime = command.getBeginTime() == 0 ? attendanceType.getBeginTime() : command.getBeginTime();
+				int endTime = command.getEndTime() == 0 ? attendanceType.getEndTime() : command.getEndTime();
+				
+				record = new TimeSheet(unit, employee, command.getDate(), beginTime, endTime, attendanceType, command.getActionType());
 			}
 
 			timeSheetRepository.save(record);
