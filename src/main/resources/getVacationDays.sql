@@ -12,15 +12,15 @@ DECLARE days INT;
 		if (years = 0) then
 			set days = 0;
 		elseif (years = 1) then
-			set days = (5 * (12 - month + 1)) / 12;
+			set days = (5 * (12 - months + 1)) / 12;
 		elseif (years > 1 && years < 10) then
 			set days = 5;
 		elseif (years = 10) then
-			set days = 5 * (month - 1) / 12 + 10 * (12 - month + 1) /12 ;
+			set days = 5 * (months - 1) / 12 + 10 * (12 - months + 1) /12 ;
 		elseif (years > 10 && years < 20) then
 			set days = 10;
 		elseif (years = 20) then
-			set days = 10 * (month - 1) / 12 + 15 * (12 - month + 1) /12 ;
+			set days = 10 * (months - 1) / 12 + 15 * (12 - months + 1) /12 ;
 		elseif (years > 20) then
 			set days = 15;
 		end if;
