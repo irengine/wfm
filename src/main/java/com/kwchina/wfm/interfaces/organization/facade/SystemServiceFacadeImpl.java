@@ -233,7 +233,7 @@ public class SystemServiceFacadeImpl implements SystemServiceFacade {
 		PageHelper pageHelper = new PageHelper(rowsCount, command.getRows());
 		pageHelper.setCurrentPage(command.getPage());
 		
-		List<AttendanceType> rows = attendanceTypeRepository.getRows(whereClause, orderByClause, pageHelper.getStart(), pageHelper.getPageSize(), true);
+		List<AttendanceType> rows = attendanceTypeRepository.getRows(whereClause, orderByClause, pageHelper.getStart(), pageHelper.getPageSize());
 		Page page = new Page(pageHelper.getCurrentPage(), pageHelper.getPagesCount(), rowsCount, rows);
 		
 		return JacksonHelper.getJson(page);
