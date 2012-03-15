@@ -1,6 +1,5 @@
 package com.kwchina.wfm.infrastructure.persistence;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -24,8 +23,8 @@ import com.kwchina.wfm.domain.model.shift.ShiftPolicyFactory;
 import com.kwchina.wfm.domain.model.shift.ShiftType;
 import com.kwchina.wfm.domain.model.shift.ShiftTypeRepository;
 import com.kwchina.wfm.infrastructure.common.DateHelper;
-import com.kwchina.wfm.interfaces.organization.web.command.QueryTimeSheetByPropertyCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryActualTimeSheetCommand;
+import com.kwchina.wfm.interfaces.organization.web.command.QueryTimeSheetByPropertyCommand;
 
 @Repository
 public class TimeSheetRepositoryImpl extends BaseRepositoryImpl<TimeSheet> implements TimeSheetRepository {
@@ -70,14 +69,8 @@ public class TimeSheetRepositoryImpl extends BaseRepositoryImpl<TimeSheet> imple
 	
 	private void removeMonthTimeSheet(String month, Unit unit) {
 		
-		// Get first and last day for month
-		Date date = DateHelper.getDate(month);
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(date);
-		calendar.set(Calendar.DAY_OF_MONTH, 1);
-		Date beginDate = calendar.getTime();
-		calendar.add(Calendar.MONTH, 1);
-		Date endDate = calendar.getTime();
+		Date beginDate = DateHelper.getBeginDateOfMonth(month);
+		Date endDate = DateHelper.getEndDateOfMonth(month);
 		
 		entityManager.createQuery("delete from TimeSheet ts where ts.unit.id = :unitId " +
 				"and ts.date >= :beginDate and ts.date < :endDate and " +
@@ -94,13 +87,9 @@ public class TimeSheetRepositoryImpl extends BaseRepositoryImpl<TimeSheet> imple
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<TimeSheet> getMonthTimeSheet(String month, Unit unit, TimeSheet.ActionType actionType) {
-		Date date = DateHelper.getDate(month);
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(date);
-		calendar.set(Calendar.DAY_OF_MONTH, 1);
-		Date beginDate = calendar.getTime();
-		calendar.add(Calendar.MONTH, 1);
-		Date endDate = calendar.getTime();
+		
+		Date beginDate = DateHelper.getBeginDateOfMonth(month);
+		Date endDate = DateHelper.getEndDateOfMonth(month);
 		
 		List<TimeSheet> ts = entityManager.createQuery("select ts from TimeSheet ts, Unit u " +
 							"where u.id = :unitId and u.left <= ts.unit.left and u.right >= ts.unit.right and " +

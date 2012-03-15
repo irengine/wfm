@@ -115,11 +115,10 @@ public class ShiftTest {
 		printResult(t3);
 	}
 
-	@SuppressWarnings("deprecation")
 	private void printHeader() {
 		List<Date> days = DateHelper.getDaysOfMonth(2012, Calendar.JANUARY);
 		for(Date day : days) {
-			System.out.print(day.getDay());
+			System.out.print(DateHelper.getString(day));
 			System.out.print("\t");
 		}
 		System.out.println("");

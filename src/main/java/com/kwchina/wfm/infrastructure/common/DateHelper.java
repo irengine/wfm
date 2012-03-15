@@ -39,22 +39,25 @@ public class DateHelper {
 	}
 	
 	public static List<Date> getDaysOfMonth(int year, int month) {
-		int firstDay = 1;
-		
-		Calendar calendar = Calendar.getInstance();
-		calendar.set(year, month, firstDay);
-		
-		int lastDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
-		
+		Calendar beginCalendar = Calendar.getInstance();
+		beginCalendar.set(year, month, DAY_OF_MONTH, 0, 0, 0);
+		beginCalendar.add(Calendar.MONTH, -1);
+
+		Calendar endCalendar = Calendar.getInstance();
+		endCalendar.set(year, month, DAY_OF_MONTH, 0, 0, 0);
+
 		List<Date> days = new ArrayList<Date>();
-		for (int i = firstDay; i <= lastDay; i++) {
-			Calendar c = Calendar.getInstance();
-			c.set(year, month, i, 0, 0, 0);
-			days.add(c.getTime());
+		
+		while(beginCalendar.before(endCalendar)) {
+			days.add(beginCalendar.getTime());
+			beginCalendar.add(Calendar.DAY_OF_MONTH, 1);
 		}
 		
 		return days;
 	}
+	
+	// TODO: move begin date and end date into system properties
+	private static int DAY_OF_MONTH = 26;
 	
 	public static List<Date> getDaysOfMonth(String d) {
 		Date date = getDate(d);
@@ -62,6 +65,29 @@ public class DateHelper {
 		calendar.setTime(date);
 		
 		return getDaysOfMonth(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH));
+	}
+	
+	public static Date getBeginDateOfMonth(String month) {
+		// Get first and last day for month
+		Date date = DateHelper.getDate(month);
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		calendar.add(Calendar.MONTH, -1);
+		calendar.set(Calendar.DAY_OF_MONTH, DAY_OF_MONTH);
+		Date beginDate = calendar.getTime();
+		
+		return beginDate;
+	}
+	
+	public static Date getEndDateOfMonth(String month) {
+		// Get first and last day for month
+		Date date = DateHelper.getDate(month);
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		calendar.set(Calendar.DAY_OF_MONTH, DAY_OF_MONTH);
+		Date endDate = calendar.getTime();
+		
+		return endDate;
 	}
 
 }
