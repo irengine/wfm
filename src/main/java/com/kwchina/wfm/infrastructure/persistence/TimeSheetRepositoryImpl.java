@@ -1,5 +1,6 @@
 package com.kwchina.wfm.infrastructure.persistence;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -128,30 +129,64 @@ public class TimeSheetRepositoryImpl extends BaseRepositoryImpl<TimeSheet> imple
 	
 	@Override
 	public List<Map<String, Object>> queryActualTimeSheet(QueryActualTimeSheetCommand command) {
-		Long leftId = null;
-		Long rightId = null;
-		if (!(null == command.getUnitId() || command.getUnitId().equals(0))) {
-			Unit unit = unitRepository.findById(command.getUnitId());
-			leftId = unit.getLeft();
-			rightId = unit.getRight();
-		}
-		List<Map<String, Object>> rows = jdbcTemplate.queryForList(command.toSQL(leftId, rightId));
 		
-		return rows;
+		String[] unitIds = command.getUnitIds().split(",");
+		
+		if (0 == unitIds.length) {
+			command.setUnitId(null);
+			List<Map<String, Object>> rows = jdbcTemplate.queryForList(command.toSQL(null, null));
+			
+			return rows;
+		}
+		else {
+			List<Map<String, Object>> rows = new ArrayList<Map<String, Object>>();
+			for (String unitId : unitIds) {
+				command.setUnitId(Long.parseLong(unitId));
+				
+				Long leftId = null;
+				Long rightId = null;
+				if (!(null == command.getUnitId() || command.getUnitId().equals(0))) {
+					Unit unit = unitRepository.findById(command.getUnitId());
+					leftId = unit.getLeft();
+					rightId = unit.getRight();
+				}
+				
+				rows.addAll(jdbcTemplate.queryForList(command.toSQL(leftId, rightId)));
+			}
+			
+			return rows;
+		}
 	}
 
 	@Override
 	public List<Map<String, Object>> queryTimeSheetByProperty(QueryTimeSheetByPropertyCommand command) {
-		Long leftId = null;
-		Long rightId = null;
-		if (!(null == command.getUnitId() || command.getUnitId().equals(0))) {
-			Unit unit = unitRepository.findById(command.getUnitId());
-			leftId = unit.getLeft();
-			rightId = unit.getRight();
-		}
-		List<Map<String, Object>> rows = jdbcTemplate.queryForList(command.toSQL(leftId, rightId));
 		
-		return rows;
+		String[] unitIds = command.getUnitIds().split(",");
+		
+		if (0 == unitIds.length) {
+			command.setUnitId(null);
+			List<Map<String, Object>> rows = jdbcTemplate.queryForList(command.toSQL(null, null));
+			
+			return rows;
+		}
+		else {
+			List<Map<String, Object>> rows = new ArrayList<Map<String, Object>>();
+			for (String unitId : unitIds) {
+				command.setUnitId(Long.parseLong(unitId));
+				
+				Long leftId = null;
+				Long rightId = null;
+				if (!(null == command.getUnitId() || command.getUnitId().equals(0))) {
+					Unit unit = unitRepository.findById(command.getUnitId());
+					leftId = unit.getLeft();
+					rightId = unit.getRight();
+				}
+				
+				rows.addAll(jdbcTemplate.queryForList(command.toSQL(leftId, rightId)));
+			}
+			
+			return rows;
+		}
 	}
 
 	@Override

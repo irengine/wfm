@@ -16,6 +16,7 @@ public class QueryActualTimeSheetCommand {
 	private String beginTime;
 	private String endTime;
 	private String attendanceTypeIds;
+	private String unitIds;
 	
 	public Long getUnitId() {
 		return unitId;
@@ -48,6 +49,12 @@ public class QueryActualTimeSheetCommand {
 		this.attendanceTypeIds = attendanceTypeIds;
 	}
 	
+	public String getUnitIds() {
+		return unitIds;
+	}
+	public void setUnitIds(String unitIds) {
+		this.unitIds = unitIds;
+	}
 	public String toSQL(Long leftId, Long rightId) {
 		List<String> firstConditions = new ArrayList<String>();
 		List<String> secondConditions = new ArrayList<String>();

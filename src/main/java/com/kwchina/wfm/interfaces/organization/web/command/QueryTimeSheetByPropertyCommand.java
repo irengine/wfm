@@ -17,6 +17,7 @@ public class QueryTimeSheetByPropertyCommand {
 	private String endTime;
 	private String propertyName;
 	private String attendanceTypeIds;	// internal user
+	private String unitIds;
 	
 	public Long getUnitId() {
 		return unitId;
@@ -95,5 +96,11 @@ public class QueryTimeSheetByPropertyCommand {
 	}
 	public void setPropertyName(String propertyName) {
 		this.propertyName = propertyName;
+	}
+	public String getUnitIds() {
+		return unitIds;
+	}
+	public void setUnitIds(String unitIds) {
+		this.unitIds = unitIds;
 	}
 }

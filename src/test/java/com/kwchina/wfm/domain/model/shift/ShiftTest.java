@@ -149,7 +149,20 @@ public class ShiftTest {
 	@Test
 	public void testGetDaysOfMonth() {
 		List<Date> days = DateHelper.getDaysOfMonth("2012-02-01");
-		assertEquals("2012-02-01", DateHelper.getString(days.get(0)));
-		assertEquals("2012-02-10", DateHelper.getString(days.get(9)));
+		assertEquals("2012-01-26", DateHelper.getString(days.get(0)));
+		assertEquals("2012-02-04", DateHelper.getString(days.get(9)));
+	}
+	
+	@Test
+	public void testSplitString() {
+		String x = "1,2,3,";
+		
+		String[] xs = x.split(",");
+		assertTrue(3 == xs.length);
+		
+		String y = "1,2,3";
+		
+		String[] ys = y.split(",");
+		assertTrue(3 == ys.length);
 	}
 }
