@@ -51,7 +51,7 @@ public class QueryVacationCommand {
 		String secondCondition = (0 == secondConditions.size()) ? "" : " where " + StringUtils.join(secondConditions, " AND ");
 		
 		
-		String syntax = "select x.*, v.month, v.lastBalance + v.balance - amount as balance " +
+		String syntax = "select x.*, v.month, v.lastBalance, v.amount, v.lastBalance + v.balance - v.amount as balance " +
 				"from (select e.Id as employeeId, e.employeeId as employeeCode, e.name as employeeName " +
 					"from t_employees e inner join t_units u on e.unitId = u.id" +
 					"%s) x " +
