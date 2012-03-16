@@ -29,6 +29,7 @@ import com.kwchina.wfm.domain.model.employee.Job;
 import com.kwchina.wfm.domain.model.employee.JobPosition;
 import com.kwchina.wfm.domain.model.employee.JobStatus;
 import com.kwchina.wfm.domain.model.employee.TimeSheet;
+import com.kwchina.wfm.domain.model.employee.Employee.Gender;
 import com.kwchina.wfm.domain.model.employee.TimeSheet.ActionType;
 import com.kwchina.wfm.domain.model.employee.TimeSheetRepository;
 import com.kwchina.wfm.domain.model.organization.Unit;
@@ -244,6 +245,7 @@ public class TimeSheetRepositoryTest {
 		Employee e = new Employee(new EmployeeId("0001"), "Alex Tang", date, date, date);
 		e.setJob(new Job(unit, null, Collections.<JobPosition>emptyList(), JobStatus.UNKNOWN, new Date()));
 		e.getJob().setUnit(unit);
+		e.setGender(Gender.MALE);
 		employeeRepository.save(e);
 		
 		AttendanceType at1 = new AttendanceType("Day1", 8, 16);
@@ -266,6 +268,7 @@ public class TimeSheetRepositoryTest {
 		assertTrue(3 == rows.size());
 		
 		Employee ex = new Employee(new EmployeeId("0002"), "Alex Tang", date, date, date);
+		ex.setGender(Gender.MALE);
 		ex.setJob(new Job(unit, null, Collections.<JobPosition>emptyList(), JobStatus.UNKNOWN, new Date()));
 		employeeRepository.save(ex);
 		

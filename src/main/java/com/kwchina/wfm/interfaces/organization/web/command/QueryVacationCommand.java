@@ -59,7 +59,7 @@ public class QueryVacationCommand {
 		
 		
 		String syntax = "select x.*, v.month, v.lastBalance, v.amount, v.lastBalance + v.balance - v.amount as balance " +
-				"from (select e.Id as employeeId, e.employeeId as employeeCode, e.name as employeeName " +
+				"from (select e.Id as employeeId, e.employeeId as employeeCode, e.name as employeeName, u.id as unitId, u.name as unitName " +
 					"from t_employees e inner join t_units u on e.unitId = u.id" +
 					"%s) x " +
 				"left join (select v.*  from t_employee_vacations v %s) v on x.employeeId = v.employeeId";

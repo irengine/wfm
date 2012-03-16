@@ -81,13 +81,13 @@ public class QueryTimeSheetByPropertyCommand {
 		
 		
 		String syntax = "select x.*, count(ts.attendanceTypeId) as days " +
-				"from (select e.Id as employeeId, e.employeeId as employeeCode, e.name as employeeName, " +
+				"from (select e.Id as employeeId, e.employeeId as employeeCode, e.name as employeeName, u.id as unitId, u.name as unitName, " +
 					"ats.Id as attendanceTypeId, ats.name as attendanceTypeName, xmonth " +
 					"from d_month, t_attendance_types ats, t_employees e inner join t_units u on e.unitId = u.id" +
 					"%s) x " +
 				"left join (select ts.employeeId, year(ts.date) as xyear, month(ts.date) as xmonth, ts.attendanceTypeId  from t_timesheet ts inner join t_units u on ts.unitId = u.id %s) ts on " +
 				"x.employeeId = ts.employeeId and x.attendanceTypeId = ts.attendanceTypeId and x.xmonth = ts.xmonth " +
-				"group by employeeId, employeeCode, employeeName, attendanceTypeId, attendanceTypeName, xyear, xmonth";
+				"group by employeeId, employeeCode, employeeName, unitId, unitName, attendanceTypeId, attendanceTypeName, xyear, xmonth";
 		
 		return String.format(syntax, firstCondition, secondCondition);
 	}
