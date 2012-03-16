@@ -74,8 +74,11 @@ public class UnitDTO {
 		setId(unit.getId().toString());
 		setData(unit.getName());
 		for(Unit child : unit.getChildren()) {
-			UnitDTO unitDTO = new UnitDTO(child);
-			addChild(unitDTO);
+			// TODO: using filter instead
+			if (child.isEnable()) {
+				UnitDTO unitDTO = new UnitDTO(child);
+				addChild(unitDTO);
+			}
 		}
 	}
 
@@ -88,12 +91,15 @@ public class UnitDTO {
 			parentDTO = this;
 		
 		for(Unit child : unit.getChildren()) {
-			if (isInclude(child, units)) {
-				UnitDTO unitDTO = new UnitDTO(child, units);
-				addChild(parentDTO, unitDTO);
-			}
-			else {
-				copy(child, parentDTO, units);
+			// TODO: using filter instead
+			if (child.isEnable()) {
+				if (isInclude(child, units)) {
+					UnitDTO unitDTO = new UnitDTO(child, units);
+					addChild(parentDTO, unitDTO);
+				}
+				else {
+					copy(child, parentDTO, units);
+				}
 			}
 		}
 	}
