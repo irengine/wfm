@@ -7,6 +7,7 @@ public class QueryTimeSheetCommand {
 	private Long unitId;
 	private String date;
 	private TimeSheet.ActionType actionType;
+	private String unitIds;
 	
 	public Long getUnitId() {
 		return unitId;
@@ -25,6 +26,12 @@ public class QueryTimeSheetCommand {
 	}
 	public void setActionType(TimeSheet.ActionType actionType) {
 		this.actionType = actionType;
+	}
+	public String getUnitIds() {
+		return unitIds;
+	}
+	public void setUnitIds(String unitIds) {
+		this.unitIds = unitIds;
 	}
 
 }

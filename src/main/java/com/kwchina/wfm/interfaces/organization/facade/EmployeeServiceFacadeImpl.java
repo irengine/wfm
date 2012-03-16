@@ -152,42 +152,59 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 	@Override
 	@Transactional(propagation=Propagation.REQUIRED)
 	public String queryEmployeesMonthTimeSheetWithJson(QueryTimeSheetCommand command) {
-		Long unitId = command.getUnitId();
+		
 		String month = command.getDate();
 		TimeSheet.ActionType actionType = command.getActionType();
-		
-		Unit unit = unitRepository.findById(unitId);
+
 		List<Date> days = DateHelper.getDaysOfMonth(month);
-		List<TimeSheet> records = timeSheetRepository.getMonthTimeSheet(month, unit, actionType);
-		
-		if (0 == records.size()) {
-			timeSheetRepository.generateMonthTimeSheet(month, unit);
-			records = timeSheetRepository.getMonthTimeSheet(month, unit, actionType);
-		}
-		
 		TimeSheetDTO ts = new TimeSheetDTO();
 		ts.setDays(days);
-		ts.setRecords(records);
 		
+		String[] unitIds = command.getUnitIds().split(",");
+		
+		if (0 != unitIds.length) {
+			List<TimeSheet> records = new ArrayList<TimeSheet>();
+			for (String id : unitIds) {
+				Long unitId = Long.parseLong(id);
+				Unit unit = unitRepository.findById(unitId);
+				List<TimeSheet> recs = timeSheetRepository.getMonthTimeSheet(month, unit, actionType);
+				
+				if (0 == recs.size()) {
+					timeSheetRepository.generateMonthTimeSheet(month, unit);
+					recs = timeSheetRepository.getMonthTimeSheet(month, unit, actionType);
+				}
+				records.addAll(recs);
+			}
+			ts.setRecords(records);
+		}
 		return JacksonHelper.getTimeSheetJsonWithFilters(ts);
 	}
 
 	@Override
 	@Transactional(propagation=Propagation.REQUIRED)
 	public String queryEmployeesDayTimeSheetWithJson(QueryTimeSheetCommand command) {
-		Long unitId = command.getUnitId();
+		
 		String day = command.getDate();
 		TimeSheet.ActionType actionType = command.getActionType();
-		Unit unit = unitRepository.findById(unitId);
 
 		List<Date> days = new ArrayList<Date>();
 		days.add(DateHelper.getDate(day));
-		List<TimeSheet> records = timeSheetRepository.getDayTimeSheet(day, unit, actionType);
-
 		TimeSheetDTO ts = new TimeSheetDTO();
 		ts.setDays(days);
-		ts.setRecords(records);
 		
+		String[] unitIds = command.getUnitIds().split(",");
+		
+		if (0 != unitIds.length) {
+			List<TimeSheet> records = new ArrayList<TimeSheet>();
+			for (String id : unitIds) {
+				Long unitId = Long.parseLong(id);
+				Unit unit = unitRepository.findById(unitId);
+				List<TimeSheet> recs = timeSheetRepository.getDayTimeSheet(day, unit, actionType);
+				
+				records.addAll(recs);
+			}
+			ts.setRecords(records);
+		}
 		return JacksonHelper.getTimeSheetJsonWithFilters(ts);
 	}
 	

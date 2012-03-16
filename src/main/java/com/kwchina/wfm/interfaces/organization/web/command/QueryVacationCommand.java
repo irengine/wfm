@@ -10,6 +10,7 @@ public class QueryVacationCommand {
 	private Long unitId;
 	private Long employeeId;
 	private String date;
+	private String unitIds;
 	
 	public Long getUnitId() {
 		return unitId;
@@ -30,6 +31,12 @@ public class QueryVacationCommand {
 		this.date = date;
 	}
 	
+	public String getUnitIds() {
+		return unitIds;
+	}
+	public void setUnitIds(String unitIds) {
+		this.unitIds = unitIds;
+	}
 	public String toSQL(Long leftId, Long rightId) {
 		List<String> firstConditions = new ArrayList<String>();
 		List<String> secondConditions = new ArrayList<String>();
