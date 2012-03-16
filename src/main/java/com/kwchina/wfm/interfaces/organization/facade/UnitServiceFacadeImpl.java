@@ -104,7 +104,7 @@ public class UnitServiceFacadeImpl implements UnitServiceFacade {
 			}
 		}
 		else if (command.getCommandType().equals(ActionCommand.DELETE)) {
-			if (null != command.getId() && command.getId().equals(0)) {
+			if (null != command.getId() && !command.getId().equals(0)) {
 				Unit unit = unitRepository.findById(command.getId());
 				unitRepository.disable(unit);
 			}
