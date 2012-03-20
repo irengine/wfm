@@ -36,8 +36,8 @@ import com.kwchina.wfm.domain.model.shift.ShiftType;
 @Entity
 @Table(name="T_EMPLOYEES")
 @NamedQueries({
-	@NamedQuery(name = "employee.findByUnitId", query = "SELECT e FROM Employee e WHERE e.job.unit.id = :unitId order by e.employeeId"),
-	@NamedQuery(name = "employee.findAllByUnitId", query = "SELECT e FROM Employee e, Unit u WHERE u.id = :unitId AND u.left <= e.job.unit.left AND u.right >= e.job.unit.right order by e.employeeId")
+	@NamedQuery(name = "employee.findByUnitId", query = "SELECT e FROM Employee e WHERE e.enable = true and e.job.unit.id = :unitId order by e.employeeId"),
+	@NamedQuery(name = "employee.findAllByUnitId", query = "SELECT e FROM Employee e, Unit u WHERE e.enable = true and u.id = :unitId AND u.left <= e.job.unit.left AND u.right >= e.job.unit.right order by e.employeeId")
 })
 public class Employee implements com.kwchina.wfm.domain.common.Entity<Employee> {
 
@@ -109,10 +109,10 @@ public class Employee implements com.kwchina.wfm.domain.common.Entity<Employee> 
 		this.enable = true;
 	}
 	
-	// TODO: add gender to construct
-	public Employee(EmployeeId employeeId, String name, Date birthday, Date beginDateOfWork, Date beginDateOfJob) {
+	public Employee(EmployeeId employeeId, String name, Gender gender, Date birthday, Date beginDateOfWork, Date beginDateOfJob) {
 		this.employeeId = employeeId;
 		this.name = name;
+		this.gender = gender;
 		this.birthday = birthday;
 		this.beginDateOfWork = beginDateOfWork;
 		this.beginDateOfJob = beginDateOfJob;
@@ -232,7 +232,7 @@ public class Employee implements com.kwchina.wfm.domain.common.Entity<Employee> 
 	}
 
 	/**
-	 * @return Hash code of tracking id.
+	 * @return Hash code of employee id.
 	 */
 	@Override
 	public int hashCode() {

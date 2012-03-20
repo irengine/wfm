@@ -113,7 +113,7 @@ public class TimeSheetRepositoryTest {
 		Date date = DateHelper.getDate(day);
 		Unit unit = unitRepository.getRoot("XX");
 		
-		Employee e = new Employee(new EmployeeId("0001"), "Alex Tang", date, date, date);
+		Employee e = new Employee(new EmployeeId("0001"), "Alex Tang", Gender.MALE, date, date, date);
 		employeeRepository.save(e);
 		
 		AttendanceType at = new AttendanceType("Day", 8, 16);
@@ -136,7 +136,7 @@ public class TimeSheetRepositoryTest {
 		Date date = DateHelper.getDate(day);
 		Unit unit = unitRepository.getRoot("XX");
 		
-		Employee e = new Employee(new EmployeeId("0001"), "Alex Tang", date, date, date);
+		Employee e = new Employee(new EmployeeId("0001"), "Alex Tang", Gender.MALE, date, date, date);
 		employeeRepository.save(e);
 		
 		AttendanceType at = new AttendanceType("Day", 8, 16);
@@ -182,7 +182,7 @@ public class TimeSheetRepositoryTest {
 		Date date = DateHelper.getDate(day);
 		Unit unit = unitRepository.getRoot("XX");
 		
-		Employee e = new Employee(new EmployeeId("0001"), "Alex Tang", date, date, date);
+		Employee e = new Employee(new EmployeeId("0001"), "Alex Tang", Gender.MALE, date, date, date);
 		employeeRepository.save(e);
 		
 		AttendanceType at = new AttendanceType("Day", 8, 16);
@@ -242,7 +242,7 @@ public class TimeSheetRepositoryTest {
 		Date date = DateHelper.getDate(day);
 		Unit unit = unitRepository.getRoot("XX");
 		
-		Employee e = new Employee(new EmployeeId("0001"), "Alex Tang", date, date, date);
+		Employee e = new Employee(new EmployeeId("0001"), "Alex Tang", Gender.MALE, date, date, date);
 		e.setJob(new Job(unit, null, Collections.<JobPosition>emptyList(), JobStatus.UNKNOWN, new Date()));
 		e.getJob().setUnit(unit);
 		e.setGender(Gender.MALE);
@@ -267,7 +267,7 @@ public class TimeSheetRepositoryTest {
 		List<Map<String, Object>> rows = jdbcTemplate.queryForList(command.toSQL(unit.getLeft(), unit.getRight()));
 		assertTrue(3 == rows.size());
 		
-		Employee ex = new Employee(new EmployeeId("0002"), "Alex Tang", date, date, date);
+		Employee ex = new Employee(new EmployeeId("0002"), "Alex Tang", Gender.MALE, date, date, date);
 		ex.setGender(Gender.MALE);
 		ex.setJob(new Job(unit, null, Collections.<JobPosition>emptyList(), JobStatus.UNKNOWN, new Date()));
 		employeeRepository.save(ex);

@@ -20,6 +20,7 @@ import org.junit.Test;
 
 import com.kwchina.wfm.domain.model.employee.Employee;
 import com.kwchina.wfm.domain.model.employee.EmployeeId;
+import com.kwchina.wfm.domain.model.employee.Employee.Gender;
 import com.kwchina.wfm.domain.model.organization.Unit;
 
 public class JacksonHelperTest {
@@ -35,7 +36,7 @@ public class JacksonHelperTest {
 		unit.addChild(child);
 		
 		Date date = DateUtils.parseDate("2012-02-14",new String[]{"yyyy-MM-dd"});
-		employee = new Employee(new EmployeeId("0001"), "Alex Tang", date, date, date);
+		employee = new Employee(new EmployeeId("0001"), "Alex Tang", Gender.MALE, date, date, date);
 	}
 	
     @JsonIgnoreProperties({"parent", "children"})
