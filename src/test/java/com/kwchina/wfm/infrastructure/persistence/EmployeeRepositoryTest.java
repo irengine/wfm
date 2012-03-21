@@ -1,14 +1,13 @@
 package com.kwchina.wfm.infrastructure.persistence;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -37,6 +36,27 @@ public class EmployeeRepositoryTest {
 
 	@Autowired
 	private EmployeeRepository employeeRepository;
+	
+	@Test
+	public void testOnlyOneEmployeeInSetWhichHasSameEmployeeId() {
+		Employee e1 = new Employee();
+		e1.setEmployeeId(new EmployeeId("00001"));
+		e1.setName("Alex");
+		Employee e2 = new Employee();
+		e2.setEmployeeId(new EmployeeId("00001"));
+		e2.setName("Irene");
+		Employee e3 = new Employee();
+		e3.setEmployeeId(new EmployeeId("00002"));
+		e3.setName("Irene");
+		
+		Set<Employee> es = new LinkedHashSet<Employee>();
+		es.add(e1);
+		assertTrue(1 == es.size());
+		es.add(e2);
+		assertTrue(1 == es.size());
+		es.add(e3);
+		assertTrue(2 == es.size());
+	}
 
 	@Test
 	@Transactional
