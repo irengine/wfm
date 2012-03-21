@@ -31,6 +31,7 @@ import com.kwchina.wfm.domain.model.shift.ShiftType;
 @Table(name="T_UNITS")
 @NamedQueries({
 	@NamedQuery(name = "unit.findRoot", query = "SELECT u FROM Unit u WHERE u.parent = null"),
+	@NamedQuery(name = "unit.findAll", query = "SELECT u FROM Unit u WHERE u.enable = true order by u.left"),
 	@NamedQuery(name = "unit.findAllChildren", query = "SELECT u FROM Unit u WHERE u.enable = true and u.left > :parentLeft and u.left < :parentRight order by u.left"),
 	@NamedQuery(name = "unit.findAllAncestor", query = "SELECT u FROM Unit u WHERE u.enable = true and u.left < :leafLeft and u.right > :leafRight order by u.left")
 })
@@ -163,7 +164,7 @@ public class Unit implements com.kwchina.wfm.domain.common.Entity<Unit> {
 			if (null == parent)
 				return null;
 			else
-				return ((Unit)getParent()).getShiftType();
+				return parent.getShiftType();
 		}
 		return shiftType;
 	}
@@ -178,6 +179,20 @@ public class Unit implements com.kwchina.wfm.domain.common.Entity<Unit> {
 
 	public void setPreferences(Set<Preference> preferences) {
 		this.preferences = preferences;
+	}
+	
+	public String getPreference(String key) {
+		for (Preference p : preferences) {
+			if (p.getKey().equals(key)) {
+				return p.getValue();
+			}
+		}
+		
+		Unit parent = (Unit)getParent();
+		if (null == parent)
+			return null;
+		else
+			return parent.getPreference(key);
 	}
 
 	public boolean isEnable() {

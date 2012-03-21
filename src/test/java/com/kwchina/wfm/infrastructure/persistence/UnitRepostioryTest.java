@@ -4,7 +4,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,9 +15,11 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.kwchina.wfm.domain.model.organization.Preference;
 import com.kwchina.wfm.domain.model.organization.Unit;
 import com.kwchina.wfm.domain.model.organization.UnitRepository;
 import com.kwchina.wfm.domain.model.shift.ShiftType;
+import com.kwchina.wfm.domain.model.shift.ShiftTypeRepository;
 import com.kwchina.wfm.interfaces.common.JacksonHelper;
 import com.kwchina.wfm.interfaces.common.PageHelper;
 
@@ -25,6 +29,9 @@ public class UnitRepostioryTest {
 
 	@Autowired
 	private UnitRepository unitRepository;
+	
+	@Autowired
+	private ShiftTypeRepository shiftTypeRepository;
 	
 	@Test
 	@Transactional
@@ -68,8 +75,6 @@ public class UnitRepostioryTest {
 		
 		assertTrue(0 != root.getLeft());
 		assertTrue(0 != root.getRight());
-
-		unitRepository.printTree(root);
 		
 		assertEquals(7, unitRepository.findAllChildren(root).size());
 		
@@ -84,9 +89,12 @@ public class UnitRepostioryTest {
 	ShiftType nightShift;
 	ShiftType fouthShift;
 	private void initialShiftType() {
-		dayShift = new ShiftType();
-		nightShift = new ShiftType();
-		fouthShift = new ShiftType();
+		dayShift = new ShiftType("日", 1, "", "", "");
+		shiftTypeRepository.save(dayShift);
+		nightShift = new ShiftType("夜", 2, "", "", "");
+		shiftTypeRepository.save(nightShift);
+		fouthShift = new ShiftType("全", 3, "", "", "");
+		shiftTypeRepository.save(fouthShift);
 	}
 	
 	@Test
@@ -123,6 +131,52 @@ public class UnitRepostioryTest {
 		assertEquals(dayShift, l.getShiftType());
 		assertEquals(nightShift, l1.getShiftType());
 		assertEquals(fouthShift, l11.getShiftType());
+	}
+	
+	@Test
+	@Transactional
+	public void testShiftTypeFlatView() {
+		initialShiftType();
+		
+		Unit l = unitRepository.getRoot("L");
+		
+		Unit l1 = new Unit("L1");
+		unitRepository.addChild(l, l1);
+		
+		Unit l11 = new Unit("L11");
+		unitRepository.addChild(l1, l11);
+		
+		l1.setShiftType(dayShift);
+		
+		
+		List<Unit> units = unitRepository.findAll();
+		for(Unit u : units) {
+			System.out.println(String.format("%s, %s", u.getUriName(), null == u.getShiftType() ? "-" : u.getShiftType().getName()));
+		}
+	}
+	
+	@Test
+	@Transactional
+	public void testPreferencesFlatView() {
+		initialShiftType();
+		
+		Unit l = unitRepository.getRoot("L");
+		
+		Unit l1 = new Unit("L1");
+		unitRepository.addChild(l, l1);
+		
+		Unit l11 = new Unit("L11");
+		unitRepository.addChild(l1, l11);
+		
+		Set<Preference> preferences = new HashSet<Preference>();
+		Preference p = new Preference("overtime", "true");
+		preferences.add(p);
+		l1.setPreferences(preferences);
+		
+		List<Unit> units = unitRepository.findAll();
+		for(Unit u : units) {
+			System.out.println(String.format("%s, %s", u.getUriName(), null == u.getPreference("overtime") ? "-" : u.getPreference("overtime")));
+		}
 	}
 	
 	@Test
@@ -176,18 +230,4 @@ public class UnitRepostioryTest {
 		assertEquals(2, page3.size());
 
 	}
-
-//	@Autowired
-//	UnitServiceFacade unitServiceFacade;
-//	
-//	@Test
-//	@Transactional
-//	public void testGetUnitJson() {
-//		
-//		unitServiceFacade.loadSampleData();
-//		
-//		Unit root = unitRepository.findRoot();
-//		JacksonHelper.getJson(root);
-//	}
-	
 }

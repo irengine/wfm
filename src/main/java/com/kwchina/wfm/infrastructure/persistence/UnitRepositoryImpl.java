@@ -21,20 +21,7 @@ public class UnitRepositoryImpl extends BaseRepositoryImpl<Unit> implements Unit
 	@PersistenceContext
 	private EntityManager entityManager;
 	
-	public void printTree(Unit root)
-	{
-		logger.debug("--" + root.getName());
-		logger.debug("n = " + root.getId());
-		logger.debug("left = " + root.getLeft());
-		logger.debug("right = " + root.getRight());
-		logger.debug("parent = " + (null == root.getParent() ? 0 : root.getParent().getId()));
-		
-		for(Unit n : root.getChildren())
-		{
-			printTree(n);
-		}
-	}
-	
+	@Override
 	public Unit getRoot(String name)
 	{
 		Unit root = findRoot();
@@ -44,6 +31,7 @@ public class UnitRepositoryImpl extends BaseRepositoryImpl<Unit> implements Unit
 		return root;
 	}
 	
+	@Override
 	public Unit findRoot() {
 		try {
 			Unit unit = (Unit) entityManager.createNamedQuery("unit.findRoot")
@@ -66,6 +54,7 @@ public class UnitRepositoryImpl extends BaseRepositoryImpl<Unit> implements Unit
 		return unit;
 	}
 	
+	@Override
 	public void addChild(Unit parentUnit, Unit unit) {
 		parentUnit.addChild(unit);
 		entityManager.persist(parentUnit);
@@ -74,6 +63,7 @@ public class UnitRepositoryImpl extends BaseRepositoryImpl<Unit> implements Unit
 		updateLRValue(unit);
 	}
 
+	@Override
 	public void removeChild(Unit parentUnit, Unit unit) {
 		parentUnit.removeChild(unit);
 		entityManager.persist(parentUnit);
@@ -112,6 +102,7 @@ public class UnitRepositoryImpl extends BaseRepositoryImpl<Unit> implements Unit
 		entityManager.refresh(root);
 	}
 	
+	@Override
 	@SuppressWarnings("unchecked")
 	public List<Unit> findAllChildren(Unit unit) {
 		List<Unit> units = entityManager.createNamedQuery("unit.findAllChildren")
@@ -121,11 +112,20 @@ public class UnitRepositoryImpl extends BaseRepositoryImpl<Unit> implements Unit
 		return units;
 	}
 	
+	@Override
 	@SuppressWarnings("unchecked")
 	public List<Unit> findAllAncestor(Unit unit) {
 		List<Unit> units = entityManager.createNamedQuery("unit.findAllAncestor")
 								.setParameter("leafLeft", unit.getLeft())
 								.setParameter("leafRight", unit.getRight())
+								.getResultList();
+		return units;
+	}
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<Unit> findAll() {
+		List<Unit> units = entityManager.createNamedQuery("unit.findAll")
 								.getResultList();
 		return units;
 	}

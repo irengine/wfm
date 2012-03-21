@@ -30,18 +30,16 @@ public class ShiftType implements com.kwchina.wfm.domain.common.Entity<ShiftType
 	@Column(nullable=false)
 	private String strategyClassParameters;
 	
-//	@OneToMany
-//	private Collection<Unit> units = new LinkedHashSet<Unit>();
-	
 	public ShiftType() {
 
 	}
 	
-	public ShiftType(String code, String name, int displayIndex, String displayName, String strategyClassName, String strategyClassParameters) {
+	public ShiftType(String name, int displayIndex, String displayName, String strategyClassName, String strategyClassParameters) {
 		this.name = name;
 		this.displayIndex = displayIndex;
 		this.displayName = displayName;
 		this.strategyClassName = strategyClassName;
+		this.strategyClassParameters = strategyClassParameters;
 	}
 
 	public Long getId() {
@@ -91,14 +89,6 @@ public class ShiftType implements com.kwchina.wfm.domain.common.Entity<ShiftType
 	public void setStrategyClassParameters(String strategyClassParameters) {
 		this.strategyClassParameters = strategyClassParameters;
 	}
-
-//	public Collection<Unit> getUnits() {
-//		return units;
-//	}
-//
-//	public void setUnits(Collection<Unit> units) {
-//		this.units = units;
-//	}
 	
 	@Override
 	public boolean sameIdentityAs(ShiftType other) {
@@ -116,9 +106,6 @@ public class ShiftType implements com.kwchina.wfm.domain.common.Entity<ShiftType
 		return sameIdentityAs(other);
 	}
 
-	/**
-	 * @return Hash code of tracking id.
-	 */
 	@Override
 	public int hashCode() {
 		return this.name.hashCode();
