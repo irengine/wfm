@@ -30,6 +30,7 @@ import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 import com.kwchina.wfm.domain.common.ValueObject;
 import com.kwchina.wfm.domain.model.organization.Preference;
+import com.kwchina.wfm.domain.model.organization.PreferenceGetter;
 import com.kwchina.wfm.domain.model.organization.Unit;
 import com.kwchina.wfm.domain.model.shift.ShiftType;
 
@@ -39,7 +40,7 @@ import com.kwchina.wfm.domain.model.shift.ShiftType;
 	@NamedQuery(name = "employee.findByUnitId", query = "SELECT e FROM Employee e WHERE e.enable = true and e.job.unit.id = :unitId order by e.employeeId"),
 	@NamedQuery(name = "employee.findAllByUnitId", query = "SELECT e FROM Employee e, Unit u WHERE e.enable = true and u.id = :unitId AND u.left <= e.job.unit.left AND u.right >= e.job.unit.right order by e.employeeId")
 })
-public class Employee implements com.kwchina.wfm.domain.common.Entity<Employee> {
+public class Employee implements com.kwchina.wfm.domain.common.Entity<Employee>, PreferenceGetter {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -197,6 +198,16 @@ public class Employee implements com.kwchina.wfm.domain.common.Entity<Employee> 
 
 	public void setPreferences(Set<Preference> preferences) {
 		this.preferences = preferences;
+	}
+	
+	public String getPreference(String key) {
+		for (Preference p : preferences) {
+			if (p.getKey().equals(key)) {
+				return p.getValue();
+			}
+		}
+		
+		return null;
 	}
 
 	public Set<Vacation> getVacations() {

@@ -35,7 +35,7 @@ import com.kwchina.wfm.domain.model.shift.ShiftType;
 	@NamedQuery(name = "unit.findAllChildren", query = "SELECT u FROM Unit u WHERE u.enable = true and u.left > :parentLeft and u.left < :parentRight order by u.left"),
 	@NamedQuery(name = "unit.findAllAncestor", query = "SELECT u FROM Unit u WHERE u.enable = true and u.left < :leafLeft and u.right > :leafRight order by u.left")
 })
-public class Unit implements com.kwchina.wfm.domain.common.Entity<Unit> {
+public class Unit implements com.kwchina.wfm.domain.common.Entity<Unit>, PreferenceGetter {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)

@@ -2,6 +2,7 @@ package com.kwchina.wfm.interfaces.organization.facade;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -21,12 +22,15 @@ import com.kwchina.wfm.domain.model.employee.JobStatus;
 import com.kwchina.wfm.domain.model.employee.TimeSheet;
 import com.kwchina.wfm.domain.model.employee.TimeSheetRepository;
 import com.kwchina.wfm.domain.model.organization.Preference;
+import com.kwchina.wfm.domain.model.organization.PreferenceGetter;
 import com.kwchina.wfm.domain.model.organization.Unit;
 import com.kwchina.wfm.domain.model.organization.UnitRepository;
 import com.kwchina.wfm.domain.model.shift.AttendanceType;
 import com.kwchina.wfm.domain.model.shift.AttendanceTypeRepository;
 import com.kwchina.wfm.domain.model.shift.ShiftType;
 import com.kwchina.wfm.domain.model.shift.ShiftTypeRepository;
+import com.kwchina.wfm.domain.model.shift.SystemPreferenceFactory;
+import com.kwchina.wfm.domain.model.shift.SystemPreferenceRepository;
 import com.kwchina.wfm.infrastructure.common.DateHelper;
 import com.kwchina.wfm.interfaces.common.JacksonHelper;
 import com.kwchina.wfm.interfaces.common.Page;
@@ -59,6 +63,9 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 	
 	@Autowired
 	TimeSheetRepository timeSheetRepository;
+	
+	@Autowired
+	SystemPreferenceRepository systemPreferenceRepository;
 	
 	@Override
 	@Transactional(propagation=Propagation.SUPPORTS)
@@ -299,5 +306,64 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 	@Transactional(propagation=Propagation.REQUIRED)
 	public String queryEmployeesVacationWithJson(QueryVacationCommand command) {
 		return JacksonHelper.getJson(employeeRepository.queryVacation(command));
+	}
+	
+	private final String REPORT_COLUMN_WORK = "出勤";
+	private final String REPORT_COLUMN_OVERTIME_HOLIDAY = "节日加班";
+	private final String REPORT_COLUMNS_NORMAL = "工休,产护,探哺,伤计,病事,婚丧,公旷,年调,日,中,夜,全夜";
+	private final String REPORT_COLUMN_ALLOWANCE = "乙种津贴";
+	
+	public void report() {
+		List<String> holidays = SystemPreferenceFactory.getInstance(systemPreferenceRepository).getHolidays();
+
+		List<TimeSheet> ts = new ArrayList<TimeSheet>();
+		Map<String, Integer> cols = new HashMap<String, Integer>();
+		for (TimeSheet r : ts) {
+			if (isIncludePreference(r.getAttendanceType(), REPORT_COLUMN_WORK)) {
+				if (cols.containsKey(REPORT_COLUMN_WORK)) {
+					cols.put(REPORT_COLUMN_WORK, cols.get(REPORT_COLUMN_WORK) + 1);
+				}
+				else {
+					cols.put(REPORT_COLUMN_WORK, 1);
+				}
+				
+				if (holidays.contains(DateHelper.getString(r.getDate()))) {
+					if (cols.containsKey(REPORT_COLUMN_OVERTIME_HOLIDAY)) {
+						cols.put(REPORT_COLUMN_OVERTIME_HOLIDAY, cols.get(REPORT_COLUMN_OVERTIME_HOLIDAY) + 1);
+					}
+					else {
+						cols.put(REPORT_COLUMN_OVERTIME_HOLIDAY, 1);
+					}
+				}
+			}
+			
+			for (String col : REPORT_COLUMNS_NORMAL.split(",")) {
+				if (isIncludePreference(r.getAttendanceType(), col)) {
+					if (cols.containsKey(col)) {
+						cols.put(col, cols.get(col) + 1);
+					}
+					else {
+						cols.put(col, 1);
+					}
+				}
+			}
+			
+			if (isIncludePreference(r.getAttendanceType(), REPORT_COLUMN_ALLOWANCE)) {
+				if (isIncludePreference(r.getEmployee(), REPORT_COLUMN_ALLOWANCE) || isIncludePreference(r.getUnit(), REPORT_COLUMN_ALLOWANCE)) {
+					if (cols.containsKey(REPORT_COLUMN_ALLOWANCE)) {
+						cols.put(REPORT_COLUMN_ALLOWANCE, cols.get(REPORT_COLUMN_ALLOWANCE) + 1);
+					}
+					else {
+						cols.put(REPORT_COLUMN_ALLOWANCE, 1);
+					}
+				}
+			}
+		}
+	}
+	
+	private boolean isIncludePreference(PreferenceGetter pg, String key) {
+		if (pg.getPreference(key) == null || pg.getPreference(key).equals("false"))
+			return false;
+		return true;
 	}
 }

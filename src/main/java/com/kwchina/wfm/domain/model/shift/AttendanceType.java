@@ -19,13 +19,14 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import com.kwchina.wfm.domain.model.organization.Preference;
+import com.kwchina.wfm.domain.model.organization.PreferenceGetter;
 
 @Entity
 @Table(name="T_ATTENDANCE_TYPES")
 @NamedQueries({
 	@NamedQuery(name = "attendanceType.findByName", query = "SELECT t FROM AttendanceType t WHERE t.name = :name")
 })
-public class AttendanceType implements com.kwchina.wfm.domain.common.Entity<AttendanceType> {
+public class AttendanceType implements com.kwchina.wfm.domain.common.Entity<AttendanceType>, PreferenceGetter {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -123,6 +124,16 @@ public class AttendanceType implements com.kwchina.wfm.domain.common.Entity<Atte
 
 	public void setPreferences(Set<Preference> preferences) {
 		this.preferences = preferences;
+	}
+	
+	public String getPreference(String key) {
+		for (Preference p : preferences) {
+			if (p.getKey().equals(key)) {
+				return p.getValue();
+			}
+		}
+		
+		return null;
 	}
 
 	public boolean isEnable() {
