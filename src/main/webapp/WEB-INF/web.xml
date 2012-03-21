@@ -71,6 +71,10 @@
 	<listener>
 		<listener-class>com.kwchina.wfm.application.utility.SampleDataGenerator</listener-class>
 	</listener>
+	
+	<listener>
+		<listener-class>com.kwchina.wfm.application.utility.Scheduler</listener-class>
+	</listener>
 
 
 </web-app>
