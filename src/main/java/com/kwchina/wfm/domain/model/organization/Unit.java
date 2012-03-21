@@ -168,7 +168,7 @@ public class Unit implements com.kwchina.wfm.domain.common.Entity<Unit> {
 	
 	public void addChild(Unit unit)
 	{
-		unit.setUriName(this.getUriName() + "-" + this.getName());
+		unit.setUriName(this.getUriName() + "-" + unit.getName());
 		this.children.add(unit);
 		unit.setParent(this);
 	}

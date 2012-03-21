@@ -1,6 +1,6 @@
 package com.kwchina.wfm.interfaces.organization.dto;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -69,12 +69,15 @@ public class UnitDTOTest {
 	private void buildTree()
 	{
 		Unit root = unitRepository.getRoot("S");
+		assertEquals("S", root.getUriName());
 		
 		Unit l1 = new Unit("L1");
 		unitRepository.addChild(root, l1);
+		assertEquals("S-L1", l1.getUriName());
 		
 		Unit l11 = new Unit("L11");
 		unitRepository.addChild(l1, l11);
+		assertEquals("S-L1-L11", l11.getUriName());
 
 		Unit l12 = new Unit("L12");
 		unitRepository.addChild(l1, l12);
