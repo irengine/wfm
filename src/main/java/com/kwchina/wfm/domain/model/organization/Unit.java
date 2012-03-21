@@ -2,10 +2,16 @@ package com.kwchina.wfm.domain.model.organization;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;
+import java.util.Set;
 
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -63,6 +69,14 @@ public class Unit implements com.kwchina.wfm.domain.common.Entity<Unit> {
 	@ManyToOne
 	@JoinColumn(name="shiftTypeId")
 	private ShiftType shiftType;
+	
+	@ElementCollection(fetch=FetchType.EAGER)
+	@CollectionTable(name="T_UNIT_PREFERENCES", joinColumns=@JoinColumn(name="unitId"))
+	@AttributeOverrides({
+		@AttributeOverride(name="key", column=@Column(name="xkey", nullable=false)),
+		@AttributeOverride(name="value", column=@Column(name="xvalue"))
+	})
+    private Set<Preference> preferences;
 	
 	@Column(nullable=false)
 	private boolean enable;
@@ -158,6 +172,14 @@ public class Unit implements com.kwchina.wfm.domain.common.Entity<Unit> {
 		this.shiftType = shiftType;
 	}
 
+	public Set<Preference> getPreferences() {
+		return preferences;
+	}
+
+	public void setPreferences(Set<Preference> preferences) {
+		this.preferences = preferences;
+	}
+
 	public boolean isEnable() {
 		return enable;
 	}
@@ -166,6 +188,9 @@ public class Unit implements com.kwchina.wfm.domain.common.Entity<Unit> {
 		this.enable = enable;
 	}
 	
+	/*
+	 * add child
+	 */
 	public void addChild(Unit unit)
 	{
 		unit.setUriName(this.getUriName() + "-" + unit.getName());
@@ -173,6 +198,9 @@ public class Unit implements com.kwchina.wfm.domain.common.Entity<Unit> {
 		unit.setParent(this);
 	}
 	
+	/*
+	 * remove child
+	 */
 	public void removeChild(Unit unit)
 	{
 		this.children.remove(unit);
