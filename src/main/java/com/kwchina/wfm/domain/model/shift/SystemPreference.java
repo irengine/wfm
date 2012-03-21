@@ -43,7 +43,8 @@ public class SystemPreference implements com.kwchina.wfm.domain.common.Entity<Sy
 		HOLIDAY,
 		DAYCHANGED,
 		ATTENDANCETYPE,
-		EMPLOYEE;
+		EMPLOYEE,
+		UNIT;
 
 		@Override
 		public boolean sameValueAs(ScopeType other) {

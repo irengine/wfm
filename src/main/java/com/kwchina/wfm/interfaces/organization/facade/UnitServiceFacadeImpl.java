@@ -1,13 +1,17 @@
 package com.kwchina.wfm.interfaces.organization.facade;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.kwchina.wfm.domain.model.organization.Preference;
 import com.kwchina.wfm.domain.model.organization.Unit;
 import com.kwchina.wfm.domain.model.organization.UnitRepository;
 import com.kwchina.wfm.domain.model.organization.User;
@@ -86,7 +90,8 @@ public class UnitServiceFacadeImpl implements UnitServiceFacade {
 				}
 				else {
 					Unit parentUnit = unitRepository.findById(command.getParentUnitId());
-					unitRepository.addChild(parentUnit, new Unit(command.getName()));
+					Unit unit = new Unit(command.getName());
+					unitRepository.addChild(parentUnit, unit);
 				}
 			}
 			else
@@ -100,6 +105,13 @@ public class UnitServiceFacadeImpl implements UnitServiceFacade {
 					if (null != shiftType)
 						unit.setShiftType(shiftType);
 				}
+				if (null != command.getProperties()) {
+					Set<Preference> preferences = new HashSet<Preference>();
+					for(Map.Entry<String, String> property : command.getProperties().entrySet()) {
+						preferences.add(new Preference(property.getKey(), property.getValue()));
+					}
+					unit.setPreferences(preferences);
+				}	
 				unitRepository.save(unit);
 			}
 		}

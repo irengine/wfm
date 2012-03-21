@@ -1,11 +1,14 @@
 package com.kwchina.wfm.interfaces.organization.web.command;
 
+import java.util.Map;
+
 public class SaveUnitCommand extends ActionCommand {
 
 	private Long id;
 	private Long parentUnitId;
 	private String Name;
 	private Long shiftTypeId;
+	private Map<String, String> properties;
 	
 	public SaveUnitCommand() {
 		
@@ -34,6 +37,12 @@ public class SaveUnitCommand extends ActionCommand {
 	}
 	public void setShiftTypeId(Long shiftTypeId) {
 		this.shiftTypeId = shiftTypeId;
+	}
+	public Map<String, String> getProperties() {
+		return properties;
+	}
+	public void setProperties(Map<String, String> properties) {
+		this.properties = properties;
 	}
 	
 }
