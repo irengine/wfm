@@ -1,6 +1,6 @@
 package com.kwchina.wfm.application.utility;
 
-import java.util.UUID;
+import java.util.Date;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -42,6 +42,7 @@ public class SampleDataGenerator implements ServletContextListener {
 		transactionTemplate.execute(new TransactionCallbackWithoutResult() {
 			protected void doInTransactionWithoutResult(TransactionStatus status) {
 
+				// to record system startup time.
 				loadDummyObjects(jdbcTemplate);
 			}
 		});
@@ -50,9 +51,8 @@ public class SampleDataGenerator implements ServletContextListener {
 	private static void loadDummyObjects(final JdbcTemplate jdbcTemplate) {
 		// dummy object
 		String sql = "insert into dummyobject(uuid) values(?)";
-		Object[][] args = { { UUID.randomUUID().toString() },
-							{ UUID.randomUUID().toString() },
-							{ UUID.randomUUID().toString() } };
+//		UUID.randomUUID()
+		Object[][] args = { {new Date().toString()} };
 
 		executeUpdate(jdbcTemplate, sql, args);
 	}
