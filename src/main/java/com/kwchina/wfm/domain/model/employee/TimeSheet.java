@@ -95,6 +95,8 @@ public class TimeSheet implements com.kwchina.wfm.domain.common.Entity<TimeSheet
 		MONTH_PLAN,
 		MONTH_PLAN_ADJUST,
 		DAY_PLAN_ADJUST,
+		IMPORT,
+		IMPORT_ADJUST,
 		ACTUAL;
 
 		@Override
