@@ -50,6 +50,9 @@ public class Unit implements com.kwchina.wfm.domain.common.Entity<Unit> {
 	@Column(nullable=false)
 	private String name;
 	
+	@Column(unique=true, nullable=false)
+	private String uriName;
+	
     @ManyToMany(
             cascade = {CascadeType.PERSIST, CascadeType.MERGE},
             mappedBy = "units",
@@ -70,6 +73,7 @@ public class Unit implements com.kwchina.wfm.domain.common.Entity<Unit> {
 	
 	public Unit(String name) {
 		this.name = name;
+		this.uriName = name;
 		this.enable = true;
 	}
 
@@ -85,7 +89,7 @@ public class Unit implements com.kwchina.wfm.domain.common.Entity<Unit> {
 		return children;
 	}
 
-	public void setChildren(Collection<Unit> children) {
+	protected void setChildren(Collection<Unit> children) {
 		this.children = children;
 	}
 
@@ -122,16 +126,18 @@ public class Unit implements com.kwchina.wfm.domain.common.Entity<Unit> {
 		this.name = name;
 	}
 
-	/**
-	 * @return the users
-	 */
+	public String getUriName() {
+		return uriName;
+	}
+
+	public void setUriName(String uriName) {
+		this.uriName = uriName;
+	}
+
 	public Collection<User> getUsers() {
 		return users;
 	}
 
-	/**
-	 * @param users the users to set
-	 */
 	public void setUsers(Collection<User> users) {
 		this.users = users;
 	}
@@ -162,6 +168,7 @@ public class Unit implements com.kwchina.wfm.domain.common.Entity<Unit> {
 	
 	public void addChild(Unit unit)
 	{
+		unit.setUriName(this.getUriName() + "-" + this.getName());
 		this.children.add(unit);
 		unit.setParent(this);
 	}
@@ -174,7 +181,7 @@ public class Unit implements com.kwchina.wfm.domain.common.Entity<Unit> {
 
 	@Override
 	public boolean sameIdentityAs(final Unit other) {
-		return other != null && id.equals(other.id);
+		return other != null && uriName.equals(other.uriName);
 	}
 
 	@Override
@@ -188,11 +195,8 @@ public class Unit implements com.kwchina.wfm.domain.common.Entity<Unit> {
 		return sameIdentityAs(other);
 	}
 
-	/**
-	 * @return Hash code of tracking id.
-	 */
 	@Override
 	public int hashCode() {
-		return id.hashCode();
+		return uriName.hashCode();
 	}
 }
