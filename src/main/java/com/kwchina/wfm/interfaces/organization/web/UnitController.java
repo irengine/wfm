@@ -40,10 +40,12 @@ public class UnitController {
 	 * for test only
 	 */
 	@RequestMapping(value = "/loadUnits", method = RequestMethod.GET)
-	public void loadUnits() {
+	public void loadUnits(HttpServletResponse response) {
 		logger.info("load units");
 		
 		unitServiceFacade.loadSampleData();
+		
+		HttpHelper.output(response, "load sample units done.");
 	}
 	
 	/*
