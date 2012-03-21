@@ -42,16 +42,15 @@ public class SampleDataGenerator implements ServletContextListener {
 		transactionTemplate.execute(new TransactionCallbackWithoutResult() {
 			protected void doInTransactionWithoutResult(TransactionStatus status) {
 
-				// to record system startup time.
+				// to retrieve system startup time.
 				loadDummyObjects(jdbcTemplate);
 			}
 		});
 	}
 	
 	private static void loadDummyObjects(final JdbcTemplate jdbcTemplate) {
-		// dummy object
+		// dummy object - UUID.randomUUID()
 		String sql = "insert into dummyobject(uuid) values(?)";
-//		UUID.randomUUID()
 		Object[][] args = { {new Date().toString()} };
 
 		executeUpdate(jdbcTemplate, sql, args);

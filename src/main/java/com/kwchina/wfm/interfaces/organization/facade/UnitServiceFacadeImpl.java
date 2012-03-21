@@ -38,6 +38,9 @@ public class UnitServiceFacadeImpl implements UnitServiceFacade {
 	
 	@Transactional(propagation=Propagation.REQUIRED)
 	public void loadSampleData() {
+		if (null != unitRepository.findRoot())
+			return;
+		
 		Unit root = unitRepository.getRoot("S");
 		
 		Unit l1 = new Unit("L1");
