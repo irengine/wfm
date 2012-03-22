@@ -1,6 +1,10 @@
 package com.kwchina.wfm.interfaces.organization.web;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,9 +19,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.kwchina.wfm.domain.model.employee.Employee;
 import com.kwchina.wfm.domain.model.employee.TimeSheet;
+import com.kwchina.wfm.infrastructure.common.DateHelper;
 import com.kwchina.wfm.infrastructure.common.HttpHelper;
 import com.kwchina.wfm.interfaces.common.JacksonHelper;
 import com.kwchina.wfm.interfaces.common.QueryHelper;
+import com.kwchina.wfm.interfaces.organization.dto.EmployeeTimeSheetDTO;
 import com.kwchina.wfm.interfaces.organization.facade.EmployeeServiceFacade;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryTimeSheetByPropertyCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryActualTimeSheetCommand;
@@ -123,5 +129,25 @@ public class EmployeeController {
 	public void queryEmployeesVacation(HttpServletRequest request, HttpServletResponse response, @ModelAttribute QueryVacationCommand command) {
 		
 		HttpHelper.output(response, employeeServiceFacade.queryEmployeesVacationWithJson(command));
+	}
+	
+	@RequestMapping(value = "/querySampleEmployeesMonthTimeSheet", method = RequestMethod.GET)
+	public void querySampleEmployeesMonthTimeSheet(HttpServletRequest request, HttpServletResponse response, @ModelAttribute QueryTimeSheetCommand command) {
+		List<EmployeeTimeSheetDTO> ts = new ArrayList<EmployeeTimeSheetDTO>();
+		List<Date> days = DateHelper.getDaysOfMonth("2012-03-01");
+		
+		for (int i = 0; i<2000; i++) {
+			EmployeeTimeSheetDTO dto = new EmployeeTimeSheetDTO();
+			dto.setId(new Long(i));
+			dto.setName(String.format("X%dX", i));
+			TreeMap<String, String> map = new TreeMap<String, String>(); 
+			for (Date day : days) {
+				map.put(DateHelper.getString(day), i%2 == 0 ? "日" : "/");
+			}
+			dto.setValues(map);
+			ts.add(dto);
+		}
+
+		HttpHelper.output(response, JacksonHelper.getJson(ts));
 	}
 }
