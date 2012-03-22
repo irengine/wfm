@@ -36,6 +36,7 @@ import com.kwchina.wfm.interfaces.common.JacksonHelper;
 import com.kwchina.wfm.interfaces.common.Page;
 import com.kwchina.wfm.interfaces.common.PageHelper;
 import com.kwchina.wfm.interfaces.common.QueryHelper;
+import com.kwchina.wfm.interfaces.common.ReportHelper;
 import com.kwchina.wfm.interfaces.organization.dto.TimeSheetDTO;
 import com.kwchina.wfm.interfaces.organization.web.command.ActionCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryTimeSheetByPropertyCommand;
@@ -308,10 +309,7 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 		return JacksonHelper.getJson(employeeRepository.queryVacation(command));
 	}
 	
-	private final String REPORT_COLUMN_WORK = "出勤";
-	private final String REPORT_COLUMN_OVERTIME_HOLIDAY = "节日加班";
-	private final String REPORT_COLUMNS_NORMAL = "工休,产护,探哺,伤计,病事,婚丧,公旷,年调,日,中,夜,全夜";
-	private final String REPORT_COLUMN_ALLOWANCE = "乙种津贴";
+
 	
 	public void report() {
 		List<String> holidays = SystemPreferenceFactory.getInstance(systemPreferenceRepository).getHolidays();
@@ -319,25 +317,25 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 		List<TimeSheet> ts = new ArrayList<TimeSheet>();
 		Map<String, Integer> cols = new HashMap<String, Integer>();
 		for (TimeSheet r : ts) {
-			if (isIncludePreference(r.getAttendanceType(), REPORT_COLUMN_WORK)) {
-				if (cols.containsKey(REPORT_COLUMN_WORK)) {
-					cols.put(REPORT_COLUMN_WORK, cols.get(REPORT_COLUMN_WORK) + 1);
+			if (isIncludePreference(r.getAttendanceType(), ReportHelper.REPORT_COLUMN_WORK)) {
+				if (cols.containsKey(ReportHelper.REPORT_COLUMN_WORK)) {
+					cols.put(ReportHelper.REPORT_COLUMN_WORK, cols.get(ReportHelper.REPORT_COLUMN_WORK) + 1);
 				}
 				else {
-					cols.put(REPORT_COLUMN_WORK, 1);
+					cols.put(ReportHelper.REPORT_COLUMN_WORK, 1);
 				}
 				
 				if (holidays.contains(DateHelper.getString(r.getDate()))) {
-					if (cols.containsKey(REPORT_COLUMN_OVERTIME_HOLIDAY)) {
-						cols.put(REPORT_COLUMN_OVERTIME_HOLIDAY, cols.get(REPORT_COLUMN_OVERTIME_HOLIDAY) + 1);
+					if (cols.containsKey(ReportHelper.REPORT_COLUMN_OVERTIME_HOLIDAY)) {
+						cols.put(ReportHelper.REPORT_COLUMN_OVERTIME_HOLIDAY, cols.get(ReportHelper.REPORT_COLUMN_OVERTIME_HOLIDAY) + 1);
 					}
 					else {
-						cols.put(REPORT_COLUMN_OVERTIME_HOLIDAY, 1);
+						cols.put(ReportHelper.REPORT_COLUMN_OVERTIME_HOLIDAY, 1);
 					}
 				}
 			}
 			
-			for (String col : REPORT_COLUMNS_NORMAL.split(",")) {
+			for (String col : ReportHelper.REPORT_COLUMNS_NORMAL.split(",")) {
 				if (isIncludePreference(r.getAttendanceType(), col)) {
 					if (cols.containsKey(col)) {
 						cols.put(col, cols.get(col) + 1);
@@ -348,13 +346,13 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 				}
 			}
 			
-			if (isIncludePreference(r.getAttendanceType(), REPORT_COLUMN_ALLOWANCE)) {
-				if (isIncludePreference(r.getEmployee(), REPORT_COLUMN_ALLOWANCE) || isIncludePreference(r.getUnit(), REPORT_COLUMN_ALLOWANCE)) {
-					if (cols.containsKey(REPORT_COLUMN_ALLOWANCE)) {
-						cols.put(REPORT_COLUMN_ALLOWANCE, cols.get(REPORT_COLUMN_ALLOWANCE) + 1);
+			if (isIncludePreference(r.getAttendanceType(), ReportHelper.REPORT_COLUMN_ALLOWANCE)) {
+				if (isIncludePreference(r.getEmployee(), ReportHelper.REPORT_COLUMN_ALLOWANCE) || isIncludePreference(r.getUnit(), ReportHelper.REPORT_COLUMN_ALLOWANCE)) {
+					if (cols.containsKey(ReportHelper.REPORT_COLUMN_ALLOWANCE)) {
+						cols.put(ReportHelper.REPORT_COLUMN_ALLOWANCE, cols.get(ReportHelper.REPORT_COLUMN_ALLOWANCE) + 1);
 					}
 					else {
-						cols.put(REPORT_COLUMN_ALLOWANCE, 1);
+						cols.put(ReportHelper.REPORT_COLUMN_ALLOWANCE, 1);
 					}
 				}
 			}
