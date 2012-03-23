@@ -23,13 +23,13 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.kwchina.wfm.domain.model.employee.Employee;
+import com.kwchina.wfm.domain.model.employee.Employee.Gender;
 import com.kwchina.wfm.domain.model.employee.EmployeeId;
 import com.kwchina.wfm.domain.model.employee.EmployeeRepository;
 import com.kwchina.wfm.domain.model.employee.Job;
 import com.kwchina.wfm.domain.model.employee.JobPosition;
 import com.kwchina.wfm.domain.model.employee.JobStatus;
 import com.kwchina.wfm.domain.model.employee.TimeSheet;
-import com.kwchina.wfm.domain.model.employee.Employee.Gender;
 import com.kwchina.wfm.domain.model.employee.TimeSheet.ActionType;
 import com.kwchina.wfm.domain.model.employee.TimeSheetRepository;
 import com.kwchina.wfm.domain.model.organization.Unit;
@@ -37,8 +37,8 @@ import com.kwchina.wfm.domain.model.organization.UnitRepository;
 import com.kwchina.wfm.domain.model.shift.AttendanceType;
 import com.kwchina.wfm.domain.model.shift.AttendanceTypeRepository;
 import com.kwchina.wfm.infrastructure.common.DateHelper;
-import com.kwchina.wfm.interfaces.organization.web.command.QueryTimeSheetByPropertyCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryActualTimeSheetCommand;
+import com.kwchina.wfm.interfaces.organization.web.command.QueryTimeSheetByPropertyCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryVacationCommand;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -294,5 +294,17 @@ public class TimeSheetRepositoryTest {
 
 	}
 	
-	
+	@Test
+	@Transactional
+	@SuppressWarnings("unchecked")
+	public void testGetNativeQuery() {
+		List<Object[]> rows = entityManager.createNativeQuery("select 'X', xmonth from d_month").getResultList();
+		
+		for(Object[] row : rows) {
+			System.out.print(row[0].getClass());
+			System.out.println(row[0].toString());
+			System.out.print(row[1].getClass());
+			System.out.println(row[1].toString());
+		}
+	}
 }
