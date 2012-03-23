@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -46,6 +47,7 @@ import com.kwchina.wfm.interfaces.organization.web.command.QueryTimeSheetCommand
 import com.kwchina.wfm.interfaces.organization.web.command.QueryVacationCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveEmployeeCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveTimeSheetRecordCommand;
+import com.kwchina.wfm.interfaces.report.MonthTimeSheetReport;
 
 @Component
 public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
@@ -165,13 +167,14 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 		TimeSheet.ActionType actionType = command.getActionType();
 
 		List<Date> days = DateHelper.getDaysOfMonth(month);
-		TimeSheetDTO ts = new TimeSheetDTO();
-		ts.setDays(days);
+//		TimeSheetDTO ts = new TimeSheetDTO();
+//		ts.setDays(days);
+		MonthTimeSheetReport report = new MonthTimeSheetReport();
 		
 		String[] unitIds = command.getUnitIds().split(",");
 		
 		if (0 != unitIds.length) {
-			List<TimeSheet> records = new ArrayList<TimeSheet>();
+			Set<TimeSheet> records = new LinkedHashSet<TimeSheet>();
 			for (String id : unitIds) {
 				Long unitId = Long.parseLong(id);
 				Unit unit = unitRepository.findById(unitId);
@@ -183,9 +186,11 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 				}
 				records.addAll(recs);
 			}
-			ts.setRecords(records);
+			report.fill(records, days);
+//			ts.setRecords(records);
 		}
-		return JacksonHelper.getTimeSheetJsonWithFilters(ts);
+//		return JacksonHelper.getTimeSheetJsonWithFilters(ts);
+		return JacksonHelper.getTimeSheetJsonWithFilters(report);
 	}
 
 	@Override
