@@ -25,6 +25,7 @@ import com.kwchina.wfm.interfaces.common.JacksonHelper;
 import com.kwchina.wfm.interfaces.common.QueryHelper;
 import com.kwchina.wfm.interfaces.organization.dto.EmployeeTimeSheetDTO;
 import com.kwchina.wfm.interfaces.organization.facade.EmployeeServiceFacade;
+import com.kwchina.wfm.interfaces.organization.web.command.ArchiveTimeSheetCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryTimeSheetByPropertyCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryActualTimeSheetCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryCommand;
@@ -127,6 +128,12 @@ public class EmployeeController {
 		
 		if (null != timesheet)
 			HttpHelper.output(response, JacksonHelper.getEmployeeJsonWithFilters(timesheet));
+	}
+	
+	@RequestMapping(value = "/archiveTimeSheet", method = RequestMethod.POST)
+	public void archiveTimeSheet(@ModelAttribute ArchiveTimeSheetCommand command) {
+
+		employeeServiceFacade.archiveTimeSheet(command);
 	}
 
 	@RequestMapping(value = "/calculateVacation", method = RequestMethod.GET)

@@ -24,6 +24,7 @@ import com.kwchina.wfm.domain.model.shift.ShiftPolicyFactory;
 import com.kwchina.wfm.domain.model.shift.ShiftType;
 import com.kwchina.wfm.domain.model.shift.ShiftTypeRepository;
 import com.kwchina.wfm.infrastructure.common.DateHelper;
+import com.kwchina.wfm.interfaces.organization.web.command.ArchiveTimeSheetCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryActualTimeSheetCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryTimeSheetByPropertyCommand;
 
@@ -196,5 +197,19 @@ public class TimeSheetRepositoryImpl extends BaseRepositoryImpl<TimeSheet> imple
 
 		entityManager.persist(ts);
 		entityManager.flush();
+	}
+	
+	@Override
+	public void archive(ArchiveTimeSheetCommand command) {
+		String archiveSQL = "select * into t_timesheet_archive from t_timesheet where date >= '%s' and date < '%s'\n"
+							+ "delete from t_timesheet where date >= '%s' and date < '%s'";
+		
+		entityManager.createNativeQuery(String.format(archiveSQL, 
+				command.getBeginTime(), 
+				command.getEndTime(), 
+				command.getBeginTime(), 
+				command.getEndTime()))
+				.executeUpdate();
+		
 	}
 }

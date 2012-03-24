@@ -40,6 +40,7 @@ import com.kwchina.wfm.interfaces.common.QueryHelper;
 import com.kwchina.wfm.interfaces.common.ReportHelper;
 import com.kwchina.wfm.interfaces.organization.dto.TimeSheetDTO;
 import com.kwchina.wfm.interfaces.organization.web.command.ActionCommand;
+import com.kwchina.wfm.interfaces.organization.web.command.ArchiveTimeSheetCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryTimeSheetByPropertyCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryActualTimeSheetCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryCommand;
@@ -380,5 +381,11 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 		if (pg.getPreference(key) == null || pg.getPreference(key).equals("false"))
 			return false;
 		return true;
+	}
+
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED)
+	public void archiveTimeSheet(ArchiveTimeSheetCommand command) {
+		timeSheetRepository.archive(command);
 	}
 }

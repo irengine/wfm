@@ -2,6 +2,7 @@ package com.kwchina.wfm.interfaces.organization.facade;
 
 import com.kwchina.wfm.domain.model.employee.Employee;
 import com.kwchina.wfm.domain.model.employee.TimeSheet;
+import com.kwchina.wfm.interfaces.organization.web.command.ArchiveTimeSheetCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryTimeSheetByPropertyCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryActualTimeSheetCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryCommand;
@@ -31,4 +32,6 @@ public interface EmployeeServiceFacade {
 	String queryEmployeesOverTimeTimeSheetWithJson(QueryTimeSheetByPropertyCommand command);
 	
 	String getEmployeeShiftType(Long id);
+	
+	void archiveTimeSheet(ArchiveTimeSheetCommand command);
 }
