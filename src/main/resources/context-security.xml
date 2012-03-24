@@ -21,6 +21,7 @@
 		<intercept-url pattern="/**" access="isAuthenticated()" />
 		<form-login login-page="/login.jsp" authentication-failure-url="/login.jsp?login_error=1" default-target-url="/"/>
 		<logout invalidate-session="true" logout-success-url="/" />
+		<session-management invalid-session-url="/sessionTimeout.htm" />
 	</http>
 
 	<beans:bean id="customPasswordEncoder"
