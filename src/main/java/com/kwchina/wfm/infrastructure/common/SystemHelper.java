@@ -96,7 +96,8 @@ public class SystemHelper {
 	public Object doEmployeeControllerHandleExceptionWithSet(ProceedingJoinPoint pjp, HttpServletResponse response) throws Throwable {
 		try {
 			Object retVal = pjp.proceed();
-			HttpHelper.output(response, "1");
+			if (retVal == null)
+				HttpHelper.output(response, "1");
 			return retVal;
 		} catch (Throwable t) {
 			logger.warn("Error:", t);

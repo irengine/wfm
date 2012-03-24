@@ -123,7 +123,10 @@ public class EmployeeController {
 	@RequestMapping(value = "/saveTimeSheetRecored", method = RequestMethod.POST)
 	public void saveTimeSheetRecored(HttpServletResponse response, @ModelAttribute SaveTimeSheetRecordCommand command) {
 
-		employeeServiceFacade.saveTimeSheetRecord(command);
+		TimeSheet timesheet = employeeServiceFacade.saveTimeSheetRecord(command);
+		
+		if (null != timesheet)
+			HttpHelper.output(response, JacksonHelper.getEmployeeJsonWithFilters(timesheet));
 	}
 
 	@RequestMapping(value = "/calculateVacation", method = RequestMethod.GET)

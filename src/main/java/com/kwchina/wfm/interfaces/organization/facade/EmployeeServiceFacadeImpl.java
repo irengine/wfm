@@ -234,7 +234,7 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 
 	@Override
 	@Transactional(propagation=Propagation.REQUIRED)
-	public void saveTimeSheetRecord(SaveTimeSheetRecordCommand command) {
+	public TimeSheet saveTimeSheetRecord(SaveTimeSheetRecordCommand command) {
 		Unit unit = unitRepository.findById(command.getUnitId());
 		Employee employee = employeeRepository.findById(command.getEmployeeId());
 		AttendanceType attendanceType = attendanceTypeRepository.findByName(command.getAttendanceTypeName());
@@ -255,6 +255,7 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 			}
 
 			timeSheetRepository.save(record);
+			return record;
 		}
 		else if (command.getCommandType().equals(ActionCommand.DELETE)){
 			if (null != command.getId() && !command.getId().equals(0)) {
@@ -266,6 +267,7 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 			}
 		}
 		
+		return null;
 	}
 
 	@Override
