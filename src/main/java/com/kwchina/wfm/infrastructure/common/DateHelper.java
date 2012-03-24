@@ -67,6 +67,13 @@ public class DateHelper {
 		return getDaysOfMonth(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH));
 	}
 	
+	public static Date getMonth() {
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.DAY_OF_MONTH, 1);
+		
+		return calendar.getTime();
+	}
+	
 	public static Date getBeginDateOfMonth(String month) {
 		// Get first and last day for month
 		Date date = DateHelper.getDate(month);
@@ -90,4 +97,21 @@ public class DateHelper {
 		return endDate;
 	}
 
+	public static long getNextRuntimeMinutes(int hours) {
+		Calendar now = Calendar.getInstance();
+		
+		Calendar next = Calendar.getInstance();
+		
+		if (now.get(Calendar.HOUR_OF_DAY) > hours)
+			next.add(Calendar.DAY_OF_MONTH, 1);
+		next.set(Calendar.HOUR_OF_DAY, 1);
+		next.set(Calendar.MINUTE, 0);
+		next.set(Calendar.SECOND, 0);
+		
+		long diffMinutes = (next.getTimeInMillis() - now.getTimeInMillis()) / (60 * 1000); 
+		
+		return diffMinutes;
+	}
+	
+	public static long MINUTES_ONE_DAY = 24 * 60;
 }
