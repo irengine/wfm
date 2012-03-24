@@ -120,8 +120,8 @@ public class EmployeeController {
 		employeeServiceFacade.generateEmployeesMonthTimeSheet(command.getDate(), command.getUnitId());
 	}
 	
-	@RequestMapping(value = "/saveTimeSheetRecored", method = RequestMethod.POST)
-	public void saveTimeSheetRecored(HttpServletResponse response, @ModelAttribute SaveTimeSheetRecordCommand command) {
+	@RequestMapping(value = "/saveTimeSheetRecord", method = RequestMethod.POST)
+	public void saveTimeSheetRecord(HttpServletResponse response, @ModelAttribute SaveTimeSheetRecordCommand command) {
 
 		TimeSheet timesheet = employeeServiceFacade.saveTimeSheetRecord(command);
 		
