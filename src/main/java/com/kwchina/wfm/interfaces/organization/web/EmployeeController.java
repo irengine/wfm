@@ -66,6 +66,13 @@ public class EmployeeController {
 		HttpHelper.output(response, JacksonHelper.getEmployeeJsonWithFilters(employee));
 	}
 	
+	@RequestMapping(value = "/getEmployeeShiftType", method = RequestMethod.GET)
+	public void getEmployeeShiftType(HttpServletRequest request, HttpServletResponse response) {
+		
+		Long id = Long.parseLong(request.getParameter("id"));
+		HttpHelper.output(response, employeeServiceFacade.getEmployeeShiftType(id));
+	}
+	
 	@RequestMapping(value = "/saveEmployee", method = RequestMethod.POST)
 	public void saveEmployee(HttpServletResponse response, @ModelAttribute SaveEmployeeCommand command) {
 		

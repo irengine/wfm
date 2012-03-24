@@ -28,4 +28,6 @@ public interface EmployeeServiceFacade {
 
 	String queryEmployeesAbsentTimeSheetWithJson(QueryTimeSheetByPropertyCommand command);
 	String queryEmployeesOverTimeTimeSheetWithJson(QueryTimeSheetByPropertyCommand command);
+	
+	String getEmployeeShiftType(Long id);
 }

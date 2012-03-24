@@ -314,6 +314,16 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 		return JacksonHelper.getJson(employeeRepository.queryVacation(command));
 	}
 	
+	@Override
+	@Transactional(propagation=Propagation.SUPPORTS)
+	public String getEmployeeShiftType(Long id) {
+
+		Employee employee = employeeRepository.findById(id);
+		ShiftType shiftType = null == employee.getShiftType() ? employee.getJob().getUnit().getShiftType() : employee.getShiftType();
+		
+		return JacksonHelper.getJson(shiftType);
+	}
+	
 
 	
 	public void report() {
