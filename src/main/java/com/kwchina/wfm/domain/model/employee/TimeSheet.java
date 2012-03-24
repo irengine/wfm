@@ -23,6 +23,7 @@ import org.springframework.format.annotation.DateTimeFormat.ISO;
 import com.kwchina.wfm.domain.common.ValueObject;
 import com.kwchina.wfm.domain.model.organization.Unit;
 import com.kwchina.wfm.domain.model.shift.AttendanceType;
+import com.kwchina.wfm.infrastructure.common.SecurityHelper;
 
 @Entity
 @Table(name="T_TIMESHEET")
@@ -75,6 +76,9 @@ public class TimeSheet implements com.kwchina.wfm.domain.common.Entity<TimeSheet
 	@Temporal(TemporalType.TIMESTAMP)
 	@DateTimeFormat(iso=ISO.DATE_TIME)
 	private Date updatedAt;
+	
+	@Column(nullable=false)
+	private String updatedBy;
 	
 	public TimeSheet() {
 		this.enable = true;
@@ -201,6 +205,14 @@ public class TimeSheet implements com.kwchina.wfm.domain.common.Entity<TimeSheet
 		this.updatedAt = updatedAt;
 	}
 	
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+
 	@PreUpdate
 	@PrePersist
 	public void updateTimeStamps() {
@@ -208,6 +220,8 @@ public class TimeSheet implements com.kwchina.wfm.domain.common.Entity<TimeSheet
 	    if (this.createdAt == null) {
 	      this.createdAt = this.updatedAt;
 	    }
+	    
+	    this.updatedBy = SecurityHelper.getCurrentUserName();
 	}
 
 	

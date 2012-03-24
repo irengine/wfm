@@ -15,4 +15,9 @@ public class SecurityHelperTest {
 		System.out.println(r);
 		assertEquals("9e7c97801cb4cce87b6c02f98291a6420e6400ad", r);
 	}
+	
+	@Test
+	public void testGetCurrentUserName() {
+		SecurityHelper.getCurrentUserName();
+	}
 }

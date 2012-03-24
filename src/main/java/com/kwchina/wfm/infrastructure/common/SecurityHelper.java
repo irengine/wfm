@@ -40,12 +40,18 @@ public class SecurityHelper {
 	}
 	
 	public static String getCurrentUserName() {
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		UserDetails userDetails = null;
-		if (principal instanceof UserDetails) {
-		  userDetails = (UserDetails) principal;
-		  if (null != userDetails)
-			  return userDetails.getUsername();
+		
+		if (null == SecurityContextHolder.getContext().getAuthentication()) {
+			return "n/a";
+		}
+		else {
+			Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			UserDetails userDetails = null;
+			if (principal instanceof UserDetails) {
+			  userDetails = (UserDetails) principal;
+			  if (null != userDetails)
+				  return userDetails.getUsername();
+			}
 		}
 
 		return null;
