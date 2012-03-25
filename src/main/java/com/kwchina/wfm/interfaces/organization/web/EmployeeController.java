@@ -122,12 +122,14 @@ public class EmployeeController {
 	}
 	
 	@RequestMapping(value = "/saveTimeSheetRecord", method = RequestMethod.POST)
-	public void saveTimeSheetRecord(HttpServletResponse response, @ModelAttribute SaveTimeSheetRecordCommand command) {
+	public TimeSheet saveTimeSheetRecord(HttpServletResponse response, @ModelAttribute SaveTimeSheetRecordCommand command) {
 
 		TimeSheet timesheet = employeeServiceFacade.saveTimeSheetRecord(command);
 		
 		if (null != timesheet)
 			HttpHelper.output(response, JacksonHelper.getEmployeeJsonWithFilters(timesheet));
+		
+		return timesheet;
 	}
 	
 	@RequestMapping(value = "/archiveTimeSheet", method = RequestMethod.POST)
