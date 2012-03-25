@@ -24,6 +24,7 @@ public interface EmployeeServiceFacade {
 	void generateEmployeesMonthTimeSheet(String date, Long unitId);
 	TimeSheet saveTimeSheetRecord(SaveTimeSheetRecordCommand command);
 	String queryEmployeesActualTimeSheetWithJson(QueryActualTimeSheetCommand command);
+	String queryEmployeesActualTimeSheetWithJson(QueryTimeSheetCommand command);
 	
 	void calculateVacation(QueryVacationCommand command);
 	String queryEmployeesVacationWithJson(QueryVacationCommand command);

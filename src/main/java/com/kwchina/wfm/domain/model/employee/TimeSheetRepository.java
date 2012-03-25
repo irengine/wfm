@@ -16,6 +16,7 @@ public interface TimeSheetRepository extends BaseRepository<TimeSheet> {
 
 	List<TimeSheet> getMonthTimeSheet(String month, Unit unit, TimeSheet.ActionType actionType);
 	List<TimeSheet> getDayTimeSheet(String day, Unit unit, ActionType actionType);
+	List<TimeSheet> getActualMonthTimeSheet(String month, Unit unit);
 
 	List<Map<String, Object>> queryActualTimeSheet(QueryActualTimeSheetCommand command);
 	List<Map<String, Object>> queryTimeSheetByProperty(QueryTimeSheetByPropertyCommand command);
@@ -23,5 +24,4 @@ public interface TimeSheetRepository extends BaseRepository<TimeSheet> {
 	void disable(TimeSheet ts);
 
 	void archive(ArchiveTimeSheetCommand command);
-
 }

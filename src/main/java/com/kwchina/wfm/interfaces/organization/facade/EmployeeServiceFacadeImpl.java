@@ -2,7 +2,6 @@ package com.kwchina.wfm.interfaces.organization.facade;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -23,7 +22,6 @@ import com.kwchina.wfm.domain.model.employee.JobStatus;
 import com.kwchina.wfm.domain.model.employee.TimeSheet;
 import com.kwchina.wfm.domain.model.employee.TimeSheetRepository;
 import com.kwchina.wfm.domain.model.organization.Preference;
-import com.kwchina.wfm.domain.model.organization.PreferenceGetter;
 import com.kwchina.wfm.domain.model.organization.Unit;
 import com.kwchina.wfm.domain.model.organization.UnitRepository;
 import com.kwchina.wfm.domain.model.shift.AttendanceType;
@@ -37,13 +35,12 @@ import com.kwchina.wfm.interfaces.common.JacksonHelper;
 import com.kwchina.wfm.interfaces.common.Page;
 import com.kwchina.wfm.interfaces.common.PageHelper;
 import com.kwchina.wfm.interfaces.common.QueryHelper;
-import com.kwchina.wfm.interfaces.common.ReportHelper;
 import com.kwchina.wfm.interfaces.organization.dto.TimeSheetDTO;
 import com.kwchina.wfm.interfaces.organization.web.command.ActionCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.ArchiveTimeSheetCommand;
-import com.kwchina.wfm.interfaces.organization.web.command.QueryTimeSheetByPropertyCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryActualTimeSheetCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryCommand;
+import com.kwchina.wfm.interfaces.organization.web.command.QueryTimeSheetByPropertyCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryTimeSheetCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryVacationCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveEmployeeCommand;
@@ -168,8 +165,6 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 		TimeSheet.ActionType actionType = command.getActionType();
 
 		List<Date> days = DateHelper.getDaysOfMonth(month);
-//		TimeSheetDTO ts = new TimeSheetDTO();
-//		ts.setDays(days);
 		MonthTimeSheetReport report = new MonthTimeSheetReport();
 		
 		String[] unitIds = command.getUnitIds().split(",");
@@ -188,9 +183,7 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 				records.addAll(recs);
 			}
 			report.fill(records, days);
-//			ts.setRecords(records);
 		}
-//		return JacksonHelper.getTimeSheetJsonWithFilters(ts);
 		return JacksonHelper.getTimeSheetJsonWithFilters(report);
 	}
 
@@ -273,8 +266,35 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 
 	@Override
 	@Transactional(propagation=Propagation.REQUIRED)
+	@Deprecated
 	public String queryEmployeesActualTimeSheetWithJson(QueryActualTimeSheetCommand command) {
 		return JacksonHelper.getJson(timeSheetRepository.queryActualTimeSheet(command));
+	}
+	
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED)
+	public String queryEmployeesActualTimeSheetWithJson(QueryTimeSheetCommand command) {
+		
+		List<String> holidays = SystemPreferenceFactory.getInstance(systemPreferenceRepository).getHolidays();
+		String month = command.getDate();
+
+		List<Date> days = DateHelper.getDaysOfMonth(month);
+		MonthTimeSheetReport report = new MonthTimeSheetReport();
+		
+		String[] unitIds = command.getUnitIds().split(",");
+		
+		if (0 != unitIds.length) {
+			Set<TimeSheet> records = new LinkedHashSet<TimeSheet>();
+			for (String id : unitIds) {
+				Long unitId = Long.parseLong(id);
+				Unit unit = unitRepository.findById(unitId);
+				List<TimeSheet> recs = timeSheetRepository.getActualMonthTimeSheet(month, unit);
+				
+				records.addAll(recs);
+			}
+			report.fill(records, days, holidays);
+		}
+		return JacksonHelper.getTimeSheetJsonWithFilters(report);
 	}
 
 	@Override
@@ -327,62 +347,6 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 		return JacksonHelper.getJson(shiftType);
 	}
 	
-
-	
-	public void report() {
-		List<String> holidays = SystemPreferenceFactory.getInstance(systemPreferenceRepository).getHolidays();
-
-		List<TimeSheet> ts = new ArrayList<TimeSheet>();
-		Map<String, Integer> cols = new HashMap<String, Integer>();
-		for (TimeSheet r : ts) {
-			if (isIncludePreference(r.getAttendanceType(), ReportHelper.REPORT_COLUMN_WORK)) {
-				if (cols.containsKey(ReportHelper.REPORT_COLUMN_WORK)) {
-					cols.put(ReportHelper.REPORT_COLUMN_WORK, cols.get(ReportHelper.REPORT_COLUMN_WORK) + 1);
-				}
-				else {
-					cols.put(ReportHelper.REPORT_COLUMN_WORK, 1);
-				}
-				
-				if (holidays.contains(DateHelper.getString(r.getDate()))) {
-					if (cols.containsKey(ReportHelper.REPORT_COLUMN_OVERTIME_HOLIDAY)) {
-						cols.put(ReportHelper.REPORT_COLUMN_OVERTIME_HOLIDAY, cols.get(ReportHelper.REPORT_COLUMN_OVERTIME_HOLIDAY) + 1);
-					}
-					else {
-						cols.put(ReportHelper.REPORT_COLUMN_OVERTIME_HOLIDAY, 1);
-					}
-				}
-			}
-			
-			for (String col : ReportHelper.REPORT_COLUMNS_NORMAL.split(",")) {
-				if (isIncludePreference(r.getAttendanceType(), col)) {
-					if (cols.containsKey(col)) {
-						cols.put(col, cols.get(col) + 1);
-					}
-					else {
-						cols.put(col, 1);
-					}
-				}
-			}
-			
-			if (isIncludePreference(r.getAttendanceType(), ReportHelper.REPORT_COLUMN_ALLOWANCE)) {
-				if (isIncludePreference(r.getEmployee(), ReportHelper.REPORT_COLUMN_ALLOWANCE) || isIncludePreference(r.getUnit(), ReportHelper.REPORT_COLUMN_ALLOWANCE)) {
-					if (cols.containsKey(ReportHelper.REPORT_COLUMN_ALLOWANCE)) {
-						cols.put(ReportHelper.REPORT_COLUMN_ALLOWANCE, cols.get(ReportHelper.REPORT_COLUMN_ALLOWANCE) + 1);
-					}
-					else {
-						cols.put(ReportHelper.REPORT_COLUMN_ALLOWANCE, 1);
-					}
-				}
-			}
-		}
-	}
-	
-	private boolean isIncludePreference(PreferenceGetter pg, String key) {
-		if (pg.getPreference(key) == null || pg.getPreference(key).equals("false"))
-			return false;
-		return true;
-	}
-
 	@Override
 	@Transactional(propagation=Propagation.REQUIRED)
 	public void archiveTimeSheet(ArchiveTimeSheetCommand command) {
