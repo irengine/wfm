@@ -9,21 +9,22 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import com.kwchina.wfm.domain.model.employee.TimeSheet;
+import com.kwchina.wfm.infrastructure.common.DateHelper;
 
 public class MonthTimeSheetReport {
 	
-	private Map<String, Map<Date, Set<TimeSheet>>> data = new HashMap<String, Map<Date, Set<TimeSheet>>>();
+	private Map<String, Map<String, Set<TimeSheet>>> data = new HashMap<String, Map<String, Set<TimeSheet>>>();
 	private List<Date> days;
 
 	public MonthTimeSheetReport() {
 		
 	}
 	
-	public Map<String, Map<Date, Set<TimeSheet>>> getData() {
+	public Map<String, Map<String, Set<TimeSheet>>> getData() {
 		return data;
 	}
 
-	public void setData(Map<String, Map<Date, Set<TimeSheet>>> data) {
+	public void setData(Map<String, Map<String, Set<TimeSheet>>> data) {
 		this.data = data;
 	}
 
@@ -44,14 +45,14 @@ public class MonthTimeSheetReport {
 			if (!getData().containsKey(key)) {
 				getData().put(key, getRows(days));
 			}
-			getData().get(key).get(ts.getDate()).add(ts);
+			getData().get(key).get(DateHelper.getString(ts.getDate())).add(ts);
 		}
 	}
 	
-	private Map<Date, Set<TimeSheet>> getRows(List<Date> days) {
-		Map<Date, Set<TimeSheet>> rows = new TreeMap<Date, Set<TimeSheet>>();
+	private Map<String, Set<TimeSheet>> getRows(List<Date> days) {
+		Map<String, Set<TimeSheet>> rows = new TreeMap<String, Set<TimeSheet>>();
 		for (Date day : days) {
-			rows.put(day, new LinkedHashSet<TimeSheet>());
+			rows.put(DateHelper.getString(day), new LinkedHashSet<TimeSheet>());
 		}
 		
 		return rows;
