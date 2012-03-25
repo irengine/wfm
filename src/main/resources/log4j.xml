@@ -9,6 +9,16 @@
 			<param name="ConversionPattern" value="[%d{ISO8601}]%-5p: %c - %m%n" />
 		</layout>
 	</appender>
+
+	<appender name="file" class="org.apache.log4j.RollingFileAppender">
+		<param name="file" value="logs/wfm.log" />
+		<param name="MaxFileSize" value="100KB" />
+		<!-- Keep one backup file -->
+		<param name="MaxBackupIndex" value="2" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%p %t %c - %m%n" />
+		</layout>
+	</appender> 
 	
 	<!-- Application Loggers -->
 	<logger name="com.kwchina.wfm">
@@ -36,6 +46,7 @@
 	<root>
 		<priority value="warn" />
 		<appender-ref ref="console" />
+		<appender-ref ref="file" />
 	</root>
 	
 </log4j:configuration>
