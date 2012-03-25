@@ -47,7 +47,7 @@ public class UserRepositoryTest {
 	public void testGetUserName() {
 		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
 		UserRepository ur = context.getBean(com.kwchina.wfm.domain.model.organization.UserRepository.class);
-		User u = ur.findByName("sysAdmin");
+		User u = ur.findByCode("sysAdmin");
 		assertNotNull(u);
 	}
 	

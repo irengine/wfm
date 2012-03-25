@@ -65,10 +65,27 @@ public class SecurityHelper {
 		return null;
 	}
 	
+	public static User getCurrentUser() {
+		
+		if (null != SecurityContextHolder.getContext().getAuthentication()) {
+			Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			UserDetails userDetails = null;
+			if (principal instanceof UserDetails) {
+			  userDetails = (UserDetails) principal;
+			  if (null != userDetails) {
+				  User u = getUserByCode(userDetails.getUsername());
+				  return u;
+			  }
+			}
+		}
+
+		return null;
+	}
+	
 	private static User getUserByCode(String code) {
 		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
 		UserRepository ur = context.getBean(com.kwchina.wfm.domain.model.organization.UserRepository.class);
-		User u = ur.findByName(code);
+		User u = ur.findByCode(code);
 		return u;
 	}
 }

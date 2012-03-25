@@ -67,13 +67,12 @@ public class UnitServiceFacadeImpl implements UnitServiceFacade {
 	
 	@Transactional(propagation=Propagation.SUPPORTS)
 	public String getUnitsWithJson() {
-		String name = SecurityHelper.getCurrentUserName();
-		User user = userRepository.findByName(name);
+		User user = SecurityHelper.getCurrentUser();
 		
 		Unit root = unitRepository.findRoot();
 		
 		UnitDTO uo = null;
-		if (name.equals("sysAdmin"))
+		if (user.getCode().equals("sysAdmin"))
 			uo = new UnitDTO(root);
 		else
 			uo = new UnitDTO(root, user.getUnits());
