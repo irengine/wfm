@@ -15,10 +15,10 @@ public class UserRepositoryImpl extends BaseRepositoryImpl<User> implements User
 	@PersistenceContext
 	private EntityManager entityManager;
 	
-	public User findByCode(String name) {
+	public User findByCode(String code) {
 		try {
-			User t = (User) entityManager.createNamedQuery("user.findByName")
-										.setParameter("name", name)
+			User t = (User) entityManager.createNamedQuery("user.findByCode")
+										.setParameter("code", code)
 										.getSingleResult();
 			return t;
 		}

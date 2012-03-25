@@ -4,7 +4,7 @@ import com.kwchina.wfm.domain.common.BaseRepository;
 
 public interface UserRepository extends BaseRepository<User> {
 
-	User findByCode(String name);
+	User findByCode(String code);
 	void disable(User user);
 
 }
