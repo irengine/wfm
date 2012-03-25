@@ -18,6 +18,6 @@ public class SecurityHelperTest {
 	
 	@Test
 	public void testGetCurrentUserName() {
-		SecurityHelper.getCurrentUserName();
+		assertEquals("n/a", SecurityHelper.getCurrentUserName());
 	}
 }

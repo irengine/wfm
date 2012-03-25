@@ -1,7 +1,11 @@
 package com.kwchina.wfm.infrastructure.common;
 
+import org.springframework.context.ApplicationContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import com.kwchina.wfm.domain.model.organization.User;
+import com.kwchina.wfm.domain.model.organization.UserRepository;
 
 public class SecurityHelper {
 
@@ -49,11 +53,22 @@ public class SecurityHelper {
 			UserDetails userDetails = null;
 			if (principal instanceof UserDetails) {
 			  userDetails = (UserDetails) principal;
-			  if (null != userDetails)
-				  return userDetails.getUsername();
+			  if (null != userDetails) {
+				  User u = getUserByCode(userDetails.getUsername());
+				  
+				  if (null != u)
+					  return u.getName();
+			  }
 			}
 		}
 
 		return null;
+	}
+	
+	private static User getUserByCode(String code) {
+		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
+		UserRepository ur = context.getBean(com.kwchina.wfm.domain.model.organization.UserRepository.class);
+		User u = ur.findByName("code");
+		return u;
 	}
 }

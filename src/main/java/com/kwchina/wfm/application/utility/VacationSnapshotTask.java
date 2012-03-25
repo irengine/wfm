@@ -28,6 +28,7 @@ public class VacationSnapshotTask implements Runnable {
 			com.kwchina.wfm.interfaces.organization.facade.EmployeeServiceFacade employeeService = springContext.getBean(com.kwchina.wfm.interfaces.organization.facade.EmployeeServiceFacade.class);
 			employeeService.calculateVacation(command);
 		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
 	}
 }

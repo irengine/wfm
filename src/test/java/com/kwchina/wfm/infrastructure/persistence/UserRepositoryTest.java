@@ -6,12 +6,14 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.kwchina.wfm.domain.model.organization.User;
 import com.kwchina.wfm.domain.model.organization.UserRepository;
+import com.kwchina.wfm.infrastructure.common.ApplicationContextProvider;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({"/context-test.xml"})
@@ -38,6 +40,15 @@ public class UserRepositoryTest {
 		
 		User n = userRepository.findById(u.getId());
 		n.validatePassword("P@ssword");
+	}
+	
+	@Test
+	@Transactional
+	public void testGetUserName() {
+		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
+		UserRepository ur = context.getBean(com.kwchina.wfm.domain.model.organization.UserRepository.class);
+		User u = ur.findByName("sysAdmin");
+		assertNotNull(u);
 	}
 	
 	// TODO: add more unit test
