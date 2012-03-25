@@ -164,8 +164,13 @@ public class EmployeeRepositoryTest {
 	}
 	
 	@Test
-	public void testfindAllEmployees() {
+	public void testFindAllEmployees() {
 		employeeRepository.findAllByUnitId(new Long(1));
+	}
+	
+	@Test
+	public void testFindByCode() {
+		employeeRepository.findByCode("1");
 	}
 	
 	@Test

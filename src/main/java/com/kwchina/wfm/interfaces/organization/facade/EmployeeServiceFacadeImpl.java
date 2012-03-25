@@ -30,11 +30,14 @@ import com.kwchina.wfm.domain.model.shift.ShiftType;
 import com.kwchina.wfm.domain.model.shift.ShiftTypeRepository;
 import com.kwchina.wfm.domain.model.shift.SystemPreferenceFactory;
 import com.kwchina.wfm.domain.model.shift.SystemPreferenceRepository;
+import com.kwchina.wfm.domain.model.shift.WorkOrder;
+import com.kwchina.wfm.domain.model.shift.WorkOrderRepository;
 import com.kwchina.wfm.infrastructure.common.DateHelper;
 import com.kwchina.wfm.interfaces.common.JacksonHelper;
 import com.kwchina.wfm.interfaces.common.Page;
 import com.kwchina.wfm.interfaces.common.PageHelper;
 import com.kwchina.wfm.interfaces.common.QueryHelper;
+import com.kwchina.wfm.interfaces.common.ReportHelper;
 import com.kwchina.wfm.interfaces.organization.dto.TimeSheetDTO;
 import com.kwchina.wfm.interfaces.organization.web.command.ActionCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.ArchiveTimeSheetCommand;
@@ -352,4 +355,33 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 	public void archiveTimeSheet(ArchiveTimeSheetCommand command) {
 		timeSheetRepository.archive(command);
 	}
+	
+	@Autowired
+	WorkOrderRepository workOrderRepository;
+	
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED)
+	public void importWorkOrder(Date date, Map<String, String> orders) {
+		
+		List<Employee> list = employeeRepository.findAll();
+		
+		workOrderRepository.removeAll(date);
+		
+		for (Employee employee : list) {
+			if (ReportHelper.isIncludePreference(employee, ReportHelper.REPORT_COLUMN_SHIFT) || ReportHelper.isIncludePreference(employee.getJob().getUnit(), ReportHelper.REPORT_COLUMN_SHIFT)) {
+				
+				if (orders.containsKey(employee.getEmployeeId().toString())) {
+					WorkOrder workOrder = new WorkOrder(DateHelper.getString(date), employee.getEmployeeId().toString(), orders.get(employee.getEmployeeId().toString()));
+					workOrderRepository.save(workOrder);
+					timeSheetRepository.importWorkOrder(workOrder);
+				}
+				else {
+					WorkOrder workOrder = new WorkOrder(DateHelper.getString(date), employee.getEmployeeId().toString(), "0");
+					workOrderRepository.save(workOrder);
+					timeSheetRepository.importWorkOrder(workOrder);
+				}
+			}
+		}
+	}
+
 }

@@ -9,7 +9,6 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import com.kwchina.wfm.domain.model.employee.TimeSheet;
-import com.kwchina.wfm.domain.model.organization.PreferenceGetter;
 import com.kwchina.wfm.infrastructure.common.DateHelper;
 import com.kwchina.wfm.interfaces.common.ReportHelper;
 
@@ -75,7 +74,7 @@ public class MonthTimeSheetReport {
 			if (!getSummary().containsKey(key)) {
 				getSummary().put(key, getSummaryRows());
 			}
-			if (isIncludePreference(ts.getAttendanceType(), ReportHelper.REPORT_COLUMN_WORK)) {
+			if (ReportHelper.isIncludePreference(ts.getAttendanceType(), ReportHelper.REPORT_COLUMN_WORK)) {
 				if (getSummary().get(key).containsKey(ReportHelper.REPORT_COLUMN_WORK)) {
 					getSummary().get(key).put(ReportHelper.REPORT_COLUMN_WORK, getSummary().get(key).get(ReportHelper.REPORT_COLUMN_WORK) + 1);
 				}
@@ -94,7 +93,7 @@ public class MonthTimeSheetReport {
 			}
 			
 			for (String col : ReportHelper.REPORT_COLUMNS_NORMAL.split(",")) {
-				if (isIncludePreference(ts.getAttendanceType(), col)) {
+				if (ReportHelper.isIncludePreference(ts.getAttendanceType(), col)) {
 					if (getSummary().get(key).containsKey(col)) {
 						getSummary().get(key).put(col, getSummary().get(key).get(col) + 1);
 					}
@@ -104,8 +103,8 @@ public class MonthTimeSheetReport {
 				}
 			}
 			
-			if (isIncludePreference(ts.getAttendanceType(), ReportHelper.REPORT_COLUMN_ALLOWANCE)) {
-				if (isIncludePreference(ts.getEmployee(), ReportHelper.REPORT_COLUMN_ALLOWANCE) || isIncludePreference(ts.getUnit(), ReportHelper.REPORT_COLUMN_ALLOWANCE)) {
+			if (ReportHelper.isIncludePreference(ts.getAttendanceType(), ReportHelper.REPORT_COLUMN_ALLOWANCE)) {
+				if (ReportHelper.isIncludePreference(ts.getEmployee(), ReportHelper.REPORT_COLUMN_ALLOWANCE) || ReportHelper.isIncludePreference(ts.getUnit(), ReportHelper.REPORT_COLUMN_ALLOWANCE)) {
 					if (getSummary().get(key).containsKey(ReportHelper.REPORT_COLUMN_ALLOWANCE)) {
 						getSummary().get(key).put(ReportHelper.REPORT_COLUMN_ALLOWANCE, getSummary().get(key).get(ReportHelper.REPORT_COLUMN_ALLOWANCE) + 1);
 					}
@@ -130,11 +129,5 @@ public class MonthTimeSheetReport {
 		Map<String, Integer> rows = new TreeMap<String, Integer>();
 		
 		return rows;
-	}
-	
-	private boolean isIncludePreference(PreferenceGetter pg, String key) {
-		if (pg.getPreference(key) == null || pg.getPreference(key).equals("false"))
-			return false;
-		return true;
 	}
 }

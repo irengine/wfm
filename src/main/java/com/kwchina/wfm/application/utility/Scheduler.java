@@ -23,6 +23,8 @@ public class Scheduler implements ServletContextListener  {
         scheduler = Executors.newScheduledThreadPool(2);
         scheduler.scheduleAtFixedRate(new VacationSnapshotTask("Vacation", springContext), DateHelper.getNextRuntimeMinutes(23), DateHelper.MINUTES_ONE_DAY, TimeUnit.MINUTES);
         scheduler.scheduleAtFixedRate(new VacationSnapshotTask("Vacation", springContext), DateHelper.getNextRuntimeMinutes(1), DateHelper.MINUTES_ONE_DAY, TimeUnit.MINUTES);
+        scheduler.scheduleAtFixedRate(new VacationSnapshotTask("Vacation", springContext), DateHelper.getNextRuntimeMinutes(1), DateHelper.MINUTES_ONE_DAY, TimeUnit.MINUTES);
+
 //        scheduler.scheduleAtFixedRate(new UnitViewSnapshotTask("U"), 0, 1, TimeUnit.MINUTES);
 //        scheduler.scheduleAtFixedRate(new EmployeeViewSnapshotTask("E"), 0, 1, TimeUnit.MINUTES);
     }

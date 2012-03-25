@@ -1,5 +1,8 @@
 package com.kwchina.wfm.interfaces.organization.facade;
 
+import java.util.Date;
+import java.util.Map;
+
 import com.kwchina.wfm.domain.model.employee.Employee;
 import com.kwchina.wfm.domain.model.employee.TimeSheet;
 import com.kwchina.wfm.interfaces.organization.web.command.ArchiveTimeSheetCommand;
@@ -35,4 +38,5 @@ public interface EmployeeServiceFacade {
 	String getEmployeeShiftType(Long id);
 	
 	void archiveTimeSheet(ArchiveTimeSheetCommand command);
+	void importWorkOrder(Date date, Map<String, String> orders);
 }

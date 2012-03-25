@@ -14,4 +14,6 @@ public interface EmployeeRepository extends BaseRepository<Employee> {
 	List<Employee> findAllByUnitId(Long unitId);
 	void calculateVacation(Date currentMonth, Long vacationId);
 	List<Map<String, Object>> queryVacation(QueryVacationCommand command);
+	List<Employee> findAll();
+	Employee findByCode(String code);
 }

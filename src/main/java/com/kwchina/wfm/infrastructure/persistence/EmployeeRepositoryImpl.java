@@ -28,6 +28,7 @@ public class EmployeeRepositoryImpl extends BaseRepositoryImpl<Employee> impleme
 	@Autowired
 	UnitRepository unitRepository;
 	
+	@Override
 	public void disable(Employee employee) {
 	
 		employee.setEnable(false);
@@ -36,6 +37,15 @@ public class EmployeeRepositoryImpl extends BaseRepositoryImpl<Employee> impleme
 		entityManager.flush();
 	}
 	
+	@Override
+	public Employee findByCode(String code) {
+		Employee employee = (Employee) entityManager.createNamedQuery("employee.findByCode")
+								.setParameter("code", code)
+								.getSingleResult();
+		return employee;
+	}
+	
+	@Override
 	@SuppressWarnings("unchecked")
 	public List<Employee> findByUnitId(Long unitId) {
 		List<Employee> employees = entityManager.createNamedQuery("employee.findByUnitId")
@@ -44,6 +54,15 @@ public class EmployeeRepositoryImpl extends BaseRepositoryImpl<Employee> impleme
 		return employees;
 	}
 	
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<Employee> findAll() {
+		List<Employee> employees = entityManager.createNamedQuery("employee.findAll")
+								.getResultList();
+		return employees;
+	}
+	
+	@Override
 	@SuppressWarnings("unchecked")
 	public List<Employee> findAllByUnitId(Long unitId) {
 		List<Employee> employees = entityManager.createNamedQuery("employee.findAllByUnitId")

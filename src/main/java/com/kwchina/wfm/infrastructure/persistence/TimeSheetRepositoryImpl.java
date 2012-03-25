@@ -2,6 +2,7 @@ package com.kwchina.wfm.infrastructure.persistence;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,11 +20,14 @@ import com.kwchina.wfm.domain.model.employee.TimeSheetRepository;
 import com.kwchina.wfm.domain.model.organization.Unit;
 import com.kwchina.wfm.domain.model.organization.UnitRepository;
 import com.kwchina.wfm.domain.model.shift.AttendanceType;
+import com.kwchina.wfm.domain.model.shift.AttendanceTypeRepository;
 import com.kwchina.wfm.domain.model.shift.ShiftPolicy;
 import com.kwchina.wfm.domain.model.shift.ShiftPolicyFactory;
 import com.kwchina.wfm.domain.model.shift.ShiftType;
 import com.kwchina.wfm.domain.model.shift.ShiftTypeRepository;
+import com.kwchina.wfm.domain.model.shift.WorkOrder;
 import com.kwchina.wfm.infrastructure.common.DateHelper;
+import com.kwchina.wfm.interfaces.common.ReportHelper;
 import com.kwchina.wfm.interfaces.organization.web.command.ArchiveTimeSheetCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryActualTimeSheetCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryTimeSheetByPropertyCommand;
@@ -42,6 +46,9 @@ public class TimeSheetRepositoryImpl extends BaseRepositoryImpl<TimeSheet> imple
 	
 	@Autowired
 	ShiftTypeRepository shiftTypeRepository;
+	
+	@Autowired
+	AttendanceTypeRepository attendanceTypeRepository;
 
 	@Override
 	public void generateMonthTimeSheet(String month, Unit unit) {
@@ -84,6 +91,29 @@ public class TimeSheetRepositoryImpl extends BaseRepositoryImpl<TimeSheet> imple
 				.executeUpdate();
 
 		entityManager.flush();
+	}
+	
+	public void importWorkOrder(WorkOrder order) {
+		
+		Map<String, AttendanceType> attendanceTypes = new HashMap<String, AttendanceType>();
+		
+		attendanceTypes.put("0", attendanceTypeRepository.findByName(ReportHelper.REPORT_COLUMN_IMPORT_0));
+		attendanceTypes.put("1", attendanceTypeRepository.findByName(ReportHelper.REPORT_COLUMN_IMPORT_1));
+		attendanceTypes.put("2", attendanceTypeRepository.findByName(ReportHelper.REPORT_COLUMN_IMPORT_2));
+		attendanceTypes.put("3", attendanceTypeRepository.findByName(ReportHelper.REPORT_COLUMN_IMPORT_3));
+		
+		Employee employee = employeeRepository.findByCode(order.getEmployeeCode());
+		AttendanceType attendanceType = attendanceTypes.get(order.getShiftCode());
+		
+		// delete
+		entityManager.createQuery("delete from TimeSheet ts where ts.employee = :employee " +
+				"and ts.date = :date ")
+				.setParameter("employee", employee)
+				.setParameter("date", DateHelper.getDate(order.getDate()))
+				.executeUpdate();
+		// insert
+		TimeSheet record = new TimeSheet(employee.getJob().getUnit(), employee, DateHelper.getDate(order.getDate()), attendanceType.getBeginTime(), attendanceType.getEndTime(), attendanceType, TimeSheet.ActionType.IMPORT);
+		entityManager.persist(record);
 	}
 	
 	@Override
