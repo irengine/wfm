@@ -68,7 +68,7 @@ public class SecurityHelper {
 	private static User getUserByCode(String code) {
 		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
 		UserRepository ur = context.getBean(com.kwchina.wfm.domain.model.organization.UserRepository.class);
-		User u = ur.findByName("code");
+		User u = ur.findByName(code);
 		return u;
 	}
 }
