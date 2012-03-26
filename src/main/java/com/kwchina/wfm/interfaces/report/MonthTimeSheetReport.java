@@ -128,6 +128,13 @@ public class MonthTimeSheetReport {
 	private Map<String, Integer> getSummaryRows() {
 		Map<String, Integer> rows = new TreeMap<String, Integer>();
 		
+		rows.put(ReportHelper.REPORT_COLUMN_WORK, 0);
+		rows.put(ReportHelper.REPORT_COLUMN_OVERTIME_HOLIDAY, 0);
+		for(String s : ReportHelper.REPORT_COLUMNS_NORMAL.split(","))
+			rows.put(s, 0);
+		
+		rows.put(ReportHelper.REPORT_COLUMN_ALLOWANCE, 0);
+		
 		return rows;
 	}
 }

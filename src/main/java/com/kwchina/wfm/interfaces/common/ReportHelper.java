@@ -11,7 +11,7 @@ public class ReportHelper {
 	public static final String REPORT_COLUMN_OVERTIME = "延时加班";
 	public static final String REPORT_COLUMN_SHIFT = "翻班";
 	
-	public static final String REPORT_COLUMN_IMPORT_0 = "公休";
+	public static final String REPORT_COLUMN_IMPORT_0 = "工休";
 	public static final String REPORT_COLUMN_IMPORT_1 = "日班";
 	public static final String REPORT_COLUMN_IMPORT_2 = "中班";
 	public static final String REPORT_COLUMN_IMPORT_3 = "夜班";
