@@ -26,6 +26,7 @@ import com.kwchina.wfm.interfaces.common.QueryHelper;
 import com.kwchina.wfm.interfaces.organization.dto.EmployeeTimeSheetDTO;
 import com.kwchina.wfm.interfaces.organization.facade.EmployeeServiceFacade;
 import com.kwchina.wfm.interfaces.organization.web.command.ArchiveTimeSheetCommand;
+import com.kwchina.wfm.interfaces.organization.web.command.QueryActualTimeSheetCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryTimeSheetByPropertyCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryTimeSheetCommand;
@@ -95,6 +96,13 @@ public class EmployeeController {
 			command.setActionType(TimeSheet.ActionType.MONTH_PLAN_ADJUST);
 		HttpHelper.output(response, employeeServiceFacade.queryEmployeesMonthTimeSheetWithJson(command));
 	}
+	
+	@RequestMapping(value = "/querySelectedEmployeesActualTimeSheet", method = RequestMethod.GET)
+	public void querySelectedEmployeesActualTimeSheet(HttpServletRequest request, HttpServletResponse response, @ModelAttribute QueryActualTimeSheetCommand command) {
+		
+		HttpHelper.output(response, employeeServiceFacade.queryEmployeesActualTimeSheetWithJson(command));
+	}
+
 	
 	@RequestMapping(value = "/queryEmployeesActualTimeSheet", method = RequestMethod.GET)
 	public void queryEmployeesActualTimeSheet(HttpServletRequest request, HttpServletResponse response, @ModelAttribute QueryTimeSheetCommand command) {
