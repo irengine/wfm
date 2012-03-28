@@ -56,6 +56,14 @@ public class DateHelper {
 		return days;
 	}
 	
+	public static Date addDay(Date day, int amount) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(day);
+		c.add(Calendar.DATE, amount);
+		
+		return c.getTime();
+	}
+	
 	// TODO: move begin date and end date into system properties
 	private static int DAY_OF_MONTH = 26;
 	

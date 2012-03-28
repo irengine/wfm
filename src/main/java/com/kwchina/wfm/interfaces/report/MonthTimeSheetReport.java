@@ -71,48 +71,131 @@ public class MonthTimeSheetReport {
 			getData().get(key).get(DateHelper.getString(ts.getDate())).add(ts);
 			
 			// Time Sheet summary data
+			int beginHour = ts.getAttendanceType().getBeginTime() / 60;
+			int endHour = ts.getAttendanceType().getEndTime() / 60;
+			
 			if (!getSummary().containsKey(key)) {
 				getSummary().put(key, getSummaryRows());
 			}
+			
+			// Work and holiday
 			if (ReportHelper.isIncludePreference(ts.getAttendanceType(), ReportHelper.REPORT_COLUMN_WORK)) {
-				if (getSummary().get(key).containsKey(ReportHelper.REPORT_COLUMN_WORK)) {
-					getSummary().get(key).put(ReportHelper.REPORT_COLUMN_WORK, getSummary().get(key).get(ReportHelper.REPORT_COLUMN_WORK) + 1);
-				}
-				else {
-					getSummary().get(key).put(ReportHelper.REPORT_COLUMN_WORK, 1);
+				// work
+				int workQuantity = (endHour - beginHour) / 8;
+				setColumn(key, ReportHelper.REPORT_COLUMN_WORK, workQuantity);
+//				if (getSummary().get(key).containsKey(ReportHelper.REPORT_COLUMN_WORK)) {
+//					getSummary().get(key).put(ReportHelper.REPORT_COLUMN_WORK, getSummary().get(key).get(ReportHelper.REPORT_COLUMN_WORK) + workQuantity);
+//				}
+//				else {
+//					getSummary().get(key).put(ReportHelper.REPORT_COLUMN_WORK, workQuantity);
+//				}
+				
+				// holiday
+				int holidayQuantity = 0;
+				// 1.yesterday
+				if (holidays.contains(DateHelper.getString(DateHelper.addDay(ts.getDate(), -1)))) {
+					holidayQuantity += ReportHelper.getYesterdayHours(beginHour, endHour) / 8;
 				}
 				
+				// 2.today
 				if (holidays.contains(DateHelper.getString(ts.getDate()))) {
-					if (getSummary().get(key).containsKey(ReportHelper.REPORT_COLUMN_OVERTIME_HOLIDAY)) {
-						getSummary().get(key).put(ReportHelper.REPORT_COLUMN_OVERTIME_HOLIDAY, getSummary().get(key).get(ReportHelper.REPORT_COLUMN_OVERTIME_HOLIDAY) + 1);
-					}
-					else {
-						getSummary().get(key).put(ReportHelper.REPORT_COLUMN_OVERTIME_HOLIDAY, 1);
-					}
+					holidayQuantity += ReportHelper.getTodayHours(beginHour, endHour) / 8;
+				}
+				
+				// 3.tomorrow
+				if (holidays.contains(DateHelper.getString(DateHelper.addDay(ts.getDate(), 1)))) {
+					holidayQuantity += ReportHelper.getTomorrowHours(beginHour, endHour) / 8;
+				}
+
+				setColumn(key, ReportHelper.REPORT_COLUMN_OVERTIME_HOLIDAY, holidayQuantity);
+//				if (getSummary().get(key).containsKey(ReportHelper.REPORT_COLUMN_OVERTIME_HOLIDAY)) {
+//					getSummary().get(key).put(ReportHelper.REPORT_COLUMN_OVERTIME_HOLIDAY, getSummary().get(key).get(ReportHelper.REPORT_COLUMN_OVERTIME_HOLIDAY) + holidayQuantity);
+//				}
+//				else {
+//					getSummary().get(key).put(ReportHelper.REPORT_COLUMN_OVERTIME_HOLIDAY, holidayQuantity);
+//				}
+			}
+			
+			// other summary
+			for (String col : ReportHelper.REPORT_COLUMNS_NORMAL.split(",")) {
+				if (ReportHelper.isIncludePreference(ts.getAttendanceType(), col)) {
+					setColumn(key, col, 1);
+//					if (getSummary().get(key).containsKey(col)) {
+//						getSummary().get(key).put(col, getSummary().get(key).get(col) + 1);
+//					}
+//					else {
+//						getSummary().get(key).put(col, 1);
+//					}
 				}
 			}
 			
-			for (String col : ReportHelper.REPORT_COLUMNS_NORMAL.split(",")) {
-				if (ReportHelper.isIncludePreference(ts.getAttendanceType(), col)) {
-					if (getSummary().get(key).containsKey(col)) {
-						getSummary().get(key).put(col, getSummary().get(key).get(col) + 1);
-					}
-					else {
-						getSummary().get(key).put(col, 1);
-					}
+			// day/middle/night shift and full shift
+			// TODO: depend on today and tomorrow
+			// special case: full shift
+			if (!holidays.contains(DateHelper.getString(ts.getDate())) &&
+					!holidays.contains(DateHelper.getString(DateHelper.addDay(ts.getDate(), 1))) &&
+					ReportHelper.isFullShift(beginHour, endHour)) {
+				setColumn(key, ReportHelper.REPORT_COLUMNS_FULL_SHIFT, 1);
+//				if (getSummary().get(key).containsKey(ReportHelper.REPORT_COLUMNS_FULL_SHIFT)) {
+//					getSummary().get(key).put(ReportHelper.REPORT_COLUMNS_FULL_SHIFT, getSummary().get(key).get(ReportHelper.REPORT_COLUMN_ALLOWANCE) + 1);
+//				}
+//				else {
+//					getSummary().get(key).put(ReportHelper.REPORT_COLUMNS_FULL_SHIFT, 1);
+//				}
+			}
+			else {
+				// yesterday is not holiday
+				if (holidays.contains(DateHelper.getString(DateHelper.addDay(ts.getDate(), -1)))) {
+					if (ReportHelper.isIncludePreference(ts.getAttendanceType(), ReportHelper.REPORT_COLUMNS_DAY_SHIFT) && ReportHelper.isDayShift(beginHour, endHour, -24))
+						setColumn(key, ReportHelper.REPORT_COLUMNS_DAY_SHIFT, 1);
+					if (ReportHelper.isIncludePreference(ts.getAttendanceType(), ReportHelper.REPORT_COLUMNS_MIDDLE_SHIFT) && ReportHelper.isMiddleShift(beginHour, endHour, -24))
+						setColumn(key, ReportHelper.REPORT_COLUMNS_MIDDLE_SHIFT, 1);
+					if (ReportHelper.isIncludePreference(ts.getAttendanceType(), ReportHelper.REPORT_COLUMNS_NIGHT_SHIFT) && ReportHelper.isNightShift(beginHour, endHour, -24))
+						setColumn(key, ReportHelper.REPORT_COLUMNS_NIGHT_SHIFT, 1);
+				}
+
+				// today is not holdliday
+				if (!holidays.contains(DateHelper.getString(ts.getDate()))) {
+					if (ReportHelper.isIncludePreference(ts.getAttendanceType(), ReportHelper.REPORT_COLUMNS_DAY_SHIFT) && ReportHelper.isDayShift(beginHour, endHour, 0))
+						setColumn(key, ReportHelper.REPORT_COLUMNS_DAY_SHIFT, 1);
+					if (ReportHelper.isIncludePreference(ts.getAttendanceType(), ReportHelper.REPORT_COLUMNS_MIDDLE_SHIFT) && ReportHelper.isMiddleShift(beginHour, endHour, 0))
+						setColumn(key, ReportHelper.REPORT_COLUMNS_MIDDLE_SHIFT, 1);
+					if (ReportHelper.isIncludePreference(ts.getAttendanceType(), ReportHelper.REPORT_COLUMNS_NIGHT_SHIFT) && ReportHelper.isNightShift(beginHour, endHour, 0))
+						setColumn(key, ReportHelper.REPORT_COLUMNS_NIGHT_SHIFT, 1);
+				}
+				
+				// tomorrow is not holiday
+				if (holidays.contains(DateHelper.getString(DateHelper.addDay(ts.getDate(), 1)))) {
+					if (ReportHelper.isIncludePreference(ts.getAttendanceType(), ReportHelper.REPORT_COLUMNS_DAY_SHIFT) && ReportHelper.isDayShift(beginHour, endHour, 24))
+						setColumn(key, ReportHelper.REPORT_COLUMNS_DAY_SHIFT, 1);
+					if (ReportHelper.isIncludePreference(ts.getAttendanceType(), ReportHelper.REPORT_COLUMNS_MIDDLE_SHIFT) && ReportHelper.isMiddleShift(beginHour, endHour, 24))
+						setColumn(key, ReportHelper.REPORT_COLUMNS_MIDDLE_SHIFT, 1);
+					if (ReportHelper.isIncludePreference(ts.getAttendanceType(), ReportHelper.REPORT_COLUMNS_NIGHT_SHIFT) && ReportHelper.isNightShift(beginHour, endHour, 24))
+						setColumn(key, ReportHelper.REPORT_COLUMNS_NIGHT_SHIFT, 1);
 				}
 			}
 			
 			if (ReportHelper.isIncludePreference(ts.getAttendanceType(), ReportHelper.REPORT_COLUMN_ALLOWANCE)) {
-				if (ReportHelper.isIncludePreference(ts.getEmployee(), ReportHelper.REPORT_COLUMN_ALLOWANCE) || ReportHelper.isIncludePreference(ts.getUnit(), ReportHelper.REPORT_COLUMN_ALLOWANCE)) {
-					if (getSummary().get(key).containsKey(ReportHelper.REPORT_COLUMN_ALLOWANCE)) {
-						getSummary().get(key).put(ReportHelper.REPORT_COLUMN_ALLOWANCE, getSummary().get(key).get(ReportHelper.REPORT_COLUMN_ALLOWANCE) + 1);
-					}
-					else {
-						getSummary().get(key).put(ReportHelper.REPORT_COLUMN_ALLOWANCE, 1);
-					}
+				if (ReportHelper.isIncludePreference(ts.getEmployee(), ReportHelper.REPORT_COLUMN_ALLOWANCE)
+						|| ReportHelper.isIncludePreference(ts.getUnit(), ReportHelper.REPORT_COLUMN_ALLOWANCE)) {
+					setColumn(key, ReportHelper.REPORT_COLUMN_ALLOWANCE, 1);
+//					if (getSummary().get(key).containsKey(ReportHelper.REPORT_COLUMN_ALLOWANCE)) {
+//						getSummary().get(key).put(ReportHelper.REPORT_COLUMN_ALLOWANCE, getSummary().get(key).get(ReportHelper.REPORT_COLUMN_ALLOWANCE) + 1);
+//					}
+//					else {
+//						getSummary().get(key).put(ReportHelper.REPORT_COLUMN_ALLOWANCE, 1);
+//					}
 				}
 			}
+		}
+	}
+	
+	private void setColumn(String key, String col, int val) {
+		if (getSummary().get(key).containsKey(col)) {
+			getSummary().get(key).put(col, getSummary().get(key).get(col) + val);
+		}
+		else {
+			getSummary().get(key).put(col, 1);
 		}
 	}
 	
