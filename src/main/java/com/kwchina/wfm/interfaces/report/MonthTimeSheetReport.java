@@ -144,8 +144,13 @@ public class MonthTimeSheetReport {
 //				}
 			}
 			else {
+				setColumn(key, ReportHelper.REPORT_COLUMNS_FULL_SHIFT, 0);
+				setColumn(key, ReportHelper.REPORT_COLUMNS_DAY_SHIFT, 0);
+				setColumn(key, ReportHelper.REPORT_COLUMNS_MIDDLE_SHIFT, 0);
+				setColumn(key, ReportHelper.REPORT_COLUMNS_NIGHT_SHIFT, 0);
+				
 				// yesterday is not holiday
-				if (holidays.contains(DateHelper.getString(DateHelper.addDay(ts.getDate(), -1)))) {
+				if (!holidays.contains(DateHelper.getString(DateHelper.addDay(ts.getDate(), -1)))) {
 					if (ReportHelper.isIncludePreference(ts.getAttendanceType(), ReportHelper.REPORT_COLUMNS_DAY_SHIFT) && ReportHelper.isDayShift(beginHour, endHour, -24))
 						setColumn(key, ReportHelper.REPORT_COLUMNS_DAY_SHIFT, 1);
 					if (ReportHelper.isIncludePreference(ts.getAttendanceType(), ReportHelper.REPORT_COLUMNS_MIDDLE_SHIFT) && ReportHelper.isMiddleShift(beginHour, endHour, -24))
@@ -165,7 +170,7 @@ public class MonthTimeSheetReport {
 				}
 				
 				// tomorrow is not holiday
-				if (holidays.contains(DateHelper.getString(DateHelper.addDay(ts.getDate(), 1)))) {
+				if (!holidays.contains(DateHelper.getString(DateHelper.addDay(ts.getDate(), 1)))) {
 					if (ReportHelper.isIncludePreference(ts.getAttendanceType(), ReportHelper.REPORT_COLUMNS_DAY_SHIFT) && ReportHelper.isDayShift(beginHour, endHour, 24))
 						setColumn(key, ReportHelper.REPORT_COLUMNS_DAY_SHIFT, 1);
 					if (ReportHelper.isIncludePreference(ts.getAttendanceType(), ReportHelper.REPORT_COLUMNS_MIDDLE_SHIFT) && ReportHelper.isMiddleShift(beginHour, endHour, 24))
