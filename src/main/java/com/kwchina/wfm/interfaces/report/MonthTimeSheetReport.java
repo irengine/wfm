@@ -83,12 +83,6 @@ public class MonthTimeSheetReport {
 				// work
 				int workQuantity = (endHour - beginHour) / 8;
 				setColumn(key, ReportHelper.REPORT_COLUMN_WORK, workQuantity);
-//				if (getSummary().get(key).containsKey(ReportHelper.REPORT_COLUMN_WORK)) {
-//					getSummary().get(key).put(ReportHelper.REPORT_COLUMN_WORK, getSummary().get(key).get(ReportHelper.REPORT_COLUMN_WORK) + workQuantity);
-//				}
-//				else {
-//					getSummary().get(key).put(ReportHelper.REPORT_COLUMN_WORK, workQuantity);
-//				}
 				
 				// holiday
 				int holidayQuantity = 0;
@@ -108,24 +102,12 @@ public class MonthTimeSheetReport {
 				}
 
 				setColumn(key, ReportHelper.REPORT_COLUMN_OVERTIME_HOLIDAY, holidayQuantity);
-//				if (getSummary().get(key).containsKey(ReportHelper.REPORT_COLUMN_OVERTIME_HOLIDAY)) {
-//					getSummary().get(key).put(ReportHelper.REPORT_COLUMN_OVERTIME_HOLIDAY, getSummary().get(key).get(ReportHelper.REPORT_COLUMN_OVERTIME_HOLIDAY) + holidayQuantity);
-//				}
-//				else {
-//					getSummary().get(key).put(ReportHelper.REPORT_COLUMN_OVERTIME_HOLIDAY, holidayQuantity);
-//				}
 			}
 			
 			// other summary
 			for (String col : ReportHelper.REPORT_COLUMNS_NORMAL.split(",")) {
 				if (ReportHelper.isIncludePreference(ts.getAttendanceType(), col)) {
 					setColumn(key, col, 1);
-//					if (getSummary().get(key).containsKey(col)) {
-//						getSummary().get(key).put(col, getSummary().get(key).get(col) + 1);
-//					}
-//					else {
-//						getSummary().get(key).put(col, 1);
-//					}
 				}
 			}
 			
@@ -136,12 +118,6 @@ public class MonthTimeSheetReport {
 					!holidays.contains(DateHelper.getString(DateHelper.addDay(ts.getDate(), 1))) &&
 					ReportHelper.isFullShift(beginHour, endHour)) {
 				setColumn(key, ReportHelper.REPORT_COLUMNS_FULL_SHIFT, 1);
-//				if (getSummary().get(key).containsKey(ReportHelper.REPORT_COLUMNS_FULL_SHIFT)) {
-//					getSummary().get(key).put(ReportHelper.REPORT_COLUMNS_FULL_SHIFT, getSummary().get(key).get(ReportHelper.REPORT_COLUMN_ALLOWANCE) + 1);
-//				}
-//				else {
-//					getSummary().get(key).put(ReportHelper.REPORT_COLUMNS_FULL_SHIFT, 1);
-//				}
 			}
 			else {
 				setColumn(key, ReportHelper.REPORT_COLUMNS_FULL_SHIFT, 0);
@@ -184,12 +160,6 @@ public class MonthTimeSheetReport {
 				if (ReportHelper.isIncludePreference(ts.getEmployee(), ReportHelper.REPORT_COLUMN_ALLOWANCE)
 						|| ReportHelper.isIncludePreference(ts.getUnit(), ReportHelper.REPORT_COLUMN_ALLOWANCE)) {
 					setColumn(key, ReportHelper.REPORT_COLUMN_ALLOWANCE, 1);
-//					if (getSummary().get(key).containsKey(ReportHelper.REPORT_COLUMN_ALLOWANCE)) {
-//						getSummary().get(key).put(ReportHelper.REPORT_COLUMN_ALLOWANCE, getSummary().get(key).get(ReportHelper.REPORT_COLUMN_ALLOWANCE) + 1);
-//					}
-//					else {
-//						getSummary().get(key).put(ReportHelper.REPORT_COLUMN_ALLOWANCE, 1);
-//					}
 				}
 			}
 		}
@@ -200,7 +170,7 @@ public class MonthTimeSheetReport {
 			getSummary().get(key).put(col, getSummary().get(key).get(col) + val);
 		}
 		else {
-			getSummary().get(key).put(col, 1);
+			getSummary().get(key).put(col, val);
 		}
 	}
 	
