@@ -84,7 +84,53 @@ public class UnitRepostioryTest {
 		
 		JacksonHelper.getJson(root);
 	}
-	
+
+	@Test
+	@Transactional
+	public void testUriNameInheritance() {
+		Unit root = unitRepository.getRoot("S");
+		
+		Unit l1 = new Unit("L1");
+		unitRepository.addChild(root, l1);
+		
+		Unit l11 = new Unit("L11");
+		unitRepository.addChild(l1, l11);
+
+		Unit l12 = new Unit("L12");
+		unitRepository.addChild(l1, l12);
+
+		Unit l2 = new Unit("L2");
+		unitRepository.addChild(root, l2);
+		
+		Unit l21 = new Unit("L21");
+		unitRepository.addChild(l2, l21);
+
+		Unit l22 = new Unit("L22");
+		unitRepository.addChild(l2, l22);
+
+		Unit l23 = new Unit("L23");
+		unitRepository.addChild(l2, l23);
+		
+		assertEquals(2, root.getChildren().size());
+		assertEquals(2, l1.getChildren().size());
+		assertEquals(3, l2.getChildren().size());
+		
+		assertTrue(0 != root.getLeft());
+		assertTrue(0 != root.getRight());
+		
+		assertEquals(7, unitRepository.findAllChildren(root).size());
+		
+		assertEquals(0, unitRepository.findAllAncestor(root).size());
+		assertEquals(1, unitRepository.findAllAncestor(l2).size());
+		assertEquals(2, unitRepository.findAllAncestor(l21).size());
+		
+		root.setName("X");
+		assertEquals("X-L2-L23", l23.getUriName());
+		
+		l2.setName("X2");
+		assertEquals("X-X2-L23", l23.getUriName());
+	}
+
 	ShiftType dayShift;
 	ShiftType nightShift;
 	ShiftType fouthShift;

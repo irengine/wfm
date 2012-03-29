@@ -139,14 +139,23 @@ public class Unit implements com.kwchina.wfm.domain.common.Entity<Unit>, Prefere
 
 	public void setName(String name) {
 		this.name = name;
+		
+		if (null == parent)
+			setUriName(name);
+		else
+			setUriName(parent.getUriName() + "-" + name);
 	}
 
 	public String getUriName() {
 		return uriName;
 	}
 
-	public void setUriName(String uriName) {
+	private void setUriName(String uriName) {
 		this.uriName = uriName;
+		
+		for (Unit u : this.children) {
+			u.setUriName(uriName + "-" + u.getName());
+		}
 	}
 
 	public Collection<User> getUsers() {
