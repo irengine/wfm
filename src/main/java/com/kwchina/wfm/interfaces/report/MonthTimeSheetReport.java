@@ -15,7 +15,7 @@ import com.kwchina.wfm.interfaces.common.ReportHelper;
 public class MonthTimeSheetReport {
 	
 	private Map<String, Map<String, Set<TimeSheet>>> data = new HashMap<String, Map<String, Set<TimeSheet>>>();
-	private Map<String, Map<String, Integer>> summary = new HashMap<String, Map<String, Integer>>();
+	private Map<String, Map<String, Float>> summary = new HashMap<String, Map<String, Float>>();
 	private List<Date> days;
 
 	public MonthTimeSheetReport() {
@@ -30,11 +30,11 @@ public class MonthTimeSheetReport {
 		this.data = data;
 	}
 
-	public Map<String, Map<String, Integer>> getSummary() {
+	public Map<String, Map<String, Float>> getSummary() {
 		return summary;
 	}
 
-	public void setSummary(Map<String, Map<String, Integer>> summary) {
+	public void setSummary(Map<String, Map<String, Float>> summary) {
 		this.summary = summary;
 	}
 
@@ -81,11 +81,11 @@ public class MonthTimeSheetReport {
 			// Work and holiday
 			if (ReportHelper.isIncludePreference(ts.getAttendanceType(), ReportHelper.REPORT_COLUMN_WORK)) {
 				// work
-				int workQuantity = (endHour - beginHour) / 8;
+				Float workQuantity = (endHour - beginHour) / 8f;
 				setColumn(key, ReportHelper.REPORT_COLUMN_WORK, workQuantity);
 				
 				// holiday
-				int holidayQuantity = 0;
+				Float holidayQuantity = 0f;
 				// 1.yesterday
 				if (holidays.contains(DateHelper.getString(DateHelper.addDay(ts.getDate(), -1)))) {
 					holidayQuantity += ReportHelper.getYesterdayHours(beginHour, endHour) / 8;
@@ -107,7 +107,7 @@ public class MonthTimeSheetReport {
 			// other summary
 			for (String col : ReportHelper.REPORT_COLUMNS_NORMAL.split(",")) {
 				if (ReportHelper.isIncludePreference(ts.getAttendanceType(), col)) {
-					setColumn(key, col, 1);
+					setColumn(key, col, 1f);
 				}
 			}
 			
@@ -117,55 +117,55 @@ public class MonthTimeSheetReport {
 			if (!holidays.contains(DateHelper.getString(ts.getDate())) &&
 					!holidays.contains(DateHelper.getString(DateHelper.addDay(ts.getDate(), 1))) &&
 					ReportHelper.isFullShift(beginHour, endHour)) {
-				setColumn(key, ReportHelper.REPORT_COLUMNS_FULL_SHIFT, 1);
+				setColumn(key, ReportHelper.REPORT_COLUMNS_FULL_SHIFT, 1f);
 			}
 			else {
-				setColumn(key, ReportHelper.REPORT_COLUMNS_FULL_SHIFT, 0);
-				setColumn(key, ReportHelper.REPORT_COLUMNS_DAY_SHIFT, 0);
-				setColumn(key, ReportHelper.REPORT_COLUMNS_MIDDLE_SHIFT, 0);
-				setColumn(key, ReportHelper.REPORT_COLUMNS_NIGHT_SHIFT, 0);
+				setColumn(key, ReportHelper.REPORT_COLUMNS_FULL_SHIFT, 0f);
+				setColumn(key, ReportHelper.REPORT_COLUMNS_DAY_SHIFT, 0f);
+				setColumn(key, ReportHelper.REPORT_COLUMNS_MIDDLE_SHIFT, 0f);
+				setColumn(key, ReportHelper.REPORT_COLUMNS_NIGHT_SHIFT, 0f);
 				
 				// yesterday is not holiday
 				if (!holidays.contains(DateHelper.getString(DateHelper.addDay(ts.getDate(), -1)))) {
 					if (ReportHelper.isIncludePreference(ts.getAttendanceType(), ReportHelper.REPORT_COLUMNS_DAY_SHIFT) && ReportHelper.isDayShift(beginHour, endHour, -24))
-						setColumn(key, ReportHelper.REPORT_COLUMNS_DAY_SHIFT, 1);
+						setColumn(key, ReportHelper.REPORT_COLUMNS_DAY_SHIFT, 1f);
 					if (ReportHelper.isIncludePreference(ts.getAttendanceType(), ReportHelper.REPORT_COLUMNS_MIDDLE_SHIFT) && ReportHelper.isMiddleShift(beginHour, endHour, -24))
-						setColumn(key, ReportHelper.REPORT_COLUMNS_MIDDLE_SHIFT, 1);
+						setColumn(key, ReportHelper.REPORT_COLUMNS_MIDDLE_SHIFT, 1f);
 					if (ReportHelper.isIncludePreference(ts.getAttendanceType(), ReportHelper.REPORT_COLUMNS_NIGHT_SHIFT) && ReportHelper.isNightShift(beginHour, endHour, -24))
-						setColumn(key, ReportHelper.REPORT_COLUMNS_NIGHT_SHIFT, 1);
+						setColumn(key, ReportHelper.REPORT_COLUMNS_NIGHT_SHIFT, 1f);
 				}
 
-				// today is not holdliday
+				// today is not holliday
 				if (!holidays.contains(DateHelper.getString(ts.getDate()))) {
 					if (ReportHelper.isIncludePreference(ts.getAttendanceType(), ReportHelper.REPORT_COLUMNS_DAY_SHIFT) && ReportHelper.isDayShift(beginHour, endHour, 0))
-						setColumn(key, ReportHelper.REPORT_COLUMNS_DAY_SHIFT, 1);
+						setColumn(key, ReportHelper.REPORT_COLUMNS_DAY_SHIFT, 1f);
 					if (ReportHelper.isIncludePreference(ts.getAttendanceType(), ReportHelper.REPORT_COLUMNS_MIDDLE_SHIFT) && ReportHelper.isMiddleShift(beginHour, endHour, 0))
-						setColumn(key, ReportHelper.REPORT_COLUMNS_MIDDLE_SHIFT, 1);
+						setColumn(key, ReportHelper.REPORT_COLUMNS_MIDDLE_SHIFT, 1f);
 					if (ReportHelper.isIncludePreference(ts.getAttendanceType(), ReportHelper.REPORT_COLUMNS_NIGHT_SHIFT) && ReportHelper.isNightShift(beginHour, endHour, 0))
-						setColumn(key, ReportHelper.REPORT_COLUMNS_NIGHT_SHIFT, 1);
+						setColumn(key, ReportHelper.REPORT_COLUMNS_NIGHT_SHIFT, 1f);
 				}
 				
 				// tomorrow is not holiday
 				if (!holidays.contains(DateHelper.getString(DateHelper.addDay(ts.getDate(), 1)))) {
 					if (ReportHelper.isIncludePreference(ts.getAttendanceType(), ReportHelper.REPORT_COLUMNS_DAY_SHIFT) && ReportHelper.isDayShift(beginHour, endHour, 24))
-						setColumn(key, ReportHelper.REPORT_COLUMNS_DAY_SHIFT, 1);
+						setColumn(key, ReportHelper.REPORT_COLUMNS_DAY_SHIFT, 1f);
 					if (ReportHelper.isIncludePreference(ts.getAttendanceType(), ReportHelper.REPORT_COLUMNS_MIDDLE_SHIFT) && ReportHelper.isMiddleShift(beginHour, endHour, 24))
-						setColumn(key, ReportHelper.REPORT_COLUMNS_MIDDLE_SHIFT, 1);
+						setColumn(key, ReportHelper.REPORT_COLUMNS_MIDDLE_SHIFT, 1f);
 					if (ReportHelper.isIncludePreference(ts.getAttendanceType(), ReportHelper.REPORT_COLUMNS_NIGHT_SHIFT) && ReportHelper.isNightShift(beginHour, endHour, 24))
-						setColumn(key, ReportHelper.REPORT_COLUMNS_NIGHT_SHIFT, 1);
+						setColumn(key, ReportHelper.REPORT_COLUMNS_NIGHT_SHIFT, 1f);
 				}
 			}
 			
 			if (ReportHelper.isIncludePreference(ts.getAttendanceType(), ReportHelper.REPORT_COLUMN_ALLOWANCE)) {
 				if (ReportHelper.isIncludePreference(ts.getEmployee(), ReportHelper.REPORT_COLUMN_ALLOWANCE)
 						|| ReportHelper.isIncludePreference(ts.getUnit(), ReportHelper.REPORT_COLUMN_ALLOWANCE)) {
-					setColumn(key, ReportHelper.REPORT_COLUMN_ALLOWANCE, 1);
+					setColumn(key, ReportHelper.REPORT_COLUMN_ALLOWANCE, 1f);
 				}
 			}
 		}
 	}
 	
-	private void setColumn(String key, String col, int val) {
+	private void setColumn(String key, String col, Float val) {
 		if (getSummary().get(key).containsKey(col)) {
 			getSummary().get(key).put(col, getSummary().get(key).get(col) + val);
 		}
@@ -183,15 +183,15 @@ public class MonthTimeSheetReport {
 		return rows;
 	}
 	
-	private Map<String, Integer> getSummaryRows() {
-		Map<String, Integer> rows = new TreeMap<String, Integer>();
+	private Map<String, Float> getSummaryRows() {
+		Map<String, Float> rows = new TreeMap<String, Float>();
 		
-		rows.put(ReportHelper.REPORT_COLUMN_WORK, 0);
-		rows.put(ReportHelper.REPORT_COLUMN_OVERTIME_HOLIDAY, 0);
+		rows.put(ReportHelper.REPORT_COLUMN_WORK, 0f);
+		rows.put(ReportHelper.REPORT_COLUMN_OVERTIME_HOLIDAY, 0f);
 		for(String s : ReportHelper.REPORT_COLUMNS_NORMAL.split(","))
-			rows.put(s, 0);
+			rows.put(s, 0f);
 		
-		rows.put(ReportHelper.REPORT_COLUMN_ALLOWANCE, 0);
+		rows.put(ReportHelper.REPORT_COLUMN_ALLOWANCE, 0f);
 		
 		return rows;
 	}
