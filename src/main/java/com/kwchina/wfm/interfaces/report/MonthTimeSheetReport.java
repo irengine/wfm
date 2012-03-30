@@ -94,9 +94,9 @@ public class MonthTimeSheetReport {
 				// holiday
 				Float holidayQuantity = 0f;
 				
-				logger.info("yesterday hours {}", ReportHelper.getYesterdayHours(beginHour, endHour));
-				logger.info("today hours {}", ReportHelper.getTodayHours(beginHour, endHour));
-				logger.info("tomorrow hours {}", ReportHelper.getTomorrowHours(beginHour, endHour));
+				logger.debug("yesterday hours {}", ReportHelper.getYesterdayHours(beginHour, endHour));
+				logger.debug("today hours {}", ReportHelper.getTodayHours(beginHour, endHour));
+				logger.debug("tomorrow hours {}", ReportHelper.getTomorrowHours(beginHour, endHour));
 				
 				// 1.yesterday
 				if (holidays.contains(DateHelper.getString(DateHelper.addDay(ts.getDate(), -1)))) {
@@ -129,7 +129,10 @@ public class MonthTimeSheetReport {
 			// special case: full shift
 			if (!holidays.contains(DateHelper.getString(ts.getDate())) &&
 					!holidays.contains(DateHelper.getString(DateHelper.addDay(ts.getDate(), 1))) &&
-					ReportHelper.isFullShift(beginHour, endHour)) {
+					ReportHelper.isFullShift(beginHour, endHour) && 
+					ReportHelper.isIncludePreference(ts.getAttendanceType(), ReportHelper.REPORT_COLUMNS_DAY_SHIFT) &&
+					ReportHelper.isIncludePreference(ts.getAttendanceType(), ReportHelper.REPORT_COLUMNS_MIDDLE_SHIFT) &&
+					ReportHelper.isIncludePreference(ts.getAttendanceType(), ReportHelper.REPORT_COLUMNS_NIGHT_SHIFT)) {
 				setColumn(key, ReportHelper.REPORT_COLUMNS_FULL_SHIFT, 1f);
 			}
 			else {
@@ -148,7 +151,7 @@ public class MonthTimeSheetReport {
 						setColumn(key, ReportHelper.REPORT_COLUMNS_NIGHT_SHIFT, 1f);
 				}
 
-				// today is not holliday
+				// today is not holiday
 				if (!holidays.contains(DateHelper.getString(ts.getDate()))) {
 					if (ReportHelper.isIncludePreference(ts.getAttendanceType(), ReportHelper.REPORT_COLUMNS_DAY_SHIFT) && ReportHelper.isDayShift(beginHour, endHour, 0))
 						setColumn(key, ReportHelper.REPORT_COLUMNS_DAY_SHIFT, 1f);
