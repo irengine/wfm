@@ -8,11 +8,18 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.kwchina.wfm.domain.model.employee.TimeSheet;
 import com.kwchina.wfm.infrastructure.common.DateHelper;
 import com.kwchina.wfm.interfaces.common.ReportHelper;
+import com.kwchina.wfm.interfaces.organization.web.SystemController;
 
 public class MonthTimeSheetReport {
+
+	private static final Logger logger = LoggerFactory.getLogger(SystemController.class);
+
 	
 	private Map<String, Map<String, Set<TimeSheet>>> data = new HashMap<String, Map<String, Set<TimeSheet>>>();
 	private Map<String, Map<String, Float>> summary = new HashMap<String, Map<String, Float>>();
@@ -86,19 +93,25 @@ public class MonthTimeSheetReport {
 				
 				// holiday
 				Float holidayQuantity = 0f;
+				
+				logger.info("yesterday hours {}", ReportHelper.getYesterdayHours(beginHour, endHour));
+				logger.info("today hours {}", ReportHelper.getTodayHours(beginHour, endHour));
+				logger.info("tomorrow hours {}", ReportHelper.getTomorrowHours(beginHour, endHour));
+				
 				// 1.yesterday
 				if (holidays.contains(DateHelper.getString(DateHelper.addDay(ts.getDate(), -1)))) {
-					holidayQuantity += ReportHelper.getYesterdayHours(beginHour, endHour) / 8;
+					holidayQuantity += ReportHelper.getYesterdayHours(beginHour, endHour) / 8f;
 				}
 				
 				// 2.today
 				if (holidays.contains(DateHelper.getString(ts.getDate()))) {
-					holidayQuantity += ReportHelper.getTodayHours(beginHour, endHour) / 8;
+					
+					holidayQuantity += ReportHelper.getTodayHours(beginHour, endHour) / 8f;
 				}
 				
 				// 3.tomorrow
 				if (holidays.contains(DateHelper.getString(DateHelper.addDay(ts.getDate(), 1)))) {
-					holidayQuantity += ReportHelper.getTomorrowHours(beginHour, endHour) / 8;
+					holidayQuantity += ReportHelper.getTomorrowHours(beginHour, endHour) / 8f;
 				}
 
 				setColumn(key, ReportHelper.REPORT_COLUMN_OVERTIME_HOLIDAY, holidayQuantity);
