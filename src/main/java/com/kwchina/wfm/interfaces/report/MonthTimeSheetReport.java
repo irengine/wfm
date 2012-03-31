@@ -175,7 +175,9 @@ public class MonthTimeSheetReport {
 			if (ReportHelper.isIncludePreference(ts.getAttendanceType(), ReportHelper.REPORT_COLUMN_ALLOWANCE)) {
 				if (ReportHelper.isIncludePreference(ts.getEmployee(), ReportHelper.REPORT_COLUMN_ALLOWANCE)
 						|| ReportHelper.isIncludePreference(ts.getUnit(), ReportHelper.REPORT_COLUMN_ALLOWANCE)) {
-					setColumn(key, ReportHelper.REPORT_COLUMN_ALLOWANCE, 1f);
+					
+					Float workQuantity = (endHour - beginHour) / 8f;
+					setColumn(key, ReportHelper.REPORT_COLUMN_ALLOWANCE, workQuantity);
 				}
 			}
 		}
