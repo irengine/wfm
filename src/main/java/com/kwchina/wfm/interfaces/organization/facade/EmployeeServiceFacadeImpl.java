@@ -140,11 +140,11 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 	
 	// TODO: refactory preferences query
 	private String getRowsSyntax(String whereClause, String orderByClause) {
-		return String.format("FROM Employee e, IN(e.preferences) WHERE enable=true AND %s %s", whereClause, orderByClause);
+		return String.format("FROM Employee e, IN(e.preferences) ps WHERE enable=true AND %s %s", whereClause, orderByClause);
 	}
 	
 	private String getRowsCountSyntax(String whereClause) {
-		return String.format("SELECT COUNT(*) FROM Employee e, IN(e.preferences) WHERE e.enable=true AND %s", whereClause);
+		return String.format("SELECT COUNT(*) FROM Employee e, IN(e.preferences) ps WHERE e.enable=true AND %s", whereClause);
 	}
 
 	@Override
@@ -288,8 +288,8 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 				ts.setLastActionType(command.getActionType());
 				timeSheetRepository.save(ts);
 				
-				int beginTime = command.getBeginTime() == 0 ? attendanceType.getBeginTime() : command.getBeginTime();
-				int endTime = command.getEndTime() == 0 ? attendanceType.getEndTime() : command.getEndTime();
+				int beginTime = command.getBeginTime();
+				int endTime = command.getEndTime();
 				
 				record = new TimeSheet(unit, employee, command.getDate(), beginTime, endTime, attendanceType, command.getActionType());
 			}
