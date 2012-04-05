@@ -56,6 +56,7 @@ public class ShiftTest {
 
 		assertEquals(morningAttendance, p.getAttendanceType(DateHelper.getDate("2012-01-04")));
 		assertEquals(breakDayAttendance, p.getAttendanceType(DateHelper.getDate("2012-01-01")));
+		
 	}
 
 	@Test

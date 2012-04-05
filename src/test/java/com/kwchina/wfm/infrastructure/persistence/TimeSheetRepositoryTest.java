@@ -36,6 +36,7 @@ import com.kwchina.wfm.domain.model.organization.Unit;
 import com.kwchina.wfm.domain.model.organization.UnitRepository;
 import com.kwchina.wfm.domain.model.shift.AttendanceType;
 import com.kwchina.wfm.domain.model.shift.AttendanceTypeRepository;
+import com.kwchina.wfm.domain.model.shift.ShiftTypeRepository;
 import com.kwchina.wfm.infrastructure.common.DateHelper;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryActualTimeSheetCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryTimeSheetByPropertyCommand;
@@ -92,6 +93,9 @@ public class TimeSheetRepositoryTest {
 	
 	@Autowired
 	UnitRepository unitRepository;
+
+	@Autowired
+	ShiftTypeRepository shiftTypeRepository;
 
 	@SuppressWarnings("unchecked")
 	@Test
@@ -306,5 +310,13 @@ public class TimeSheetRepositoryTest {
 			System.out.print(row[1].getClass());
 			System.out.println(row[1].toString());
 		}
+	}
+	
+	@Test
+	@Transactional
+	public void testGetDailyShiftWorkingDays() {
+		List<Date> days = DateHelper.getDaysOfMonth(2012, 2);
+		
+		System.out.println(shiftTypeRepository.getDailyShiftCount(days));
 	}
 }

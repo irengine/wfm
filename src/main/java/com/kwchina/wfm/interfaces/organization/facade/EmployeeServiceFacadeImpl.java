@@ -282,6 +282,7 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 		String month = command.getDate();
 
 		List<Date> days = DateHelper.getDaysOfMonth(month);
+		int dailyShiftCount = shiftTypeRepository.getDailyShiftCount(days);
 		MonthTimeSheetReport report = new MonthTimeSheetReport();
 		
 		String[] unitIds = command.getUnitIds().split(",");
@@ -295,7 +296,7 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 				
 				records.addAll(recs);
 			}
-			report.fill(records, days, holidays);
+			report.fill(records, days, holidays, dailyShiftCount);
 		}
 		return JacksonHelper.getTimeSheetJsonWithFilters(report);
 	}

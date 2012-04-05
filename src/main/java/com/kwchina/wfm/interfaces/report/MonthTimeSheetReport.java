@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
@@ -66,7 +67,7 @@ public class MonthTimeSheetReport {
 		}
 	}
 	
-	public void fill(Set<TimeSheet> list, List<Date> days, List<String> holidays) {
+	public void fill(Set<TimeSheet> list, List<Date> days, List<String> holidays, int dailyShiftCount) {
 		this.setDays(days);
 		
 		for (TimeSheet ts : list) {
@@ -78,11 +79,17 @@ public class MonthTimeSheetReport {
 			getData().get(key).get(DateHelper.getString(ts.getDate())).add(ts);
 			
 			// Time Sheet summary data
-			int beginHour = ts.getAttendanceType().getBeginTime() / 60;
-			int endHour = ts.getAttendanceType().getEndTime() / 60;
+			int beginHour = ts.getBeginTime() / 60;
+			int endHour = ts.getEndTime() / 60;
 			
 			if (!getSummary().containsKey(key)) {
-				getSummary().put(key, getSummaryRows());
+				Float expectdWorkQuantity = 0f;
+				if (ReportHelper.isIncludePreference(ts.getEmployee(), ReportHelper.REPORT_COLUMN_SHIFT) || ReportHelper.isIncludePreference(ts.getEmployee().getJob().getUnit(), ReportHelper.REPORT_COLUMN_SHIFT))
+					expectdWorkQuantity = 21f;
+				else
+					expectdWorkQuantity = (float) dailyShiftCount;
+				
+				getSummary().put(key, getSummaryRows(expectdWorkQuantity));
 			}
 			
 			// Work and holiday
@@ -117,10 +124,11 @@ public class MonthTimeSheetReport {
 				setColumn(key, ReportHelper.REPORT_COLUMN_OVERTIME_HOLIDAY, holidayQuantity);
 			}
 			
-			// other summary
-			for (String col : ReportHelper.REPORT_COLUMNS_NORMAL.split(",")) {
+			// absent summary
+			for (String col : ReportHelper.REPORT_COLUMNS_ABSENT.split(",")) {
 				if (ReportHelper.isIncludePreference(ts.getAttendanceType(), col)) {
-					setColumn(key, col, 1f);
+					Float absentQuantity = (endHour - beginHour) / 8f;
+					setColumn(key, col, absentQuantity);
 				}
 			}
 			
@@ -176,10 +184,15 @@ public class MonthTimeSheetReport {
 				if (ReportHelper.isIncludePreference(ts.getEmployee(), ReportHelper.REPORT_COLUMN_ALLOWANCE)
 						|| ReportHelper.isIncludePreference(ts.getUnit(), ReportHelper.REPORT_COLUMN_ALLOWANCE)) {
 					
-					Float workQuantity = (endHour - beginHour) / 8f;
-					setColumn(key, ReportHelper.REPORT_COLUMN_ALLOWANCE, workQuantity);
+					Float allowanceQuantity = (endHour - beginHour) / 8f;
+					setColumn(key, ReportHelper.REPORT_COLUMN_ALLOWANCE, allowanceQuantity);
 				}
 			}
+		}
+		
+		// Calculate Rows
+		for (Entry<String, Map<String, Float>> e : getSummary().entrySet()) {
+			getSummary().put(e.getKey(), calculateSummaryRows(e.getValue()));
 		}
 	}
 	
@@ -201,15 +214,128 @@ public class MonthTimeSheetReport {
 		return rows;
 	}
 	
-	private Map<String, Float> getSummaryRows() {
+	private Map<String, Float> getSummaryRows(float expected) {
 		Map<String, Float> rows = new TreeMap<String, Float>();
 		
+		rows.put(ReportHelper.REPORT_COLUMN_EXPECTED_WORK, expected);
 		rows.put(ReportHelper.REPORT_COLUMN_WORK, 0f);
 		rows.put(ReportHelper.REPORT_COLUMN_OVERTIME_HOLIDAY, 0f);
-		for(String s : ReportHelper.REPORT_COLUMNS_NORMAL.split(","))
+		for(String s : ReportHelper.REPORT_COLUMNS_ABSENT.split(","))
 			rows.put(s, 0f);
 		
 		rows.put(ReportHelper.REPORT_COLUMN_ALLOWANCE, 0f);
+		
+		return rows;
+	}
+	
+	private Map<String, Float> calculateSummaryRows(Map<String, Float> rows) {
+		
+		Float q1 = rows.get(ReportHelper.REPORT_COLUMN_EXPECTED_WORK)
+				- rows.get(ReportHelper.REPORT_COLUMN_WORK)
+				- rows.get("产")
+				- rows.get("护")
+				- rows.get("伤")
+				- rows.get("计")
+				- rows.get("婚")
+				- rows.get("年")
+				- rows.get("调")
+				;
+		if (rows.get("探") > 0) {
+			if (q1 <= 0)
+				rows.put("探", 0f);
+			else if (q1 <= 2)
+				rows.put("探", 2f);
+			else
+				rows.put("探", q1);
+		}
+		
+		Float q2 = rows.get(ReportHelper.REPORT_COLUMN_EXPECTED_WORK)
+				- rows.get(ReportHelper.REPORT_COLUMN_WORK)
+				- rows.get("产")
+				- rows.get("护")
+				- rows.get("伤")
+				- rows.get("计")
+				- rows.get("婚")
+				- rows.get("年")
+				- rows.get("调")
+				- rows.get("探")
+				;
+		if (rows.get("丧") > 0) {
+			if (q2 <= 0)
+				rows.put("丧", 0f);
+			else
+				rows.put("丧", q2);
+		}
+		
+		Float q3 = rows.get(ReportHelper.REPORT_COLUMN_EXPECTED_WORK)
+				- rows.get(ReportHelper.REPORT_COLUMN_WORK)
+				- rows.get("产")
+				- rows.get("护")
+				- rows.get("伤")
+				- rows.get("计")
+				- rows.get("婚")
+				- rows.get("年")
+				- rows.get("调")
+				- rows.get("探")
+				- rows.get("丧")
+				;
+		if (rows.get("哺") > 0) {
+			if (q3 <= 0)
+				rows.put("哺", 0f);
+			else
+				rows.put("哺", q3);
+		}
+		
+		Float q4 = rows.get(ReportHelper.REPORT_COLUMN_EXPECTED_WORK)
+				- rows.get(ReportHelper.REPORT_COLUMN_WORK)
+				- rows.get("产")
+				- rows.get("护")
+				- rows.get("伤")
+				- rows.get("计")
+				- rows.get("婚")
+				- rows.get("年")
+				- rows.get("调")
+				- rows.get("探")
+				- rows.get("丧")
+				- rows.get("哺")
+				;
+		if (rows.get("病") > 0) {
+			if (q4 <= 0)
+				rows.put("病", 0f);
+			else
+				rows.put("病", q4);
+		}
+		
+		Float q5 = rows.get(ReportHelper.REPORT_COLUMN_EXPECTED_WORK)
+				- rows.get(ReportHelper.REPORT_COLUMN_WORK)
+				- rows.get("产")
+				- rows.get("护")
+				- rows.get("伤")
+				- rows.get("计")
+				- rows.get("婚")
+				- rows.get("年")
+				- rows.get("调")
+				- rows.get("探")
+				- rows.get("丧")
+				- rows.get("哺")
+				- rows.get("病")
+				;
+		if (rows.get("事") > 0) {
+			if (q5 <= 0)
+				rows.put("事", 0f);
+			else
+				rows.put("事", q5);
+		}
+		
+		Float overtimeQuantity = rows.get(ReportHelper.REPORT_COLUMN_WORK)
+				- rows.get(ReportHelper.REPORT_COLUMN_OVERTIME_HOLIDAY)
+				- rows.get("公")
+				- rows.get(ReportHelper.REPORT_COLUMN_EXPECTED_WORK);
+		
+		if (overtimeQuantity <= 0)
+			rows.put(ReportHelper.REPORT_COLUMN_OVERTIME, 0f);
+		else
+			rows.put(ReportHelper.REPORT_COLUMN_OVERTIME, overtimeQuantity);
 		
 		return rows;
 	}

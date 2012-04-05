@@ -72,4 +72,23 @@ public class ShiftTypeRepositoryImpl extends BaseRepositoryImpl<ShiftType> imple
 		return new DailyShiftPolicy(workingDay, breakDay, holidays, weekends, daysChanged);
 	}
 
+	@Override
+	public int getDailyShiftCount(List<Date> days) {
+		AttendanceType workingDay = new AttendanceType();
+		AttendanceType breakDay = null;
+		String weekends = SystemPreferenceFactory.getInstance(systemPreferenceRepository).getWeekends();
+		List<String> holidays = SystemPreferenceFactory.getInstance(systemPreferenceRepository).getHolidays();
+		Map<String, String> daysChanged = SystemPreferenceFactory.getInstance(systemPreferenceRepository).getDaysChanged();
+		
+		DailyShiftPolicy shiftPolicy = new DailyShiftPolicy(workingDay, breakDay, holidays, weekends, daysChanged);
+		
+		int count = 0;
+		for (Date day : days) {
+			AttendanceType attendanceType = shiftPolicy.getAttendanceType(day);
+			if (null != attendanceType)
+				count++;
+		}
+		
+		return count;
+	}
 }
