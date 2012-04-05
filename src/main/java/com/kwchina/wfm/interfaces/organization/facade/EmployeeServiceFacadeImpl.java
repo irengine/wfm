@@ -43,6 +43,7 @@ import com.kwchina.wfm.interfaces.organization.web.command.ActionCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.ArchiveTimeSheetCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryActualTimeSheetCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryCommand;
+import com.kwchina.wfm.interfaces.organization.web.command.QueryEmployeeByPropertyCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryTimeSheetByPropertyCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryTimeSheetCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryVacationCommand;
@@ -102,6 +103,48 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 		
 		Page page = new Page(pageHelper.getCurrentPage(), pageHelper.getPagesCount(), rowsCount, rows);
 		return JacksonHelper.getEmployeeJsonWithFilters(page);
+	}
+	
+	@Override
+	@Transactional(propagation=Propagation.SUPPORTS)
+	public String queryEmployeesByPropertyWithJson(QueryEmployeeByPropertyCommand command) {
+		List<String> conditions = new ArrayList<String>();
+		if (!StringUtils.isEmpty(command.getUnitId())) {
+			Unit unit = unitRepository.findById(Long.parseLong(command.getUnitId()));
+			String left = String.format("e.job.unit.left >= %d", unit.getLeft());
+			conditions.add(left);
+			String right = String.format("e.job.unit.right <= %d", unit.getRight());
+			conditions.add(right);
+		}
+		
+		String whereClause = "";
+		String orderByClause = String.format(" ORDER BY %s %s ", command.getSidx(), command.getSord());
+		
+		if (Boolean.parseBoolean(command.getSearch())) {
+			whereClause = QueryHelper.getWhereClause(command.getFilters(), conditions);
+		}
+		else {
+			whereClause = QueryHelper.getWhereClause("", conditions);
+		}
+		
+		int rowsCount = employeeRepository.getRowsCountBySql(getRowsCountSyntax(whereClause)).intValue();
+		
+		PageHelper pageHelper = new PageHelper(rowsCount, command.getRows());
+		pageHelper.setCurrentPage(command.getPage());
+		
+		List<Employee> rows = employeeRepository.getRowsBySql(getRowsSyntax(whereClause, orderByClause), pageHelper.getStart(), pageHelper.getPageSize());
+		
+		Page page = new Page(pageHelper.getCurrentPage(), pageHelper.getPagesCount(), rowsCount, rows);
+		return JacksonHelper.getEmployeeJsonWithFilters(page);
+	}
+	
+	// TODO: refactory preferences query
+	private String getRowsSyntax(String whereClause, String orderByClause) {
+		return String.format("FROM Employee e, IN(e.preferences) WHERE enable=true AND %s %s", whereClause, orderByClause);
+	}
+	
+	private String getRowsCountSyntax(String whereClause) {
+		return String.format("SELECT COUNT(*) FROM Employee e, IN(e.preferences) WHERE e.enable=true AND %s", whereClause);
 	}
 
 	@Override

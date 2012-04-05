@@ -14,4 +14,7 @@ public interface BaseRepository<T> {
 
 	List<T> getRows(String whereClause, String orderByClause, int start, int limit);
 	Long getRowsCount(String whereClause);
+
+	List<T> getRowsBySql(String sqlSyntax, int start, int limit);
+	Long getRowsCountBySql(String sqlSyntax);
 }

@@ -1,6 +1,10 @@
 package com.kwchina.wfm.infrastructure.persistence;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -20,12 +24,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.kwchina.wfm.domain.model.employee.Employee;
+import com.kwchina.wfm.domain.model.employee.Employee.Gender;
 import com.kwchina.wfm.domain.model.employee.EmployeeId;
 import com.kwchina.wfm.domain.model.employee.EmployeeRepository;
 import com.kwchina.wfm.domain.model.employee.Job;
 import com.kwchina.wfm.domain.model.employee.JobPosition;
 import com.kwchina.wfm.domain.model.employee.JobTitle;
-import com.kwchina.wfm.domain.model.employee.Employee.Gender;
 import com.kwchina.wfm.domain.model.organization.Unit;
 import com.kwchina.wfm.infrastructure.common.DateHelper;
 
@@ -161,6 +165,16 @@ public class EmployeeRepositoryTest {
 	public void testGetEmployees() {
 		Long cnt = (Long)entityManager.createQuery("SELECT COUNT(*) FROM Employee WHERE enable=true AND job.unit.id = 1").getSingleResult();
 		assertEquals(new Long(0), cnt);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testGetEmployeesByPreference() {
+		
+		List<Employee> es= entityManager.createQuery("FROM Employee e, IN(e.preferences) ps WHERE enable=true AND id=1 AND e.job.unit.id = 1 AND ps.key = :key")
+				.setParameter("key", "xxx")
+				.getResultList();
+		assertTrue(0 == es.size());
 	}
 	
 	@Test

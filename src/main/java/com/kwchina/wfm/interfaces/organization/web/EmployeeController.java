@@ -28,6 +28,7 @@ import com.kwchina.wfm.interfaces.organization.facade.EmployeeServiceFacade;
 import com.kwchina.wfm.interfaces.organization.web.command.ArchiveTimeSheetCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryActualTimeSheetCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryCommand;
+import com.kwchina.wfm.interfaces.organization.web.command.QueryEmployeeByPropertyCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryTimeSheetByPropertyCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryTimeSheetCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryVacationCommand;
@@ -53,6 +54,13 @@ public class EmployeeController {
 		logger.info(command.toString());
 		
 		HttpHelper.output(response, employeeServiceFacade.queryEmployeesWithJson(command));
+	}
+	
+	@RequestMapping(value = "/queryEmployeesByProperty", method = RequestMethod.GET)
+	public void queryEmployeesByProperty(HttpServletRequest request, HttpServletResponse response, @ModelAttribute QueryEmployeeByPropertyCommand command) {
+		logger.info(command.toString());
+		
+		HttpHelper.output(response, employeeServiceFacade.queryEmployeesByPropertyWithJson(command));
 	}
 	
 	@RequestMapping(value = "/getEmployee", method = RequestMethod.GET)

@@ -6,6 +6,7 @@ import java.util.Map;
 import com.kwchina.wfm.domain.model.employee.Employee;
 import com.kwchina.wfm.domain.model.employee.TimeSheet;
 import com.kwchina.wfm.interfaces.organization.web.command.ArchiveTimeSheetCommand;
+import com.kwchina.wfm.interfaces.organization.web.command.QueryEmployeeByPropertyCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryTimeSheetByPropertyCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryActualTimeSheetCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryCommand;
@@ -17,6 +18,7 @@ import com.kwchina.wfm.interfaces.organization.web.command.SaveTimeSheetRecordCo
 public interface EmployeeServiceFacade {
 
 	String queryEmployeesWithJson(QueryCommand command);
+	String queryEmployeesByPropertyWithJson(QueryEmployeeByPropertyCommand command);
 	void saveEmployee(SaveEmployeeCommand command);
 	
 	Employee findById(Long id);

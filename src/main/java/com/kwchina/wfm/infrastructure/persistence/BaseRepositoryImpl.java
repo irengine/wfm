@@ -72,6 +72,15 @@ public abstract class BaseRepositoryImpl<T> implements BaseRepository<T> {
 		return query.getResultList();
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<T> getRowsBySql(String sqlSyntax, int start, int limit) {
+		Query query = entityManager.createQuery(sqlSyntax);
+		query.setMaxResults(limit);
+		query.setFirstResult(start);
+		return query.getResultList();
+	}
+	
 	public Long getRowsCount(String whereClause) {
 		return getRowsCount(whereClause, false);
 	}
@@ -97,6 +106,12 @@ public abstract class BaseRepositoryImpl<T> implements BaseRepository<T> {
 	@Override
 	public Long getRowsCount(String whereClause, boolean includeDisabled) {
 		Long rowsCount = (Long)entityManager.createQuery(getRowsCountSyntax(whereClause, includeDisabled)).getSingleResult(); 
+		return rowsCount;
+	}
+	
+	@Override
+	public Long getRowsCountBySql(String sqlSyntax) {
+		Long rowsCount = (Long)entityManager.createQuery(sqlSyntax).getSingleResult(); 
 		return rowsCount;
 	}
 }
