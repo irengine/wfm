@@ -23,6 +23,7 @@ import com.kwchina.wfm.interfaces.common.QueryHelper;
 import com.kwchina.wfm.interfaces.organization.web.command.ActionCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveUserCommand;
+import com.kwchina.wfm.interfaces.organization.web.command.SaveUserPasswordCommand;
 
 @Component
 public class UserServiceFacadeImpl implements UserServiceFacade {
@@ -77,6 +78,19 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
 			}
 		}
 	}
+	
+	@Transactional(propagation=Propagation.REQUIRED)
+	public void saveUserPassword(SaveUserPasswordCommand command) {
+		
+	
+		if (null == command.getId() || command.getId().equals(0))
+			return;
+		User user = userRepository.findById(command.getId());
+		user.setPassword(command.getPassword());
+
+		userRepository.save(user);
+	}
+	
 	
 	@Transactional(propagation=Propagation.SUPPORTS)
 	public User findById(Long id) {

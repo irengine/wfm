@@ -21,6 +21,7 @@ import com.kwchina.wfm.interfaces.organization.facade.UserServiceFacade;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveUnitCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveUserCommand;
+import com.kwchina.wfm.interfaces.organization.web.command.SaveUserPasswordCommand;
 
 /**
  * Handles requests for the application home page.
@@ -102,5 +103,10 @@ public class UnitController {
 		
 		userServiceFacade.saveUser(command);
 	}
-
+	
+	@RequestMapping(value = "/saveUser", method = RequestMethod.POST)
+	public void saveUserPassword(HttpServletResponse response, @ModelAttribute SaveUserPasswordCommand command) {
+		
+		userServiceFacade.saveUserPassword(command);
+	}
 }
