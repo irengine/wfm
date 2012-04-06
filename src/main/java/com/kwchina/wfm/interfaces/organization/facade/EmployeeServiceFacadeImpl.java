@@ -117,6 +117,13 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 			conditions.add(right);
 		}
 		
+		String propertyCondition = String.format("((ps1.key = %s AND ps1.value = %s) OR (ps2.key = %s AND ps2.value = %s))",
+						command.getKey(),
+						command.getValue(),
+						command.getKey(),
+						command.getValue());
+		conditions.add(propertyCondition);
+		
 		String whereClause = "";
 		String orderByClause = String.format(" ORDER BY %s %s ", command.getSidx(), command.getSord());
 		
@@ -140,11 +147,11 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 	
 	// TODO: refactory preferences query
 	private String getRowsSyntax(String whereClause, String orderByClause) {
-		return String.format("FROM Employee e, IN(e.preferences) ps WHERE enable=true AND %s %s", whereClause, orderByClause);
+		return String.format("FROM Employee e, IN(e.preferences) ps1, IN(e.job.unit.preferences) ps2 WHERE enable=true AND %s %s", whereClause, orderByClause);
 	}
 	
 	private String getRowsCountSyntax(String whereClause) {
-		return String.format("SELECT COUNT(*) FROM Employee e, IN(e.preferences) ps WHERE e.enable=true AND %s", whereClause);
+		return String.format("SELECT COUNT(*) FROM Employee e, IN(e.preferences) ps1, IN(e.job.unit.preferences) ps2 WHERE e.enable=true AND %s", whereClause);
 	}
 
 	@Override
