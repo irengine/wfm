@@ -48,6 +48,7 @@ import com.kwchina.wfm.interfaces.organization.web.command.QueryTimeSheetByPrope
 import com.kwchina.wfm.interfaces.organization.web.command.QueryTimeSheetCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryVacationCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveEmployeeCommand;
+import com.kwchina.wfm.interfaces.organization.web.command.SavePreferenceCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveTimeSheetRecordCommand;
 import com.kwchina.wfm.interfaces.report.MonthTimeSheetReport;
 
@@ -147,11 +148,11 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 	
 	// TODO: refactory preferences query
 	private String getRowsSyntax(String whereClause, String orderByClause) {
-		return String.format("FROM Employee e, IN(e.preferences) ps1, IN(e.job.unit.preferences) ps2 WHERE e.enable=true AND %s %s", whereClause, orderByClause);
+		return String.format("SELECT DISTINCT e FROM Employee e, IN(e.preferences) ps1, IN(e.job.unit.preferences) ps2 WHERE e.enable=true AND %s %s", whereClause, orderByClause);
 	}
 	
 	private String getRowsCountSyntax(String whereClause) {
-		return String.format("SELECT COUNT(*) FROM Employee e, IN(e.preferences) ps1, IN(e.job.unit.preferences) ps2 WHERE e.enable=true AND %s", whereClause);
+		return String.format("SELECT COUNT(DISTINCT e) FROM Employee e, IN(e.preferences) ps1, IN(e.job.unit.preferences) ps2 WHERE e.enable=true AND %s", whereClause);
 	}
 
 	@Override
@@ -192,6 +193,18 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 				}
 				employee.setPreferences(preferences);
 			}
+			/*
+			 	if (null != command.getProperties()) {
+				Set<Preference> preferences = null == employee.getPreferences() ? new HashSet<Preference>() : employee.getPreferences();
+				for(Map.Entry<String, String> property : command.getProperties().entrySet()) {
+					Preference p = employee.getPreference(property.getKey());
+					if (null != p)
+						preferences.remove(p);
+					preferences.add(new Preference(property.getKey(), property.getValue()));
+				}
+				employee.setPreferences(preferences);
+			}
+			 */
 			
 			employeeRepository.save(employee);
 		}
@@ -202,6 +215,25 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 				employeeRepository.disable(employee);
 			}
 		}
+	}
+	
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED)
+	public void saveEmployeeProperty(SavePreferenceCommand command) {
+		
+		if (null == command.getId() || command.getId().equals(0))
+			return;
+		Employee employee = employeeRepository.findById(command.getId());
+
+		Set<Preference> preferences = null == employee.getPreferences() ? new HashSet<Preference>()
+				: employee.getPreferences();
+
+		Preference p = employee.getPreference(command.getKey());
+		if (null != p)
+			preferences.remove(p);
+		preferences.add(new Preference(command.getKey(), command.getValue()));
+		employee.setPreferences(preferences);
+		employeeRepository.save(employee);
 	}
 	
 	@Override

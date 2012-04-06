@@ -33,6 +33,7 @@ import com.kwchina.wfm.interfaces.organization.web.command.QueryTimeSheetByPrope
 import com.kwchina.wfm.interfaces.organization.web.command.QueryTimeSheetCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryVacationCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveEmployeeCommand;
+import com.kwchina.wfm.interfaces.organization.web.command.SavePreferenceCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveTimeSheetRecordCommand;
 
 /**
@@ -88,6 +89,11 @@ public class EmployeeController {
 		employeeServiceFacade.saveEmployee(command);
 	}
 
+	@RequestMapping(value = "/saveEmployeeProperty", method = RequestMethod.POST)
+	public void saveEmployeeProperty(HttpServletResponse response, @ModelAttribute SavePreferenceCommand command) {
+		
+		employeeServiceFacade.saveEmployeeProperty(command);
+	}
 	
 	@RequestMapping(value = "/queryEmployeesDayTimeSheet", method = RequestMethod.GET)
 	public void queryEmployeesDayTimeSheet(HttpServletRequest request, HttpServletResponse response, @ModelAttribute QueryTimeSheetCommand command) {
