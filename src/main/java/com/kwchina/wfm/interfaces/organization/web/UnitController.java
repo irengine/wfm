@@ -104,7 +104,7 @@ public class UnitController {
 		userServiceFacade.saveUser(command);
 	}
 	
-	@RequestMapping(value = "/saveUser", method = RequestMethod.POST)
+	@RequestMapping(value = "/saveUserPassword", method = RequestMethod.POST)
 	public void saveUserPassword(HttpServletResponse response, @ModelAttribute SaveUserPasswordCommand command) {
 		
 		userServiceFacade.saveUserPassword(command);
