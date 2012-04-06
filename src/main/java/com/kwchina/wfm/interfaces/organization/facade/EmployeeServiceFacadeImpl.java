@@ -219,7 +219,7 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 	
 	@Override
 	@Transactional(propagation=Propagation.REQUIRED)
-	public void saveEmployeeProperty(SavePreferenceCommand command) {
+	public void saveEmployeePreference(SavePreferenceCommand command) {
 		
 		if (null == command.getId() || command.getId().equals(0))
 			return;

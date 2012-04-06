@@ -42,5 +42,5 @@ public interface EmployeeServiceFacade {
 	
 	void archiveTimeSheet(ArchiveTimeSheetCommand command);
 	void importWorkOrder(Date date, Map<String, String> orders);
-	void saveEmployeeProperty(SavePreferenceCommand command);
+	void saveEmployeePreference(SavePreferenceCommand command);
 }

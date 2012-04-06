@@ -89,10 +89,10 @@ public class EmployeeController {
 		employeeServiceFacade.saveEmployee(command);
 	}
 
-	@RequestMapping(value = "/saveEmployeeProperty", method = RequestMethod.POST)
-	public void saveEmployeeProperty(HttpServletResponse response, @ModelAttribute SavePreferenceCommand command) {
+	@RequestMapping(value = "/saveEmployeePreference", method = RequestMethod.POST)
+	public void saveEmployeePreference(HttpServletResponse response, @ModelAttribute SavePreferenceCommand command) {
 		
-		employeeServiceFacade.saveEmployeeProperty(command);
+		employeeServiceFacade.saveEmployeePreference(command);
 	}
 	
 	@RequestMapping(value = "/queryEmployeesDayTimeSheet", method = RequestMethod.GET)
