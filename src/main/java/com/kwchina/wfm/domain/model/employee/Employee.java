@@ -202,10 +202,10 @@ public class Employee implements com.kwchina.wfm.domain.common.Entity<Employee>,
 		this.preferences = preferences;
 	}
 	
-	public String getPreference(String key) {
+	public Preference getPreference(String key) {
 		for (Preference p : preferences) {
 			if (p.getKey().equals(key)) {
-				return p.getValue();
+				return p;
 			}
 		}
 		

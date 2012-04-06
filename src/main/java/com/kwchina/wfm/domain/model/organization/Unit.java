@@ -75,9 +75,10 @@ public class Unit implements com.kwchina.wfm.domain.common.Entity<Unit>, Prefere
 	@CollectionTable(name="T_UNIT_PREFERENCES", joinColumns=@JoinColumn(name="unitId"))
 	@AttributeOverrides({
 		@AttributeOverride(name="key", column=@Column(name="xkey", nullable=false)),
-		@AttributeOverride(name="value", column=@Column(name="xvalue"))
+		@AttributeOverride(name="value", column=@Column(name="xvalue")),
+		@AttributeOverride(name="scope", column=@Column(name="xscope", nullable= false))
 	})
-    private Set<Preference> preferences;
+    private Set<Preference> preferences = new LinkedHashSet<Preference>();
 	
 	@Column(nullable=false)
 	private boolean enable;
@@ -188,20 +189,35 @@ public class Unit implements com.kwchina.wfm.domain.common.Entity<Unit>, Prefere
 
 	public void setPreferences(Set<Preference> preferences) {
 		this.preferences = preferences;
+		
+		for (Unit u : this.children) {
+			Set<Preference> ups = u.getPreferences();
+			for (Preference p : this.preferences) {
+				Preference up = u.getPreference(p.getKey());
+				if (null == up) {
+					ups.add(new Preference(p.getKey(), p.getValue(), "I"));
+				} else if (up.getScope().equals("I")) {
+					ups.remove(up);
+					ups.add(new Preference(p.getKey(), p.getValue(), "I"));
+				}
+			}
+			u.setPreferences(ups);
+		}
 	}
 	
-	public String getPreference(String key) {
+	public Preference getPreference(String key) {
 		for (Preference p : preferences) {
 			if (p.getKey().equals(key)) {
-				return p.getValue();
+				return p;
 			}
 		}
 		
-		Unit parent = (Unit)getParent();
-		if (null == parent)
-			return null;
-		else
-			return parent.getPreference(key);
+		return null;
+//		Unit parent = (Unit)getParent();
+//		if (null == parent)
+//			return null;
+//		else
+//			return parent.getPreference(key);
 	}
 
 	public boolean isEnable() {

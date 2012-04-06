@@ -1,6 +1,9 @@
 package com.kwchina.wfm.interfaces.organization.web.command;
 
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.kwchina.wfm.domain.model.organization.Preference;
 
 public class SaveUnitCommand extends ActionCommand {
 
@@ -8,7 +11,8 @@ public class SaveUnitCommand extends ActionCommand {
 	private Long parentUnitId;
 	private String Name;
 	private Long shiftTypeId;
-	private Map<String, String> properties;
+//	private Map<String, String> properties;
+	private List<Preference> preferences = new ArrayList<Preference>();
 	
 	public SaveUnitCommand() {
 		
@@ -38,11 +42,17 @@ public class SaveUnitCommand extends ActionCommand {
 	public void setShiftTypeId(Long shiftTypeId) {
 		this.shiftTypeId = shiftTypeId;
 	}
-	public Map<String, String> getProperties() {
-		return properties;
+//	public Map<String, String> getProperties() {
+//		return properties;
+//	}
+//	public void setProperties(Map<String, String> properties) {
+//		this.properties = properties;
+//	}
+	public List<Preference> getPreferences() {
+		return preferences;
 	}
-	public void setProperties(Map<String, String> properties) {
-		this.properties = properties;
+	public void setPreferences(List<Preference> preferences) {
+		this.preferences = preferences;
 	}
 	
 }

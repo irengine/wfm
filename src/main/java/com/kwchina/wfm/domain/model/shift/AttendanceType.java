@@ -126,10 +126,10 @@ public class AttendanceType implements com.kwchina.wfm.domain.common.Entity<Atte
 		this.preferences = preferences;
 	}
 	
-	public String getPreference(String key) {
+	public Preference getPreference(String key) {
 		for (Preference p : preferences) {
 			if (p.getKey().equals(key)) {
-				return p.getValue();
+				return p;
 			}
 		}
 		

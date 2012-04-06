@@ -3,7 +3,6 @@ package com.kwchina.wfm.interfaces.organization.facade;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,13 +106,21 @@ public class UnitServiceFacadeImpl implements UnitServiceFacade {
 					if (null != shiftType)
 						unit.setShiftType(shiftType);
 				}
-				if (null != command.getProperties()) {
-					Set<Preference> preferences = new HashSet<Preference>();
-					for(Map.Entry<String, String> property : command.getProperties().entrySet()) {
-						preferences.add(new Preference(property.getKey(), property.getValue()));
+//				if (null != command.getProperties()) {
+//					Set<Preference> preferences = new HashSet<Preference>();
+//					for(Map.Entry<String, String> property : command.getProperties().entrySet()) {
+//						preferences.add(new Preference(property.getKey(), property.getValue()));
+//					}
+//					unit.setPreferences(preferences);
+//				}	
+				// set preferences
+				if (null != command.getPreferences()) {
+					Set<Preference> preferences = null == unit.getPreferences() ? new HashSet<Preference>() : unit.getPreferences();
+					for (Preference p : command.getPreferences()) {
+						preferences.add(p);
 					}
 					unit.setPreferences(preferences);
-				}	
+				}
 				unitRepository.save(unit);
 			}
 		}

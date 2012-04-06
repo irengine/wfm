@@ -24,7 +24,7 @@ public class ReportHelper {
 	
 	
 	public static boolean isIncludePreference(PreferenceGetter pg, String key) {
-		if (pg.getPreference(key) == null || pg.getPreference(key).equals("false"))
+		if (pg.getPreference(key) == null || pg.getPreference(key).getValue().equals("false"))
 			return false;
 		return true;
 	}

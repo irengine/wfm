@@ -27,6 +27,12 @@ public class Preference implements ValueObject<Preference> {
 		this.value = value;
 		this.scope = "";
 	}
+	
+	public Preference(String key, String value, String scope) {
+		this.key = key;
+		this.value = value;
+		this.scope = scope;
+	}
 
 	public String getKey() {
 		return key;

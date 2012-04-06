@@ -171,7 +171,7 @@ public class EmployeeRepositoryTest {
 	@Test
 	public void testGetEmployeesByPreference() {
 		
-		List<Employee> es= entityManager.createQuery("FROM Employee e, IN(e.preferences) ps WHERE enable=true AND id=1 AND e.job.unit.id = 1 AND ps.key = :key")
+		List<Employee> es= entityManager.createQuery("SELECT e FROM Employee e, IN(e.preferences) ps1, IN(e.job.unit.preferences) ps2 WHERE e.enable=true AND e.id=1 AND e.job.unit.id = 1 AND (ps1.key = :key OR ps2.key =:key)")
 				.setParameter("key", "xxx")
 				.getResultList();
 		assertTrue(0 == es.size());
@@ -183,8 +183,12 @@ public class EmployeeRepositoryTest {
 	}
 	
 	@Test
+	@Transactional
 	public void testFindByCode() {
-		employeeRepository.findByCode("1");
+		Date date = DateHelper.getDate("2012-02-14");
+		Employee employee = new Employee(new EmployeeId("0001"), "Alex Tang", Gender.MALE, date, date, date);
+		employeeRepository.save(employee);
+		employeeRepository.findByCode("0001");
 	}
 	
 	@Test

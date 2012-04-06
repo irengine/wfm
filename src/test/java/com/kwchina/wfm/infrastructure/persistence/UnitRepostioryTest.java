@@ -221,7 +221,7 @@ public class UnitRepostioryTest {
 		
 		List<Unit> units = unitRepository.findAll();
 		for(Unit u : units) {
-			System.out.println(String.format("%s, %s", u.getUriName(), null == u.getPreference("overtime") ? "-" : u.getPreference("overtime")));
+			System.out.println(String.format("%s, %s", u.getUriName(), null == u.getPreference("overtime") ? "-" : u.getPreference("overtime").getValue()));
 		}
 	}
 	
