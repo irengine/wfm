@@ -21,6 +21,7 @@ import com.kwchina.wfm.domain.model.employee.Job;
 import com.kwchina.wfm.domain.model.employee.JobStatus;
 import com.kwchina.wfm.domain.model.employee.TimeSheet;
 import com.kwchina.wfm.domain.model.employee.TimeSheetRepository;
+import com.kwchina.wfm.domain.model.employee.Vacation;
 import com.kwchina.wfm.domain.model.organization.Preference;
 import com.kwchina.wfm.domain.model.organization.Unit;
 import com.kwchina.wfm.domain.model.organization.UnitRepository;
@@ -33,6 +34,7 @@ import com.kwchina.wfm.domain.model.shift.SystemPreferenceRepository;
 import com.kwchina.wfm.domain.model.shift.WorkOrder;
 import com.kwchina.wfm.domain.model.shift.WorkOrderRepository;
 import com.kwchina.wfm.infrastructure.common.DateHelper;
+import com.kwchina.wfm.infrastructure.common.PropertiesHelper;
 import com.kwchina.wfm.interfaces.common.JacksonHelper;
 import com.kwchina.wfm.interfaces.common.Page;
 import com.kwchina.wfm.interfaces.common.PageHelper;
@@ -413,7 +415,7 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 	@Override
 	@Transactional(propagation=Propagation.REQUIRED)
 	public void calculateVacation(QueryVacationCommand command) {
-		AttendanceType at = attendanceTypeRepository.findByName("年假");
+		AttendanceType at = attendanceTypeRepository.findByName(PropertiesHelper.getProperty(Vacation.Type.ANNUAL_LEAVE.name()));
 		employeeRepository.calculateVacation(DateHelper.getDate(command.getDate()), at.getId());
 	}
 	

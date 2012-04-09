@@ -112,7 +112,7 @@ public class DateHelper {
 		
 		if (now.get(Calendar.HOUR_OF_DAY) > hours)
 			next.add(Calendar.DAY_OF_MONTH, 1);
-		next.set(Calendar.HOUR_OF_DAY, 1);
+		next.set(Calendar.HOUR_OF_DAY, hours);
 		next.set(Calendar.MINUTE, 0);
 		next.set(Calendar.SECOND, 0);
 		
