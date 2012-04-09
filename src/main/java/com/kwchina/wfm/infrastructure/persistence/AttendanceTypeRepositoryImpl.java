@@ -54,10 +54,12 @@ public class AttendanceTypeRepositoryImpl extends BaseRepositoryImpl<AttendanceT
 	@Override
 	public void disable(AttendanceType at) {
 		
-		at.setEnable(false);
+		if (at.getId() >= 1000) {
+			at.setEnable(false);
 
-		entityManager.persist(at);
-		entityManager.flush();
+			entityManager.persist(at);
+			entityManager.flush();
+		}
 	}
 
 }

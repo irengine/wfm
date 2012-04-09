@@ -104,7 +104,9 @@ public class SystemPreferenceRepositoryImpl extends BaseRepositoryImpl<SystemPre
 										.setParameter("key", name)
 										.getResultList();
 		for(SystemPreference p : ps) {
-			entityManager.remove(p);
+			
+			if (p.getId() >= 1000)
+				entityManager.remove(p);
 		}
 		entityManager.flush();
 	}
