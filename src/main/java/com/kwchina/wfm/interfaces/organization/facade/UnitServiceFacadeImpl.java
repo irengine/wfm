@@ -117,6 +117,9 @@ public class UnitServiceFacadeImpl implements UnitServiceFacade {
 				if (null != command.getPreferences()) {
 					Set<Preference> preferences = null == unit.getPreferences() ? new HashSet<Preference>() : unit.getPreferences();
 					for (Preference p : command.getPreferences()) {
+						Preference op = unit.getPreference(p.getKey());
+						if (null != op)
+							preferences.remove(op);
 						preferences.add(p);
 					}
 					unit.setPreferences(preferences);
