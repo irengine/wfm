@@ -68,7 +68,8 @@ public class ImportDataTask implements Runnable {
 			conn.close();
 		}
         catch(Exception e) {
-	        	
+        	logger.error(e.getMessage());
+        	e.printStackTrace();
         }
         finally {
         	if (conn != null)
