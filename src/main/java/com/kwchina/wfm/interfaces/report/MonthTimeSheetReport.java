@@ -245,7 +245,7 @@ public class MonthTimeSheetReport {
 				rows.put("探", 0f);
 			else if (q1 <= 2)
 				rows.put("探", 2f);
-			else
+			else if (q1 < rows.get("探"))
 				rows.put("探", q1);
 		}
 		
@@ -263,7 +263,7 @@ public class MonthTimeSheetReport {
 		if (rows.get("丧") > 0) {
 			if (q2 <= 0)
 				rows.put("丧", 0f);
-			else
+			else if (q2 < rows.get("丧"))
 				rows.put("丧", q2);
 		}
 		
@@ -282,7 +282,7 @@ public class MonthTimeSheetReport {
 		if (rows.get("哺") > 0) {
 			if (q3 <= 0)
 				rows.put("哺", 0f);
-			else
+			else if (q3 < rows.get("哺"))
 				rows.put("哺", q3);
 		}
 		
@@ -302,7 +302,7 @@ public class MonthTimeSheetReport {
 		if (rows.get("病") > 0) {
 			if (q4 <= 0)
 				rows.put("病", 0f);
-			else
+			else if (q4 < rows.get("病"))
 				rows.put("病", q4);
 		}
 		
@@ -323,7 +323,7 @@ public class MonthTimeSheetReport {
 		if (rows.get("事") > 0) {
 			if (q5 <= 0)
 				rows.put("事", 0f);
-			else
+			else if (q5 < rows.get("事"))
 				rows.put("事", q5);
 		}
 		
