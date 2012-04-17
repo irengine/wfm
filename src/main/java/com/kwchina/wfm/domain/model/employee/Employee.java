@@ -105,6 +105,9 @@ public class Employee implements com.kwchina.wfm.domain.common.Entity<Employee>,
 	@CollectionTable(name="T_EMPLOYEE_VACATIONS", joinColumns=@JoinColumn(name="employeeId"))
     private Set<Vacation> vacations;
 	
+//	@OneToMany
+//	private Collection<LeaveEvent> leaveEvents;
+	
 	@Column(nullable=false)
 	private boolean enable;
 	
@@ -219,6 +222,14 @@ public class Employee implements com.kwchina.wfm.domain.common.Entity<Employee>,
 	public void setVacations(Set<Vacation> vacations) {
 		this.vacations = vacations;
 	}
+
+//	public Collection<LeaveEvent> getLeaveEvents() {
+//		return leaveEvents;
+//	}
+//
+//	public void setLeaveEvents(Collection<LeaveEvent> leaveEvents) {
+//		this.leaveEvents = leaveEvents;
+//	}
 
 	public boolean isEnable() {
 		return enable;

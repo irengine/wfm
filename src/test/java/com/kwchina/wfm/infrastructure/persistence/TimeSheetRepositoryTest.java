@@ -29,6 +29,8 @@ import com.kwchina.wfm.domain.model.employee.EmployeeRepository;
 import com.kwchina.wfm.domain.model.employee.Job;
 import com.kwchina.wfm.domain.model.employee.JobPosition;
 import com.kwchina.wfm.domain.model.employee.JobStatus;
+import com.kwchina.wfm.domain.model.employee.LeaveEvent;
+import com.kwchina.wfm.domain.model.employee.LeaveEventRepository;
 import com.kwchina.wfm.domain.model.employee.TimeSheet;
 import com.kwchina.wfm.domain.model.employee.TimeSheet.ActionType;
 import com.kwchina.wfm.domain.model.employee.TimeSheetRepository;
@@ -96,6 +98,9 @@ public class TimeSheetRepositoryTest {
 
 	@Autowired
 	ShiftTypeRepository shiftTypeRepository;
+	
+	@Autowired
+	LeaveEventRepository leaveEventRepository;
 
 	@SuppressWarnings("unchecked")
 	@Test
@@ -318,5 +323,29 @@ public class TimeSheetRepositoryTest {
 		List<Date> days = DateHelper.getDaysOfMonth(2012, 2);
 		
 		System.out.println(shiftTypeRepository.getDailyShiftCount(days));
+	}
+	
+	@Test
+	@Transactional
+	public void testSaveLeaveEvent() {
+		String day = "2012-02-14";
+		Date date = DateHelper.getDate(day);
+		Unit unit = unitRepository.getRoot("XX");
+		
+		Employee e = new Employee(new EmployeeId("0001"), "Alex Tang", Gender.MALE, date, date, date);
+		e.setJob(new Job(unit, null, Collections.<JobPosition>emptyList(), JobStatus.UNKNOWN, new Date()));
+		e.getJob().setUnit(unit);
+		e.setGender(Gender.MALE);
+		employeeRepository.save(e);
+		
+		AttendanceType at1 = new AttendanceType("Day1", 8, 16);
+		attendanceTypeRepository.save(at1);
+		
+		Date d1 = date;
+		Date d2 = DateHelper.addDay(date, 3);
+		
+		LeaveEvent event = new LeaveEvent(e, at1, d1, d2);
+		leaveEventRepository.save(event);
+		
 	}
 }
