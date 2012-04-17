@@ -53,8 +53,11 @@ public class LeaveEvent implements Serializable, com.kwchina.wfm.domain.common.D
 	@DateTimeFormat(iso=ISO.DATE)
 	private Date endDate;
 	
+	@Column(nullable=false)
+	private boolean enable;
+	
 	public LeaveEvent() {
-		
+		this.enable = true;
 	}
 	
 	public LeaveEvent(Employee employee, AttendanceType attendanceType, Date beginDate, Date endDate) {
@@ -62,6 +65,7 @@ public class LeaveEvent implements Serializable, com.kwchina.wfm.domain.common.D
 		this.attendanceType = attendanceType;
 		this.beginDate = beginDate;
 		this.endDate = endDate;
+		this.enable = true;
 	}
 	
 	public AttendanceType getAttendanceType() {
@@ -94,6 +98,14 @@ public class LeaveEvent implements Serializable, com.kwchina.wfm.domain.common.D
 
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
+	}
+
+	public boolean isEnable() {
+		return enable;
+	}
+
+	public void setEnable(boolean enable) {
+		this.enable = enable;
 	}
 
 	@Override

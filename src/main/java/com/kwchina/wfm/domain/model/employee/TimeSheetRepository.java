@@ -1,5 +1,6 @@
 package com.kwchina.wfm.domain.model.employee;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -27,4 +28,6 @@ public interface TimeSheetRepository extends BaseRepository<TimeSheet> {
 	void archive(ArchiveTimeSheetCommand command);
 
 	void importWorkOrder(WorkOrder workOrder);
+
+	List<TimeSheet> getEmployeeDayTimeSheet(Date date, Employee employee, ActionType actionType);
 }

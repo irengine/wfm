@@ -177,6 +177,24 @@ public class TimeSheetRepositoryImpl extends BaseRepositoryImpl<TimeSheet> imple
 		return ts;
 	}
 	
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<TimeSheet> getEmployeeDayTimeSheet(Date date, Employee employee, TimeSheet.ActionType actionType) {
+		
+		List<TimeSheet> ts = entityManager.createQuery("select ts from TimeSheet ts " +
+							"where ts.employee = :employee and " +
+							"ts.date = :date and ts.enable = true and " +
+							"ts.actionType <= :actionType and (ts.lastActionType = null or ts.lastActionType > :actionType) " +
+//							"((ts.lastActionType = null and ts.actionType <= :actionType) or ts.lastActionType > :actionType) " +
+							"order by ts.date, ts.actionType")
+				.setParameter("employee", employee)
+				.setParameter("date", date)
+				.setParameter("actionType", actionType)
+				.getResultList();
+		
+		return ts;
+	}
+	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 	

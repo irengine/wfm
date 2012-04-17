@@ -1,6 +1,7 @@
 package com.kwchina.wfm.interfaces.organization.facade;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -19,6 +20,8 @@ import com.kwchina.wfm.domain.model.employee.EmployeeId;
 import com.kwchina.wfm.domain.model.employee.EmployeeRepository;
 import com.kwchina.wfm.domain.model.employee.Job;
 import com.kwchina.wfm.domain.model.employee.JobStatus;
+import com.kwchina.wfm.domain.model.employee.LeaveEvent;
+import com.kwchina.wfm.domain.model.employee.LeaveEventRepository;
 import com.kwchina.wfm.domain.model.employee.TimeSheet;
 import com.kwchina.wfm.domain.model.employee.TimeSheetRepository;
 import com.kwchina.wfm.domain.model.employee.Vacation;
@@ -50,6 +53,7 @@ import com.kwchina.wfm.interfaces.organization.web.command.QueryTimeSheetByPrope
 import com.kwchina.wfm.interfaces.organization.web.command.QueryTimeSheetCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryVacationCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveEmployeeCommand;
+import com.kwchina.wfm.interfaces.organization.web.command.SaveLeaveEventCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SavePreferenceCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveTimeSheetRecordCommand;
 import com.kwchina.wfm.interfaces.report.MonthTimeSheetReport;
@@ -74,6 +78,9 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 	
 	@Autowired
 	SystemPreferenceRepository systemPreferenceRepository;
+	
+	@Autowired
+	LeaveEventRepository leaveEventRepository;
 	
 	@Override
 	@Transactional(propagation=Propagation.SUPPORTS)
@@ -349,6 +356,40 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 		}
 		
 		return null;
+	}
+	
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED)
+	public void saveLeaveEvent(SaveLeaveEventCommand command) {
+
+		Unit unit = unitRepository.findById(command.getUnitId());
+		Employee employee = employeeRepository.findById(command.getEmployeeId());
+		AttendanceType attendanceType = attendanceTypeRepository.findByName(command.getAttendanceTypeName());
+		
+		if (command.getCommandType().equals(ActionCommand.ADD)) {
+			LeaveEvent event = new LeaveEvent(employee, attendanceType, command.getBeginDate(), command.getEndDate());
+			leaveEventRepository.save(event);
+			
+			Calendar c = Calendar.getInstance();
+			c.setTime(command.getBeginDate());
+			
+			List<Date> days = DateHelper.getDaysOfMonth(c.get(Calendar.YEAR), c.get(Calendar.MONTH), command.getBeginDate(), command.getEndDate());
+			
+			for (Date day : days) {
+				List<TimeSheet> tss = timeSheetRepository.getEmployeeDayTimeSheet(day, employee, command.getActionType());
+				for (TimeSheet ts : tss) {
+					ts.setLastActionType(command.getActionType());
+					timeSheetRepository.save(ts);
+				}
+				
+				TimeSheet record = new TimeSheet(unit, employee, day, attendanceType.getBeginTime(), attendanceType.getEndTime(), attendanceType, command.getActionType());
+				timeSheetRepository.save(record);
+			}
+
+		}
+		else if (command.getCommandType().equals(ActionCommand.DELETE)){
+			// TODO: delete leave event
+		}
 	}
 
 	@Override

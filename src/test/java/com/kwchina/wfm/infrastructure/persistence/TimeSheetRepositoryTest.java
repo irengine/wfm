@@ -348,4 +348,25 @@ public class TimeSheetRepositoryTest {
 		leaveEventRepository.save(event);
 		
 	}
+	
+	@Test
+	@Transactional
+	public void testGetEmployeeDayTimeSheet() {
+		
+		String day = "2012-02-14";
+		Date date = DateHelper.getDate(day);
+		Unit unit = unitRepository.getRoot("XX");
+		
+		Employee e = new Employee(new EmployeeId("0001"), "Alex Tang", Gender.MALE, date, date, date);
+		e.setJob(new Job(unit, null, Collections.<JobPosition>emptyList(), JobStatus.UNKNOWN, new Date()));
+		e.getJob().setUnit(unit);
+		e.setGender(Gender.MALE);
+		employeeRepository.save(e);
+		
+		AttendanceType at1 = new AttendanceType("Day1", 8, 16);
+		attendanceTypeRepository.save(at1);
+		
+		List<TimeSheet> ts = timeSheetRepository.getEmployeeDayTimeSheet(date, e, ActionType.ACTUAL);
+		assertTrue(0 == ts.size());
+	}
 }

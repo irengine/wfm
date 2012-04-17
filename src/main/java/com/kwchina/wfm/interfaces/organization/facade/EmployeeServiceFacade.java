@@ -13,6 +13,7 @@ import com.kwchina.wfm.interfaces.organization.web.command.QueryCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryTimeSheetCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryVacationCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveEmployeeCommand;
+import com.kwchina.wfm.interfaces.organization.web.command.SaveLeaveEventCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SavePreferenceCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveTimeSheetRecordCommand;
 
@@ -29,6 +30,7 @@ public interface EmployeeServiceFacade {
 	
 	void generateEmployeesMonthTimeSheet(String date, Long unitId);
 	TimeSheet saveTimeSheetRecord(SaveTimeSheetRecordCommand command);
+	void saveLeaveEvent(SaveLeaveEventCommand command);
 	String queryEmployeesActualTimeSheetWithJson(QueryActualTimeSheetCommand command);
 	String queryEmployeesActualTimeSheetWithJson(QueryTimeSheetCommand command);
 	

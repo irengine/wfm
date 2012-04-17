@@ -56,6 +56,33 @@ public class DateHelper {
 		return days;
 	}
 	
+	public static List<Date> getDaysOfMonth(int year, int month, Date beginDate, Date endDate) {
+		Calendar beginCalendar = Calendar.getInstance();
+		beginCalendar.set(year, month, DAY_OF_MONTH, 0, 0, 0);
+		beginCalendar.add(Calendar.MONTH, -1);
+
+		Calendar endCalendar = Calendar.getInstance();
+		endCalendar.set(year, month, DAY_OF_MONTH, 0, 0, 0);
+		
+		Calendar beginScope = Calendar.getInstance();
+		beginScope.setTime(beginDate);
+
+		Calendar endScope = Calendar.getInstance();
+		endScope.setTime(beginDate);
+		
+		beginCalendar = beginCalendar.before(beginScope) ? beginScope : beginCalendar;
+		endCalendar = endCalendar.after(endScope) ? endScope : endCalendar;
+
+		List<Date> days = new ArrayList<Date>();
+		
+		while(beginCalendar.before(endCalendar)) {
+			days.add(beginCalendar.getTime());
+			beginCalendar.add(Calendar.DAY_OF_MONTH, 1);
+		}
+		
+		return days;
+	}
+	
 	public static Date addDay(Date day, int amount) {
 		Calendar c = Calendar.getInstance();
 		c.setTime(day);
