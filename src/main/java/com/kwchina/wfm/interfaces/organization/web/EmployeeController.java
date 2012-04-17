@@ -33,6 +33,7 @@ import com.kwchina.wfm.interfaces.organization.web.command.QueryTimeSheetByPrope
 import com.kwchina.wfm.interfaces.organization.web.command.QueryTimeSheetCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryVacationCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveEmployeeCommand;
+import com.kwchina.wfm.interfaces.organization.web.command.SaveLeaveEventCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SavePreferenceCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveTimeSheetRecordCommand;
 
@@ -151,6 +152,12 @@ public class EmployeeController {
 			HttpHelper.output(response, JacksonHelper.getEmployeeJsonWithFilters(timesheet));
 		
 		return timesheet;
+	}
+	
+	@RequestMapping(value = "/saveLeaveEvent", method = RequestMethod.POST)
+	public void saveLeaveEvent(HttpServletResponse response, @ModelAttribute SaveLeaveEventCommand command) {
+
+		employeeServiceFacade.saveLeaveEvent(command);
 	}
 	
 	@RequestMapping(value = "/archiveTimeSheet", method = RequestMethod.POST)
