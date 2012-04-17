@@ -78,7 +78,9 @@ public class SystemHelper {
 	@Around("com.kwchina.wfm.infrastructure.common.SystemHelper.inEmployeeControllerGetMethods() && args(request, response,..)")
 	public Object doEmployeeControllerHandleExceptionWithGet(ProceedingJoinPoint pjp, HttpServletRequest request, HttpServletResponse response) throws Throwable {
 		try {
+//			long startTime=System.currentTimeMillis();
 			Object retVal = pjp.proceed();
+//			long endTime=System.currentTimeMillis();
 			return retVal;
 		} catch (Throwable t) {
 			logger.warn("Error:", t);
