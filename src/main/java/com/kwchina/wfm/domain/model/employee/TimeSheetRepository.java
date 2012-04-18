@@ -14,6 +14,7 @@ import com.kwchina.wfm.interfaces.organization.web.command.QueryActualTimeSheetC
 
 public interface TimeSheetRepository extends BaseRepository<TimeSheet> {
 
+	void generateMonthTimeSheet(String month);
 	void generateMonthTimeSheet(String month, Unit unit);
 
 	List<TimeSheet> getMonthTimeSheet(String month, Unit unit, TimeSheet.ActionType actionType);

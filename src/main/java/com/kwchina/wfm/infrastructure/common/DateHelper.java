@@ -104,8 +104,12 @@ public class DateHelper {
 	
 	public static Date getMonth() {
 		Calendar calendar = Calendar.getInstance();
-		calendar.set(Calendar.DAY_OF_MONTH, 1);
 		
+		if (calendar.get(Calendar.DAY_OF_MONTH) >= DAY_OF_MONTH)
+			calendar.add(Calendar.MONTH, 1);
+
+		calendar.set(Calendar.DAY_OF_MONTH, 1);
+
 		return calendar.getTime();
 	}
 	

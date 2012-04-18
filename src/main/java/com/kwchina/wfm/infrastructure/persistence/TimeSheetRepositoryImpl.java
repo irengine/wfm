@@ -51,6 +51,29 @@ public class TimeSheetRepositoryImpl extends BaseRepositoryImpl<TimeSheet> imple
 	AttendanceTypeRepository attendanceTypeRepository;
 
 	@Override
+	public void generateMonthTimeSheet(String month) {
+	
+		List<Date> days = DateHelper.getDaysOfMonth(month);
+		
+		List<Employee> employees = employeeRepository.findAll();
+		for(Employee employee : employees) {
+			
+			ShiftType shiftType = null == employee.getShiftType() ? employee.getJob().getUnit().getShiftType() : employee.getShiftType();
+			
+			ShiftPolicy shiftPolicy = ShiftPolicyFactory.getInstance(shiftTypeRepository)
+									.getShiftPolicy(shiftType.getStrategyClassName(), shiftType.getStrategyClassParameters());
+			
+			for(Date day : days) {
+				AttendanceType attendanceType = shiftPolicy.getAttendanceType(day);
+				TimeSheet record = new TimeSheet(employee.getJob().getUnit(), employee, day, attendanceType.getBeginTime(), attendanceType.getEndTime(), attendanceType, TimeSheet.ActionType.MONTH_PLAN);
+				entityManager.persist(record);
+			}
+		}
+		
+		entityManager.flush();
+	}
+	
+	@Override
 	public void generateMonthTimeSheet(String month, Unit unit) {
 		// Remove old time sheet entries
 		removeMonthTimeSheet(month, unit);
