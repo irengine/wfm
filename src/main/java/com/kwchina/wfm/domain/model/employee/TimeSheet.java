@@ -98,6 +98,7 @@ public class TimeSheet implements com.kwchina.wfm.domain.common.Entity<TimeSheet
 	public enum ActionType implements ValueObject<ActionType> {
 		MONTH_PLAN,
 		MONTH_PLAN_ADJUST,
+		DAY_PLAN,
 		DAY_PLAN_ADJUST,
 		IMPORT,
 		IMPORT_ADJUST,

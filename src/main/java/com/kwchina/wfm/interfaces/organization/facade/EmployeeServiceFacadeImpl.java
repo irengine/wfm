@@ -36,6 +36,8 @@ import com.kwchina.wfm.domain.model.shift.SystemPreferenceFactory;
 import com.kwchina.wfm.domain.model.shift.SystemPreferenceRepository;
 import com.kwchina.wfm.domain.model.shift.WorkOrder;
 import com.kwchina.wfm.domain.model.shift.WorkOrderRepository;
+import com.kwchina.wfm.domain.model.system.SystemAction;
+import com.kwchina.wfm.domain.model.system.SystemActionRepository;
 import com.kwchina.wfm.infrastructure.common.DateHelper;
 import com.kwchina.wfm.infrastructure.common.PropertiesHelper;
 import com.kwchina.wfm.interfaces.common.JacksonHelper;
@@ -81,6 +83,9 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 	
 	@Autowired
 	LeaveEventRepository leaveEventRepository;
+	
+	@Autowired
+	SystemActionRepository systemActionRepository;
 	
 	@Override
 	@Transactional(propagation=Propagation.SUPPORTS)
@@ -488,6 +493,11 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 	@Override
 	@Transactional(propagation=Propagation.REQUIRED)
 	public void importWorkOrder(Date date, Map<String, String> orders) {
+		
+		if( 0 != systemActionRepository.getActions(SystemAction.ScopeType.IMPORT, DateHelper.getString(date)).size())
+			return;
+		
+		systemActionRepository.addAction(SystemAction.ScopeType.IMPORT, DateHelper.getString(date), null, null);
 		
 		List<Employee> list = employeeRepository.findAll();
 		

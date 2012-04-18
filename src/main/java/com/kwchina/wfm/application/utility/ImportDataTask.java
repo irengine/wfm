@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.kwchina.wfm.infrastructure.common.DateHelper;
+import com.kwchina.wfm.infrastructure.common.PropertiesHelper;
 
 public class ImportDataTask implements Runnable {
 
@@ -44,8 +45,8 @@ public class ImportDataTask implements Runnable {
 			}
 
 			// connect to oracle and login
-			String url = "jdbc:oracle:thin:@//10.169.80.15:1521/c3cdb615";
-			conn = DriverManager.getConnection(url, "hostdb", "hostdb");
+			String url = PropertiesHelper.getProperty("IMPORT_DATABASE");
+			conn = DriverManager.getConnection(url, PropertiesHelper.getProperty("IMPORT_USER"), PropertiesHelper.getProperty("IMPORT_PASSWORD"));
 
 			// create the SQL statement
 			String sql = "SELECT WORK_DATE, STAFF_ID, SHIFT_ID FROM WAG_TASK_INFO WHERE WORK_DATE = ?";
