@@ -3,10 +3,10 @@ package com.kwchina.wfm.domain.model.employee;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -28,12 +28,15 @@ public class LeaveEvent implements Serializable, com.kwchina.wfm.domain.common.D
 	private static final long serialVersionUID = -9207970537805968317L;
 
 	@Id
-	@AttributeOverrides({
-		@AttributeOverride(name = "employee",	column = @Column(name="employeeId")),
-		@AttributeOverride(name = "attendanceType",	column = @Column(name="attendanceTypeId")),
-		@AttributeOverride(name = "beginDate",	column = @Column(name="beginDate")),
-		@AttributeOverride(name = "endDate",	column = @Column(name="endDate"))
-	})
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	private Long id;
+	
+//	@AttributeOverrides({
+//		@AttributeOverride(name = "employee",	column = @Column(name="employeeId")),
+//		@AttributeOverride(name = "attendanceType",	column = @Column(name="attendanceTypeId")),
+//		@AttributeOverride(name = "beginDate",	column = @Column(name="beginDate")),
+//		@AttributeOverride(name = "endDate",	column = @Column(name="endDate"))
+//	})
 	
 	@ManyToOne
 	@JoinColumn(name="employeeId")
@@ -68,6 +71,14 @@ public class LeaveEvent implements Serializable, com.kwchina.wfm.domain.common.D
 		this.enable = true;
 	}
 	
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 	public AttendanceType getAttendanceType() {
 		return attendanceType;
 	}

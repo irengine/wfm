@@ -68,7 +68,7 @@ public class DateHelper {
 		beginScope.setTime(beginDate);
 
 		Calendar endScope = Calendar.getInstance();
-		endScope.setTime(beginDate);
+		endScope.setTime(endDate);
 		
 		beginCalendar = beginCalendar.before(beginScope) ? beginScope : beginCalendar;
 		endCalendar = endCalendar.after(endScope) ? endScope : endCalendar;
