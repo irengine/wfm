@@ -52,7 +52,7 @@ public class ImportDataTask implements Runnable {
 			String sql = "SELECT WORK_DATE, STAFF_ID, SHIFT_ID FROM WAG_TASK_INFO WHERE WORK_DATE = ?";
 			PreparedStatement stmt = conn.prepareStatement(sql);
 
-			Date date = new Date();
+			Date date = DateHelper.addDay(new Date(), -1);
 			stmt.setString(1, DateHelper.getString(date));
 
 			// fetch and display the results
