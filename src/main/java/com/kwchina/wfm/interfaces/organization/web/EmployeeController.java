@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.kwchina.wfm.domain.model.employee.Employee;
 import com.kwchina.wfm.domain.model.employee.TimeSheet;
+import com.kwchina.wfm.domain.model.employee.Vacation;
 import com.kwchina.wfm.infrastructure.common.DateHelper;
 import com.kwchina.wfm.infrastructure.common.HttpHelper;
 import com.kwchina.wfm.interfaces.common.JacksonHelper;
@@ -138,12 +139,12 @@ public class EmployeeController {
 		HttpHelper.output(response, employeeServiceFacade.queryEmployeesAbsentTimeSheetWithJson(command));
 	}
 
-	@RequestMapping(value = "/queryEmployeesOverTimeSheet", method = RequestMethod.GET)
-	public void queryEmployeesOverTimeSheet(HttpServletRequest request, HttpServletResponse response, @ModelAttribute QueryTimeSheetByPropertyCommand command) {
-		
-		HttpHelper.output(response, employeeServiceFacade.queryEmployeesAbsentTimeSheetWithJson(command));
-	}
-	
+//	@RequestMapping(value = "/queryEmployeesOverTimeSheet", method = RequestMethod.GET)
+//	public void queryEmployeesOverTimeSheet(HttpServletRequest request, HttpServletResponse response, @ModelAttribute QueryTimeSheetByPropertyCommand command) {
+//		
+//		HttpHelper.output(response, employeeServiceFacade.queryEmployeesAbsentTimeSheetWithJson(command));
+//	}
+
 	@RequestMapping(value = "/generateEmployeesMonthTimeSheet", method = RequestMethod.GET)
 	public void generateEmployeesMonthTimeSheet(HttpServletResponse response, @ModelAttribute QueryTimeSheetCommand command) throws IOException {
 		
@@ -181,9 +182,19 @@ public class EmployeeController {
 
 	@RequestMapping(value = "/queryEmployeesVacation", method = RequestMethod.GET)
 	public void queryEmployeesVacation(HttpServletRequest request, HttpServletResponse response, @ModelAttribute QueryVacationCommand command) {
-		
+
+		command.setType(Vacation.Type.ANNUAL_LEAVE);
 		HttpHelper.output(response, employeeServiceFacade.queryEmployeesVacationWithJson(command));
 	}
+	
+	
+	@RequestMapping(value = "/queryEmployeesOverTimeSheet", method = RequestMethod.GET)
+	public void queryEmployeesOverTimeSheet(HttpServletRequest request, HttpServletResponse response, @ModelAttribute QueryVacationCommand command) {
+		
+		command.setType(Vacation.Type.OVERTIME);
+		HttpHelper.output(response, employeeServiceFacade.queryEmployeesVacationWithJson(command));
+	}
+	
 	
 	@RequestMapping(value = "/querySampleEmployeesMonthTimeSheet", method = RequestMethod.GET)
 	public void querySampleEmployeesMonthTimeSheet(HttpServletRequest request, HttpServletResponse response, @ModelAttribute QueryTimeSheetCommand command) {

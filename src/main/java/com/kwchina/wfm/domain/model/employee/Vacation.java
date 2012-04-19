@@ -36,7 +36,8 @@ public class Vacation {
 	private double amount;
 	
 	public enum Type implements ValueObject<Type> {
-		ANNUAL_LEAVE;
+		ANNUAL_LEAVE,
+		OVERTIME;
 
 		@Override
 		public boolean sameValueAs(Type other) {

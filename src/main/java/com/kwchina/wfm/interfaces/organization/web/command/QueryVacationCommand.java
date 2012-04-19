@@ -5,13 +5,37 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.kwchina.wfm.domain.model.employee.Vacation;
+
 public class QueryVacationCommand {
+	
+	private Vacation.Type type;
+	private String beginTime;
+	private String endTime;
 	
 	private Long unitId;
 	private Long employeeId;
 	private String date;
 	private String unitIds;
 	
+	public Vacation.Type getType() {
+		return type;
+	}
+	public void setType(Vacation.Type type) {
+		this.type = type;
+	}
+	public String getBeginTime() {
+		return beginTime;
+	}
+	public void setBeginTime(String beginTime) {
+		this.beginTime = beginTime;
+	}
+	public String getEndTime() {
+		return endTime;
+	}
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
+	}
 	public Long getUnitId() {
 		return unitId;
 	}
