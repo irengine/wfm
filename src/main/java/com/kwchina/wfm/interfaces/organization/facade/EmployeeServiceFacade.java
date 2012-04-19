@@ -13,6 +13,7 @@ import com.kwchina.wfm.interfaces.organization.web.command.QueryCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryTimeSheetCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryVacationCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveEmployeeCommand;
+import com.kwchina.wfm.interfaces.organization.web.command.SaveJobEventCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveLeaveEventCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SavePreferenceCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveTimeSheetRecordCommand;
@@ -46,4 +47,5 @@ public interface EmployeeServiceFacade {
 	void archiveTimeSheet(ArchiveTimeSheetCommand command);
 	void importWorkOrder(Date date, Map<String, String> orders);
 	void saveEmployeePreference(SavePreferenceCommand command);
+	void saveJobEvent(SaveJobEventCommand command);
 }

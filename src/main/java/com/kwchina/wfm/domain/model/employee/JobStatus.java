@@ -5,7 +5,7 @@ import com.kwchina.wfm.domain.common.ValueObject;
 public enum JobStatus implements ValueObject<JobStatus> {
 	HIRED,
 	FIRED,
-	lEFT,
+	LEFT,
 	RETIED,
 	UNKNOWN;
 

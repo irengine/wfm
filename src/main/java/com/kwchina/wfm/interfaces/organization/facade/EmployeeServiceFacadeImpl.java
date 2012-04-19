@@ -19,6 +19,8 @@ import com.kwchina.wfm.domain.model.employee.Employee;
 import com.kwchina.wfm.domain.model.employee.EmployeeId;
 import com.kwchina.wfm.domain.model.employee.EmployeeRepository;
 import com.kwchina.wfm.domain.model.employee.Job;
+import com.kwchina.wfm.domain.model.employee.JobChangeEvent;
+import com.kwchina.wfm.domain.model.employee.JobChangeEventRepository;
 import com.kwchina.wfm.domain.model.employee.JobStatus;
 import com.kwchina.wfm.domain.model.employee.LeaveEvent;
 import com.kwchina.wfm.domain.model.employee.LeaveEventRepository;
@@ -55,6 +57,7 @@ import com.kwchina.wfm.interfaces.organization.web.command.QueryTimeSheetByPrope
 import com.kwchina.wfm.interfaces.organization.web.command.QueryTimeSheetCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryVacationCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveEmployeeCommand;
+import com.kwchina.wfm.interfaces.organization.web.command.SaveJobEventCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveLeaveEventCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SavePreferenceCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveTimeSheetRecordCommand;
@@ -83,6 +86,9 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 	
 	@Autowired
 	LeaveEventRepository leaveEventRepository;
+	
+	@Autowired
+	JobChangeEventRepository jobChangeEventRepository;
 	
 	@Autowired
 	SystemActionRepository systemActionRepository;
@@ -228,6 +234,26 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 				Employee employee = employeeRepository.findById(Long.parseLong(id));
 				employeeRepository.disable(employee);
 			}
+		}
+	}
+	
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED)
+	public void saveJobEvent(SaveJobEventCommand command) {
+		
+		Unit unit = unitRepository.findById(command.getUnitId());
+		
+		String[] ids = StringUtils.split(command.getIds(), ActionCommand.ID_SEPARATOR);
+		for (String id : ids) {
+			Employee employee = employeeRepository.findById(Long.parseLong(id));
+
+			JobChangeEvent event = new JobChangeEvent(JobChangeEvent.Type.TRANSFER, unit, employee, command.getEffectDate(), null);
+			jobChangeEventRepository.addEvent(event);
+			
+			// TODO: add job title and job positions
+			Job job = new Job(unit, null, null, JobStatus.HIRED, new Date());
+			employee.setJob(job);
+			employeeRepository.save(employee);
 		}
 	}
 	
