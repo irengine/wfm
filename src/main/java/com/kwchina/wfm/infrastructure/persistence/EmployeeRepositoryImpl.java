@@ -77,7 +77,7 @@ public class EmployeeRepositoryImpl extends BaseRepositoryImpl<Employee> impleme
 	@Override
 	public void calculateVacation(Date currentMonth, Long vacationId) {
 		// delete current vacations
-		String deleteSql = String.format("delete from t_employee_vacations where month = '%s' ", DateHelper.getString(currentMonth));
+		String deleteSql = String.format("delete from t_employee_vacations where month = '%s' and type = 'ANNUAL_LEAVE' ", DateHelper.getString(currentMonth));
 
 		// create current vacations
 		String createSql = String.format("insert into t_employee_vacations(employeeId, type, month, lastBalance, balance, amount)" +

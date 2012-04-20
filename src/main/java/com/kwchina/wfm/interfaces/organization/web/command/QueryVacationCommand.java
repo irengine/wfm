@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 
 import com.kwchina.wfm.domain.model.employee.Vacation;
+import com.kwchina.wfm.infrastructure.common.DateHelper;
 
 public class QueryVacationCommand {
 	
@@ -53,6 +54,8 @@ public class QueryVacationCommand {
 	}
 	public void setDate(String date) {
 		this.date = date;
+		this.beginTime = date;
+		this.endTime = DateHelper.getString(DateHelper.addYear(DateHelper.getDate(date), 1));
 	}
 	
 	public String getUnitIds() {
@@ -75,7 +78,8 @@ public class QueryVacationCommand {
 		}
 		
 		if (!StringUtils.isEmpty(this.date)) {
-			secondConditions.add(String.format("v.month >= '%s' and v.month < date_add('%s', INTERVAL 1 YEAR)", date, date));
+			//secondConditions.add(String.format("v.month >= '%s' and v.month < date_add('%s', INTERVAL 1 YEAR)", date, date));
+			secondConditions.add(String.format("v.month >= '%s' and v.month <= '%s'", beginTime, endTime));
 		}
 		
 		String firstCondition = (0 == firstConditions.size()) ? " where e.enable = 1 " : " where e.enable = 1 and " + StringUtils.join(firstConditions, " AND ");

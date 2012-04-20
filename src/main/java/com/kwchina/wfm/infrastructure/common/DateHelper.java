@@ -82,6 +82,14 @@ public class DateHelper {
 		
 		return days;
 	}
+
+	public static Date addYear(Date day, int amount) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(day);
+		c.add(Calendar.YEAR, amount);
+		
+		return c.getTime();
+	}
 	
 	public static Date addDay(Date day, int amount) {
 		Calendar c = Calendar.getInstance();
