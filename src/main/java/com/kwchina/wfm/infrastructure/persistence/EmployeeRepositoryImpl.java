@@ -101,9 +101,9 @@ public class EmployeeRepositoryImpl extends BaseRepositoryImpl<Employee> impleme
 				"group by employeeId, attendanceTypeId) ts on v.employeeId = ts.employeeId " +
 				"set v.amount = ts.cnt " +
 				"where v.month = '%s' ",
-				0, 
-				DateHelper.getString(currentMonth), 
-				DateHelper.getString(currentMonth), 
+				vacationId, 
+				DateHelper.getBeginDateOfMonth(currentMonth), 
+				DateHelper.getBeginDateOfMonth(currentMonth), 
 				DateHelper.getString(currentMonth));
 		
 		jdbcTemplate.batchUpdate(new String [] {deleteSql, createSql, updateSql});

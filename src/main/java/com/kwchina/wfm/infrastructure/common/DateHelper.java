@@ -122,10 +122,14 @@ public class DateHelper {
 	}
 	
 	public static Date getBeginDateOfMonth(String month) {
+		
+		return getBeginDateOfMonth(DateHelper.getDate(month));
+	}
+	
+	public static Date getBeginDateOfMonth(Date month) {
 		// Get first and last day for month
-		Date date = DateHelper.getDate(month);
 		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(date);
+		calendar.setTime(month);
 		calendar.add(Calendar.MONTH, -1);
 		calendar.set(Calendar.DAY_OF_MONTH, DAY_OF_MONTH);
 		Date beginDate = calendar.getTime();
@@ -134,10 +138,14 @@ public class DateHelper {
 	}
 	
 	public static Date getEndDateOfMonth(String month) {
+		
+		return getEndDateOfMonth(DateHelper.getDate(month));
+	}
+	
+	public static Date getEndDateOfMonth(Date month) {
 		// Get first and last day for month
-		Date date = DateHelper.getDate(month);
 		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(date);
+		calendar.setTime(month);
 		calendar.set(Calendar.DAY_OF_MONTH, DAY_OF_MONTH);
 		Date endDate = calendar.getTime();
 		

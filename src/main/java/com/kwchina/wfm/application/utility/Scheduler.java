@@ -21,13 +21,13 @@ public class Scheduler implements ServletContextListener  {
         final WebApplicationContext springContext = WebApplicationContextUtils.getWebApplicationContext(event.getServletContext());
     	
         scheduler = Executors.newScheduledThreadPool(2);
-//        scheduler.scheduleAtFixedRate(new VacationSnapshotTask("Vacation", springContext), DateHelper.getNextRuntimeMinutes(23), DateHelper.MINUTES_ONE_DAY, TimeUnit.MINUTES);
-//        scheduler.scheduleAtFixedRate(new VacationSnapshotTask("Vacation", springContext), DateHelper.getNextRuntimeMinutes(1), DateHelper.MINUTES_ONE_DAY, TimeUnit.MINUTES);
         scheduler.scheduleAtFixedRate(new ImportDataTask("Oracle", springContext), DateHelper.getNextRuntimeMinutes(1), DateHelper.MINUTES_ONE_DAY, TimeUnit.MINUTES);
         scheduler.scheduleAtFixedRate(new GenerateMonthTimeSheetTask("Month", springContext), DateHelper.getNextRuntimeMinutes(1), DateHelper.MINUTES_ONE_DAY, TimeUnit.MINUTES);
+        scheduler.scheduleAtFixedRate(new VacationSnapshotTask("Vacation", springContext), DateHelper.getNextRuntimeMinutes(23), DateHelper.MINUTES_ONE_DAY, TimeUnit.MINUTES);
         
         scheduler.schedule(new ImportDataTask("Oracle", springContext), 1, TimeUnit.MINUTES);
         scheduler.schedule(new GenerateMonthTimeSheetTask("Month", springContext), 1, TimeUnit.MINUTES);
+        scheduler.schedule(new VacationSnapshotTask("Vacation", springContext), 2, TimeUnit.MINUTES);
 
 //        scheduler.scheduleAtFixedRate(new UnitViewSnapshotTask("U"), 0, 1, TimeUnit.MINUTES);
 //        scheduler.scheduleAtFixedRate(new EmployeeViewSnapshotTask("E"), 0, 1, TimeUnit.MINUTES);
