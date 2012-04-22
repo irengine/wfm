@@ -68,6 +68,8 @@ public class QueryVacationCommand {
 		List<String> firstConditions = new ArrayList<String>();
 		List<String> secondConditions = new ArrayList<String>();
 		
+		secondConditions.add(String.format("v.type = '%s'", this.getType().name()));
+		
 		if (!(null == this.unitId || this.unitId.equals(0))) {
 			firstConditions.add(String.format("u.leftId >= %d and u.rightId <= %d", leftId, rightId));
 		}
@@ -77,7 +79,7 @@ public class QueryVacationCommand {
 			secondConditions.add(String.format("v.employeeId = %d", this.getEmployeeId()));
 		}
 		
-		if (!StringUtils.isEmpty(this.date)) {
+		if (!StringUtils.isEmpty(this.beginTime)) {
 			//secondConditions.add(String.format("v.month >= '%s' and v.month < date_add('%s', INTERVAL 1 YEAR)", date, date));
 			secondConditions.add(String.format("v.month >= '%s' and v.month <= '%s'", beginTime, endTime));
 		}

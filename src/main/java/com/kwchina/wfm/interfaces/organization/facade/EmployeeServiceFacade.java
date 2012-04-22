@@ -36,11 +36,12 @@ public interface EmployeeServiceFacade {
 	String queryEmployeesActualTimeSheetWithJson(QueryActualTimeSheetCommand command);
 	String queryEmployeesActualTimeSheetWithJson(QueryTimeSheetCommand command);
 	
-	void calculateVacation(QueryVacationCommand command);
+	void calculateVacation(Date month);
+	void calculateOvertime(Date month);
 	String queryEmployeesVacationWithJson(QueryVacationCommand command);
 
 	String queryEmployeesAbsentTimeSheetWithJson(QueryTimeSheetByPropertyCommand command);
-	String queryEmployeesOverTimeTimeSheetWithJson(QueryTimeSheetByPropertyCommand command);
+//	String queryEmployeesOverTimeTimeSheetWithJson(QueryTimeSheetByPropertyCommand command);
 	
 	String getEmployeeShiftType(Long id);
 	

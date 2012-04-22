@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -17,7 +18,9 @@ import com.kwchina.wfm.domain.model.employee.EmployeeRepository;
 import com.kwchina.wfm.domain.model.organization.Unit;
 import com.kwchina.wfm.domain.model.organization.UnitRepository;
 import com.kwchina.wfm.infrastructure.common.DateHelper;
+import com.kwchina.wfm.interfaces.common.ReportHelper;
 import com.kwchina.wfm.interfaces.organization.web.command.QueryVacationCommand;
+import com.kwchina.wfm.interfaces.report.MonthTimeSheetReport;
 
 @Repository
 public class EmployeeRepositoryImpl extends BaseRepositoryImpl<Employee> implements EmployeeRepository {
@@ -107,6 +110,26 @@ public class EmployeeRepositoryImpl extends BaseRepositoryImpl<Employee> impleme
 				DateHelper.getString(currentMonth));
 		
 		jdbcTemplate.batchUpdate(new String [] {deleteSql, createSql, updateSql});
+	}
+	
+	@Override
+	public void calculateOvertime(Date currentMonth, MonthTimeSheetReport report) {
+		// delete current overtime records
+		String deleteSql = String.format("delete from t_employee_vacations where month = '%s' and type = 'OVERTIME' ", DateHelper.getString(currentMonth));
+		jdbcTemplate.update(deleteSql);
+		
+		// create current overtime records
+		for (Entry<String, Map<String, Float>> e : report.getSummary().entrySet()) {
+			String createSql = String.format("insert into t_employee_vacations(employeeId, type, month, amount)" +
+					"	select e.Id, 'OVERTIME', '%s', " +
+					"%d as amount " +
+					"from t_employees e where e.employeeId = '%s'", 
+					DateHelper.getString(currentMonth), 
+					e.getValue().get(ReportHelper.REPORT_COLUMN_OVERTIME), 
+					e.getKey());
+			
+			jdbcTemplate.update(createSql);
+		}
 	}
 	
 	@Override

@@ -481,25 +481,43 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 		return JacksonHelper.getJson(timeSheetRepository.queryTimeSheetByProperty(command));
 	}
 	
-	@Override
-	@Transactional(propagation=Propagation.REQUIRED)
-	public String queryEmployeesOverTimeTimeSheetWithJson(QueryTimeSheetByPropertyCommand command) {
-		List<AttendanceType> ats = attendanceTypeRepository.findByProperty(command.getPropertyName(), "true");
-		List<String> atIds = new ArrayList<String>();
-		for (AttendanceType at : ats) {
-			atIds.add(at.getId().toString());
-		}
-		command.setattendanceTypeIds(StringUtils.join(atIds, ","));
-		
-		return JacksonHelper.getJson(timeSheetRepository.queryTimeSheetByProperty(command));
-	}
+//	@Override
+//	@Transactional(propagation=Propagation.REQUIRED)
+//	public String queryEmployeesOverTimeTimeSheetWithJson(QueryTimeSheetByPropertyCommand command) {
+//		List<AttendanceType> ats = attendanceTypeRepository.findByProperty(command.getPropertyName(), "true");
+//		List<String> atIds = new ArrayList<String>();
+//		for (AttendanceType at : ats) {
+//			atIds.add(at.getId().toString());
+//		}
+//		command.setattendanceTypeIds(StringUtils.join(atIds, ","));
+//		
+//		return JacksonHelper.getJson(timeSheetRepository.queryTimeSheetByProperty(command));
+//	}
 
 	
 	@Override
 	@Transactional(propagation=Propagation.REQUIRED)
-	public void calculateVacation(QueryVacationCommand command) {
+	public void calculateVacation(Date currentMonth) {
 		AttendanceType at = attendanceTypeRepository.findByName(PropertiesHelper.getProperty(Vacation.Type.ANNUAL_LEAVE.name()));
-		employeeRepository.calculateVacation(DateHelper.getDate(command.getDate()), at.getId());
+		employeeRepository.calculateVacation(currentMonth, at.getId());
+	}
+	
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED)
+	public void calculateOvertime(Date currentMonth) {
+		List<String> holidays = SystemPreferenceFactory.getInstance(systemPreferenceRepository).getHolidays();
+		String month = DateHelper.getString(currentMonth);
+
+		List<Date> days = DateHelper.getDaysOfMonth(month);
+		int dailyShiftCount = shiftTypeRepository.getDailyShiftCount(days);
+		MonthTimeSheetReport report = new MonthTimeSheetReport();
+		Set<TimeSheet> records = new LinkedHashSet<TimeSheet>();
+		Unit unit = unitRepository.findRoot();
+		List<TimeSheet> recs = timeSheetRepository.getActualMonthTimeSheet(month, unit);
+		records.addAll(recs);
+		report.fill(records, days, holidays, dailyShiftCount);
+		
+		employeeRepository.calculateOvertime(currentMonth, report);
 	}
 	
 	@Override

@@ -173,11 +173,11 @@ public class EmployeeController {
 		employeeServiceFacade.archiveTimeSheet(command);
 	}
 
-	@RequestMapping(value = "/calculateVacation", method = RequestMethod.GET)
-	public void calculateVacation(HttpServletResponse response, @ModelAttribute QueryVacationCommand command) {
-
-		employeeServiceFacade.calculateVacation(command);
-	}
+//	@RequestMapping(value = "/calculateVacation", method = RequestMethod.GET)
+//	public void calculateVacation(HttpServletResponse response, @ModelAttribute QueryVacationCommand command) {
+//
+//		employeeServiceFacade.calculateVacation(command);
+//	}
 
 	@RequestMapping(value = "/queryEmployeesVacation", method = RequestMethod.GET)
 	public void queryEmployeesVacation(HttpServletRequest request, HttpServletResponse response, @ModelAttribute QueryVacationCommand command) {
