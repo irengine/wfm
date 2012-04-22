@@ -1,6 +1,5 @@
 package com.kwchina.wfm.interfaces.organization.web;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -145,11 +144,11 @@ public class EmployeeController {
 //		HttpHelper.output(response, employeeServiceFacade.queryEmployeesAbsentTimeSheetWithJson(command));
 //	}
 
-	@RequestMapping(value = "/generateEmployeesMonthTimeSheet", method = RequestMethod.GET)
-	public void generateEmployeesMonthTimeSheet(HttpServletResponse response, @ModelAttribute QueryTimeSheetCommand command) throws IOException {
-		
-		employeeServiceFacade.generateEmployeesMonthTimeSheet(command.getDate(), command.getUnitId());
-	}
+//	@RequestMapping(value = "/generateEmployeesMonthTimeSheet", method = RequestMethod.GET)
+//	public void generateEmployeesMonthTimeSheet(HttpServletResponse response, @ModelAttribute QueryTimeSheetCommand command) throws IOException {
+//		
+//		employeeServiceFacade.generateEmployeesMonthTimeSheet(command.getDate(), command.getUnitId());
+//	}
 	
 	@RequestMapping(value = "/saveTimeSheetRecord", method = RequestMethod.POST)
 	public TimeSheet saveTimeSheetRecord(HttpServletResponse response, @ModelAttribute SaveTimeSheetRecordCommand command) {

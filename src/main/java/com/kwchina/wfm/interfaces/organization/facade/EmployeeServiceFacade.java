@@ -30,7 +30,7 @@ public interface EmployeeServiceFacade {
 	String queryEmployeesMonthTimeSheetWithJson(QueryTimeSheetCommand command);
 	
 	void generateMonthTimeSheet(String month);
-	void generateEmployeesMonthTimeSheet(String date, Long unitId);
+//	void generateEmployeesMonthTimeSheet(String date, Long unitId);
 	TimeSheet saveTimeSheetRecord(SaveTimeSheetRecordCommand command);
 	void saveLeaveEvent(SaveLeaveEventCommand command);
 	String queryEmployeesActualTimeSheetWithJson(QueryActualTimeSheetCommand command);

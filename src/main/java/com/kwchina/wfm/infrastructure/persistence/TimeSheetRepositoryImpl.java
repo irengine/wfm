@@ -73,48 +73,48 @@ public class TimeSheetRepositoryImpl extends BaseRepositoryImpl<TimeSheet> imple
 		entityManager.flush();
 	}
 	
-	@Override
-	public void generateMonthTimeSheet(String month, Unit unit) {
-		// Remove old time sheet entries
-		removeMonthTimeSheet(month, unit);
-		
-		List<Date> days = DateHelper.getDaysOfMonth(month);
-		ShiftType defaultShiftType = unit.getShiftType();
-
-		List<Employee> employees = employeeRepository.findByUnitId(unit.getId());
-		for(Employee employee : employees) {
-			
-			ShiftType shiftType = null == employee.getShiftType() ? defaultShiftType : employee.getShiftType();
-			
-			ShiftPolicy shiftPolicy = ShiftPolicyFactory.getInstance(shiftTypeRepository)
-									.getShiftPolicy(shiftType.getStrategyClassName(), shiftType.getStrategyClassParameters());
-			
-			for(Date day : days) {
-				AttendanceType attendanceType = shiftPolicy.getAttendanceType(day);
-				TimeSheet record = new TimeSheet(unit, employee, day, attendanceType.getBeginTime(), attendanceType.getEndTime(), attendanceType, TimeSheet.ActionType.MONTH_PLAN);
-				entityManager.persist(record);
-			}
-		}
-		
-		entityManager.flush();
-	}
-	
-	private void removeMonthTimeSheet(String month, Unit unit) {
-		
-		Date beginDate = DateHelper.getBeginDateOfMonth(month);
-		Date endDate = DateHelper.getEndDateOfMonth(month);
-		
-		entityManager.createQuery("delete from TimeSheet ts where ts.unit.id = :unitId " +
-				"and ts.date >= :beginDate and ts.date < :endDate and " +
-				"ts.actionType <= :actionType")
-				.setParameter("unitId", unit.getId())
-				.setParameter("beginDate", beginDate)
-				.setParameter("endDate", endDate)
-				.setParameter("actionType", TimeSheet.ActionType.MONTH_PLAN_ADJUST)
-				.executeUpdate();
-
-		entityManager.flush();
-	}
+//	@Override
+//	public void generateMonthTimeSheet(String month, Unit unit) {
+//		// Remove old time sheet entries
+//		removeMonthTimeSheet(month, unit);
+//		
+//		List<Date> days = DateHelper.getDaysOfMonth(month);
+//		ShiftType defaultShiftType = unit.getShiftType();
+//
+//		List<Employee> employees = employeeRepository.findByUnitId(unit.getId());
+//		for(Employee employee : employees) {
+//			
+//			ShiftType shiftType = null == employee.getShiftType() ? defaultShiftType : employee.getShiftType();
+//			
+//			ShiftPolicy shiftPolicy = ShiftPolicyFactory.getInstance(shiftTypeRepository)
+//									.getShiftPolicy(shiftType.getStrategyClassName(), shiftType.getStrategyClassParameters());
+//			
+//			for(Date day : days) {
+//				AttendanceType attendanceType = shiftPolicy.getAttendanceType(day);
+//				TimeSheet record = new TimeSheet(unit, employee, day, attendanceType.getBeginTime(), attendanceType.getEndTime(), attendanceType, TimeSheet.ActionType.MONTH_PLAN);
+//				entityManager.persist(record);
+//			}
+//		}
+//		
+//		entityManager.flush();
+//	}
+//	
+//	private void removeMonthTimeSheet(String month, Unit unit) {
+//		
+//		Date beginDate = DateHelper.getBeginDateOfMonth(month);
+//		Date endDate = DateHelper.getEndDateOfMonth(month);
+//		
+//		entityManager.createQuery("delete from TimeSheet ts where ts.unit.id = :unitId " +
+//				"and ts.date >= :beginDate and ts.date < :endDate and " +
+//				"ts.actionType <= :actionType")
+//				.setParameter("unitId", unit.getId())
+//				.setParameter("beginDate", beginDate)
+//				.setParameter("endDate", endDate)
+//				.setParameter("actionType", TimeSheet.ActionType.MONTH_PLAN_ADJUST)
+//				.executeUpdate();
+//
+//		entityManager.flush();
+//	}
 	
 	public void importWorkOrder(WorkOrder order) {
 		
