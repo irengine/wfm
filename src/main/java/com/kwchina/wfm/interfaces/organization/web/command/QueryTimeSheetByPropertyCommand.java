@@ -79,15 +79,14 @@ public class QueryTimeSheetByPropertyCommand {
 		String firstCondition = (0 == firstConditions.size()) ? " where e.enable = 1 " : " where e.enable = 1 and " + StringUtils.join(firstConditions, " AND ");
 		String secondCondition = (0 == secondConditions.size()) ? " where ts.enable = true and ts.lastActionType is null " : " where ts.enable = true and ts.lastActionType is null and " + StringUtils.join(secondConditions, " AND ");
 		
-		
-		String syntax = "select x.*, count(ts.attendanceTypeId) as days " +
+		String syntax = "select x.*, ifnull(ts.days, 0) as days " +
 				"from (select e.Id as employeeId, e.employeeId as employeeCode, e.name as employeeName, u.id as unitId, u.name as unitName, " +
 					"ats.Id as attendanceTypeId, ats.name as attendanceTypeName, xmonth " +
 					"from d_month, t_attendance_types ats, t_employees e inner join t_units u on e.unitId = u.id" +
 					"%s) x " +
-				"left join (select ts.employeeId, year(ts.date) as xyear, month(ts.date) as xmonth, ts.attendanceTypeId  from t_timesheet ts inner join t_units u on ts.unitId = u.id %s) ts on " +
-				"x.employeeId = ts.employeeId and x.attendanceTypeId = ts.attendanceTypeId and x.xmonth = ts.xmonth " +
-				"group by employeeId, employeeCode, employeeName, unitId, unitName, attendanceTypeId, attendanceTypeName, xyear, xmonth";
+				"left join (select ts.unitId, ts.employeeId, year(ts.date) as xyear, month(ts.date) as xmonth, ts.attendanceTypeId, count(ts.attendanceTypeId)AS days " +
+				"from t_timesheet ts inner join t_units u on ts.unitId = u.id %s GROUP BY ts.unitId,ts.employeeId,ts.attendanceTypeId,xyear,xmonth) ts on " +
+				"x.unitId = ts.unitId AND x.employeeId = ts.employeeId and x.attendanceTypeId = ts.attendanceTypeId and x.xmonth = ts.xmonth ";
 		
 		return String.format(syntax, firstCondition, secondCondition);
 	}
