@@ -120,9 +120,9 @@ public class EmployeeRepositoryImpl extends BaseRepositoryImpl<Employee> impleme
 		
 		// create current overtime records
 		for (Entry<String, Map<String, Float>> e : report.getSummary().entrySet()) {
-			String createSql = String.format("insert into t_employee_vacations(employeeId, type, month, amount)" +
+			String createSql = String.format("insert into t_employee_vacations(employeeId, type, month, amount, lastBalance, balance)" +
 					"	select e.Id, 'OVERTIME', '%s', " +
-					"%d as amount " +
+					"%f as amount, 0, 0 " +
 					"from t_employees e where e.employeeId = '%s'", 
 					DateHelper.getString(currentMonth), 
 					e.getValue().get(ReportHelper.REPORT_COLUMN_OVERTIME), 
