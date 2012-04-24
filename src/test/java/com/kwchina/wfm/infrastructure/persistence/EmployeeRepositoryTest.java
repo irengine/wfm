@@ -171,7 +171,7 @@ public class EmployeeRepositoryTest {
 	@Test
 	public void testGetEmployeesByPreference() {
 		
-		List<Employee> es= entityManager.createQuery("SELECT e FROM Employee e LEFT OUTER JOIN e.preferences ps1 LEFT OUTER JOIN e.job.unit.preferences ps2 WHERE e.enable=true AND ((ps1.key = :key AND ps1.value = 'true') OR (ps1.key is null AND ps2.key =:key AND ps2.value = 'true'))")
+		List<Employee> es= entityManager.createQuery("SELECT e FROM Employee e LEFT OUTER JOIN e.preferences ps1 WITH ps1.key = 'test' LEFT OUTER JOIN e.job.unit.preferences ps2 WHERE e.enable=true AND ((ps1.key = :key AND ps1.value = 'true') OR (ps1.key is null AND ps2.key =:key AND ps2.value = 'true'))")
 				.setParameter("key", "xxx")
 				.getResultList();
 		assertTrue(0 == es.size());

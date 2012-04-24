@@ -138,8 +138,7 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 			conditions.add(right);
 		}
 		
-		String propertyCondition = String.format("((ps1.key = '%s' AND ps1.value = '%s') OR (ps1.key is null AND ps2.key = '%s' AND ps2.value = '%s'))",
-						command.getKey(),
+		String propertyCondition = String.format("((ps1.value = '%s') OR (ps1.value is null AND ps2.key = '%s' AND ps2.value = '%s'))",
 						command.getValue(),
 						command.getKey(),
 						command.getValue());
@@ -155,24 +154,26 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 			whereClause = QueryHelper.getWhereClause("", conditions);
 		}
 		
-		int rowsCount = employeeRepository.getRowsCountBySql(getRowsCountSyntax(whereClause)).intValue();
+		int rowsCount = employeeRepository.getRowsCountBySql(getRowsCountSyntax(command.getKey(), whereClause)).intValue();
 		
 		PageHelper pageHelper = new PageHelper(rowsCount, command.getRows());
 		pageHelper.setCurrentPage(command.getPage());
 		
-		List<Employee> rows = employeeRepository.getRowsBySql(getRowsSyntax(whereClause, orderByClause), pageHelper.getStart(), pageHelper.getPageSize());
+		List<Employee> rows = employeeRepository.getRowsBySql(getRowsSyntax(command.getKey(), whereClause, orderByClause), pageHelper.getStart(), pageHelper.getPageSize());
 		
 		Page page = new Page(pageHelper.getCurrentPage(), pageHelper.getPagesCount(), rowsCount, rows);
 		return JacksonHelper.getEmployeeJsonWithFilters(page);
 	}
 	
 	// TODO: refactory preferences query
-	private String getRowsSyntax(String whereClause, String orderByClause) {
-		return String.format("SELECT DISTINCT e FROM Employee e LEFT OUTER JOIN e.preferences ps1 LEFT OUTER JOIN e.job.unit.preferences ps2 WHERE e.enable=true AND %s %s", whereClause, orderByClause);
+	private String getRowsSyntax(String propertyName, String whereClause, String orderByClause) {
+		return String.format("SELECT DISTINCT e FROM Employee e LEFT OUTER JOIN e.preferences ps1 WITH ps1.key = '%s' LEFT OUTER JOIN e.job.unit.preferences ps2 WHERE e.enable=true AND %s %s",
+				propertyName, whereClause, orderByClause);
 	}
 	
-	private String getRowsCountSyntax(String whereClause) {
-		return String.format("SELECT COUNT(DISTINCT e) FROM Employee e LEFT OUTER JOIN e.preferences ps1 LEFT OUTER JOIN e.job.unit.preferences ps2 WHERE e.enable=true AND %s", whereClause);
+	private String getRowsCountSyntax(String propertyName, String whereClause) {
+		return String.format("SELECT COUNT(DISTINCT e) FROM Employee e LEFT OUTER JOIN e.preferences ps1 WITH ps1.key = '%s' LEFT OUTER JOIN e.job.unit.preferences ps2 WHERE e.enable=true AND %s",
+				propertyName, whereClause);
 	}
 
 	@Override
