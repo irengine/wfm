@@ -6,6 +6,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 import com.kwchina.wfm.domain.model.employee.TimeSheet.ActionType;
+import com.kwchina.wfm.infrastructure.common.DateHelper;
 
 public class SaveLeaveEventCommand extends ActionCommand {
 
@@ -16,6 +17,7 @@ public class SaveLeaveEventCommand extends ActionCommand {
 	private Date beginDate;
 	@DateTimeFormat(iso=ISO.DATE)
 	private Date endDate;
+	private int days;
 	private String attendanceTypeName;
 	private ActionType actionType;
 	
@@ -44,10 +46,18 @@ public class SaveLeaveEventCommand extends ActionCommand {
 		this.beginDate = beginDate;
 	}
 	public Date getEndDate() {
+		if (null == endDate)
+			endDate = DateHelper.addDay(beginDate, days - 1);
 		return endDate;
 	}
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
+	}
+	public int getDays() {
+		return days;
+	}
+	public void setDays(int days) {
+		this.days = days;
 	}
 	public String getAttendanceTypeName() {
 		return attendanceTypeName;
