@@ -25,7 +25,7 @@ public class GenerateMonthTimeSheetTask implements Runnable {
 		com.kwchina.wfm.interfaces.organization.facade.EmployeeServiceFacade employeeService = springContext.getBean(com.kwchina.wfm.interfaces.organization.facade.EmployeeServiceFacade.class);
 
         try {
-			employeeService.generateMonthTimeSheet(DateHelper.getString(DateHelper.getMonth()));
+			employeeService.generateMonthTimeSheet(DateHelper.getString(DateHelper.getFinancialMonth()));
 		}
         catch(Exception e) {
         	logger.error(e.getMessage());

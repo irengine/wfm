@@ -414,7 +414,7 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 			leaveEventRepository.save(event);
 			
 			Calendar c = Calendar.getInstance();
-			c.setTime(command.getBeginDate());
+			c.setTime(DateHelper.getFinancialMonth(command.getBeginDate()));
 			
 			List<Date> days = DateHelper.getDaysOfMonth(c.get(Calendar.YEAR), c.get(Calendar.MONTH), command.getBeginDate(), command.getEndDate());
 			

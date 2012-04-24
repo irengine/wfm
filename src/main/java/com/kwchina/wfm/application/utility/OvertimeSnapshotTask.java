@@ -23,7 +23,7 @@ public class OvertimeSnapshotTask implements Runnable {
 		logger.info("OvertimeSnapshotTask {} executed.", name);
 		try {
 			com.kwchina.wfm.interfaces.organization.facade.EmployeeServiceFacade employeeService = springContext.getBean(com.kwchina.wfm.interfaces.organization.facade.EmployeeServiceFacade.class);
-			employeeService.calculateOvertime(DateHelper.getMonth());
+			employeeService.calculateOvertime(DateHelper.getFinancialMonth());
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}
