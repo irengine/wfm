@@ -10,6 +10,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import com.kwchina.wfm.domain.model.employee.Employee;
 import com.kwchina.wfm.domain.model.organization.Unit;
 import com.kwchina.wfm.domain.model.organization.User;
+import com.kwchina.wfm.domain.model.shift.AttendanceType;
 
 public class JacksonHelper {
 	
@@ -22,6 +23,12 @@ public class JacksonHelper {
     @JsonIgnoreProperties({"preferences"})
     @JsonPropertyOrder(value={})
 	private interface CommonUserFilter {
+		
+	}
+    
+    @JsonIgnoreProperties({"preferences"})
+    @JsonPropertyOrder(value={})
+	private interface CommonAttendanceTypeFilter {
 		
 	}
     
@@ -63,6 +70,7 @@ public class JacksonHelper {
     	filters.put(Unit.class, CommonUnitFilter.class);
     	filters.put(User.class, CommonUserFilter.class);
     	filters.put(Employee.class, CommonEmployeeFilter.class);
+    	filters.put(AttendanceType.class, CommonAttendanceTypeFilter.class);
     	
     	return getJsonWithFilters(o, filters);
     }

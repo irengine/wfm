@@ -31,7 +31,7 @@ public class JpaConfiguration extends JdbcConfiguration {
 	@Bean
 	public JpaVendorAdapter jpaVendorAdapter() {
 		HibernateJpaVendorAdapter jva = new HibernateJpaVendorAdapter();
-		jva.setShowSql(true);
+		jva.setShowSql(false);
 		jva.setGenerateDdl(false);
 		jva.setDatabasePlatform(this.getPlatform());
 		return jva;
