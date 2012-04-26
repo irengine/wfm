@@ -26,17 +26,36 @@ public class JacksonHelper {
 		
 	}
     
-    @JsonIgnoreProperties({"preferences"})
-    @JsonPropertyOrder(value={})
-	private interface CommonAttendanceTypeFilter {
-		
-	}
-    
     @JsonIgnoreProperties({"vacations"})
     @JsonPropertyOrder(value={})
     private interface CommonEmployeeFilter {
     	
     }
+    
+    @JsonIgnoreProperties({"parent", "children", "users", "left", "right", "shiftType", "preferences"})
+    @JsonPropertyOrder(value={})
+	private interface TUnitFilter {
+		
+	}
+    
+    @JsonIgnoreProperties({"preferences"})
+    @JsonPropertyOrder(value={})
+	private interface TUserFilter {
+		
+	}
+    
+    @JsonIgnoreProperties({"vacations", "gender", "birthday", "beginDateOfWork", "beginDateOfJob", "shiftType", "job", "preferences", "enable"})
+    @JsonPropertyOrder(value={})
+    private interface TEmployeeFilter {
+    	
+    }
+    
+    @JsonIgnoreProperties({"preferences", "enable"})
+    @JsonPropertyOrder(value={})
+	private interface TAttendanceTypeFilter {
+		
+	}
+
 
     public static String getUnitJsonWithFilters(Object o) {
     	
@@ -67,10 +86,10 @@ public class JacksonHelper {
     public static String getTimeSheetJsonWithFilters(Object o) {
     	
     	Map<Class<?>, Class<?>> filters = new HashMap<Class<?>, Class<?>>();
-    	filters.put(Unit.class, CommonUnitFilter.class);
-    	filters.put(User.class, CommonUserFilter.class);
-    	filters.put(Employee.class, CommonEmployeeFilter.class);
-    	filters.put(AttendanceType.class, CommonAttendanceTypeFilter.class);
+    	filters.put(Unit.class, TUnitFilter.class);
+    	filters.put(User.class, TUserFilter.class);
+    	filters.put(Employee.class, TEmployeeFilter.class);
+    	filters.put(AttendanceType.class, TAttendanceTypeFilter.class);
     	
     	return getJsonWithFilters(o, filters);
     }
