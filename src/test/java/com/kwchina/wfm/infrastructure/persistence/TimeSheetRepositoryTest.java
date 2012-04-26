@@ -131,10 +131,13 @@ public class TimeSheetRepositoryTest {
 		TimeSheet ts1 = new TimeSheet(unit, e, date, 8, 16, at, ActionType.MONTH_PLAN);
 		timeSheetRepository.save(ts1);
 		
-		List<TimeSheet> monthTs = timeSheetRepository.getMonthTimeSheet(day, unit, ActionType.MONTH_PLAN);
+		List<Long> unitIdList = new ArrayList<Long>();
+		unitIdList.add(unit.getId());
+		
+		List<TimeSheet> monthTs = timeSheetRepository.getMonthTimeSheet(day, unitIdList, ActionType.MONTH_PLAN);
 		assertTrue( 1 == monthTs.size());
 
-		List<TimeSheet> dayTs = timeSheetRepository.getDayTimeSheet(day, unit, ActionType.MONTH_PLAN);
+		List<TimeSheet> dayTs = timeSheetRepository.getDayTimeSheet(day, unitIdList, ActionType.MONTH_PLAN);
 		assertTrue( 1 == dayTs.size());
 	}
 	
@@ -165,22 +168,25 @@ public class TimeSheetRepositoryTest {
 		TimeSheet ts2 = new TimeSheet(unit, e, date, 8, 12, at, ActionType.MONTH_PLAN_ADJUST);
 		timeSheetRepository.save(ts2);
 		
-		List<TimeSheet> monthTs1 = timeSheetRepository.getMonthTimeSheet(day, unit, ActionType.MONTH_PLAN);
+		List<Long> unitIdList = new ArrayList<Long>();
+		unitIdList.add(unit.getId());
+		
+		List<TimeSheet> monthTs1 = timeSheetRepository.getMonthTimeSheet(day, unitIdList, ActionType.MONTH_PLAN);
 		assertTrue( 2 == monthTs1.size());
 
-		List<TimeSheet> dayTs1 = timeSheetRepository.getDayTimeSheet(day, unit, ActionType.MONTH_PLAN);
+		List<TimeSheet> dayTs1 = timeSheetRepository.getDayTimeSheet(day, unitIdList, ActionType.MONTH_PLAN);
 		assertTrue( 2 == dayTs1.size());
 
-		List<TimeSheet> monthTs2 = timeSheetRepository.getMonthTimeSheet(day, unit, ActionType.MONTH_PLAN_ADJUST);
+		List<TimeSheet> monthTs2 = timeSheetRepository.getMonthTimeSheet(day, unitIdList, ActionType.MONTH_PLAN_ADJUST);
 		assertTrue( 2 == monthTs2.size());
 
-		List<TimeSheet> dayTs2 = timeSheetRepository.getDayTimeSheet(day, unit, ActionType.MONTH_PLAN_ADJUST);
+		List<TimeSheet> dayTs2 = timeSheetRepository.getDayTimeSheet(day, unitIdList, ActionType.MONTH_PLAN_ADJUST);
 		assertTrue( 2 == dayTs2.size());
 		
-		List<TimeSheet> monthTs3 = timeSheetRepository.getMonthTimeSheet(day, unit, ActionType.MONTH_PLAN_ADJUST);
+		List<TimeSheet> monthTs3 = timeSheetRepository.getMonthTimeSheet(day, unitIdList, ActionType.MONTH_PLAN_ADJUST);
 		assertTrue( 2 == monthTs3.size());
 
-		List<TimeSheet> dayTs3 = timeSheetRepository.getDayTimeSheet(day, unit, ActionType.MONTH_PLAN_ADJUST);
+		List<TimeSheet> dayTs3 = timeSheetRepository.getDayTimeSheet(day, unitIdList, ActionType.MONTH_PLAN_ADJUST);
 		assertTrue( 2 == dayTs3.size());
 	}
 	
@@ -211,22 +217,25 @@ public class TimeSheetRepositoryTest {
 		TimeSheet ts2 = new TimeSheet(unit, e, date, 8, 12, at, ActionType.MONTH_PLAN_ADJUST);
 		timeSheetRepository.disable(ts2);
 		
-		List<TimeSheet> monthTs1 = timeSheetRepository.getMonthTimeSheet(day, unit, ActionType.MONTH_PLAN);
+		List<Long> unitIdList = new ArrayList<Long>();
+		unitIdList.add(unit.getId());
+		
+		List<TimeSheet> monthTs1 = timeSheetRepository.getMonthTimeSheet(day, unitIdList, ActionType.MONTH_PLAN);
 		assertTrue( 2 == monthTs1.size());
 
-		List<TimeSheet> dayTs1 = timeSheetRepository.getDayTimeSheet(day, unit, ActionType.MONTH_PLAN);
+		List<TimeSheet> dayTs1 = timeSheetRepository.getDayTimeSheet(day, unitIdList, ActionType.MONTH_PLAN);
 		assertTrue( 2 == dayTs1.size());
 
-		List<TimeSheet> monthTs2 = timeSheetRepository.getMonthTimeSheet(day, unit, ActionType.MONTH_PLAN_ADJUST);
+		List<TimeSheet> monthTs2 = timeSheetRepository.getMonthTimeSheet(day, unitIdList, ActionType.MONTH_PLAN_ADJUST);
 		assertTrue( 1 == monthTs2.size());
 
-		List<TimeSheet> dayTs2 = timeSheetRepository.getDayTimeSheet(day, unit, ActionType.MONTH_PLAN_ADJUST);
+		List<TimeSheet> dayTs2 = timeSheetRepository.getDayTimeSheet(day, unitIdList, ActionType.MONTH_PLAN_ADJUST);
 		assertTrue( 1 == dayTs2.size());
 		
-		List<TimeSheet> monthTs3 = timeSheetRepository.getMonthTimeSheet(day, unit, ActionType.MONTH_PLAN_ADJUST);
+		List<TimeSheet> monthTs3 = timeSheetRepository.getMonthTimeSheet(day, unitIdList, ActionType.MONTH_PLAN_ADJUST);
 		assertTrue( 1 == monthTs3.size());
 
-		List<TimeSheet> dayTs3 = timeSheetRepository.getDayTimeSheet(day, unit, ActionType.MONTH_PLAN_ADJUST);
+		List<TimeSheet> dayTs3 = timeSheetRepository.getDayTimeSheet(day, unitIdList, ActionType.MONTH_PLAN_ADJUST);
 		assertTrue( 1 == dayTs3.size());
 		
 		

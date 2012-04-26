@@ -1,20 +1,23 @@
 package com.kwchina.wfm.interfaces.organization.web.command;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.kwchina.wfm.domain.model.employee.TimeSheet;
 
 public class QueryTimeSheetCommand {
 
-	private Long unitId;
+//	private Long unitId;
 	private String date;
 	private TimeSheet.ActionType actionType;
 	private String unitIds;
 	
-	public Long getUnitId() {
-		return unitId;
-	}
-	public void setUnitId(Long unitId) {
-		this.unitId = unitId;
-	}
+//	public Long getUnitId() {
+//		return unitId;
+//	}
+//	public void setUnitId(Long unitId) {
+//		this.unitId = unitId;
+//	}
 	public String getDate() {
 		return date;
 	}
@@ -32,6 +35,16 @@ public class QueryTimeSheetCommand {
 	}
 	public void setUnitIds(String unitIds) {
 		this.unitIds = unitIds;
+	}
+	
+	public List<Long> getUnitIdList() {
+		String[] idArray = unitIds.split(",");
+		List<Long> idList = new ArrayList<Long>(); 
+		for(String unitId : idArray) {
+			idList.add(Long.parseLong(unitId));
+		}
+		
+		return idList;
 	}
 
 }
