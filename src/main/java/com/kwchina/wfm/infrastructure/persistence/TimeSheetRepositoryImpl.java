@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TemporalType;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -50,6 +51,33 @@ public class TimeSheetRepositoryImpl extends BaseRepositoryImpl<TimeSheet> imple
 	@Autowired
 	AttendanceTypeRepository attendanceTypeRepository;
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public void generateDayTimeSheet(String today) {
+	
+		List<Date> days = DateHelper.getRemainingDaysOfMonth(DateHelper.getDate(today));
+		
+		List<Employee> employees = entityManager.createNamedQuery("employee.findAllByEffectDate")
+						.setParameter("effectDate", DateHelper.getDate(today), TemporalType.DATE)
+						.getResultList();
+		
+		for(Employee employee : employees) {
+			
+			ShiftType shiftType = null == employee.getShiftType() ? employee.getJob().getUnit().getShiftType() : employee.getShiftType();
+			
+			ShiftPolicy shiftPolicy = ShiftPolicyFactory.getInstance(shiftTypeRepository)
+									.getShiftPolicy(shiftType.getStrategyClassName(), shiftType.getStrategyClassParameters());
+			
+			for(Date day : days) {
+				AttendanceType attendanceType = shiftPolicy.getAttendanceType(day);
+				TimeSheet record = new TimeSheet(employee.getJob().getUnit(), employee, day, attendanceType.getBeginTime(), attendanceType.getEndTime(), attendanceType, TimeSheet.ActionType.MONTH_PLAN);
+				entityManager.persist(record);
+			}
+		}
+		
+		entityManager.flush();
+	}
+	
 	@Override
 	public void generateMonthTimeSheet(String month) {
 	

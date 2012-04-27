@@ -13,6 +13,7 @@ import com.kwchina.wfm.interfaces.organization.web.command.QueryTimeSheetByPrope
 
 public interface TimeSheetRepository extends BaseRepository<TimeSheet> {
 
+	void generateDayTimeSheet(String day);
 	void generateMonthTimeSheet(String month);
 //	void generateMonthTimeSheet(String month, Unit unit);
 

@@ -10,9 +10,13 @@ import javax.persistence.Embeddable;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 import com.kwchina.wfm.domain.common.ValueObject;
 import com.kwchina.wfm.domain.model.organization.Unit;
@@ -36,6 +40,8 @@ public class Job implements ValueObject<Job> {
 	
 	private JobStatus status;
 	
+	@Temporal(TemporalType.DATE)
+	@DateTimeFormat(iso=ISO.DATE)
 	private Date effectDate;
 	
 	public static Job UNKNOWN = new Job(null, null, Collections.<JobPosition>emptyList(), JobStatus.UNKNOWN, null);

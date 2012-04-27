@@ -23,11 +23,13 @@ public class Scheduler implements ServletContextListener  {
         scheduler = Executors.newScheduledThreadPool(2);
         scheduler.scheduleAtFixedRate(new ImportDataTask("Oracle", springContext), DateHelper.getNextRuntimeMinutes(1), DateHelper.MINUTES_ONE_DAY, TimeUnit.MINUTES);
         scheduler.scheduleAtFixedRate(new GenerateMonthTimeSheetTask("Month", springContext), DateHelper.getNextRuntimeMinutes(1), DateHelper.MINUTES_ONE_DAY, TimeUnit.MINUTES);
+        scheduler.scheduleAtFixedRate(new GenerateDayTimeSheetTask("Day", springContext), DateHelper.getNextRuntimeMinutes(2), DateHelper.MINUTES_ONE_DAY, TimeUnit.MINUTES);
         scheduler.scheduleAtFixedRate(new VacationSnapshotTask("Vacation", springContext), DateHelper.getNextRuntimeMinutes(23), DateHelper.MINUTES_ONE_DAY, TimeUnit.MINUTES);
         scheduler.scheduleAtFixedRate(new OvertimeSnapshotTask("Overtime", springContext), DateHelper.getNextRuntimeMinutes(23), DateHelper.MINUTES_ONE_DAY, TimeUnit.MINUTES);
         
         scheduler.schedule(new ImportDataTask("Oracle", springContext), 1, TimeUnit.MINUTES);
         scheduler.schedule(new GenerateMonthTimeSheetTask("Month", springContext), 1, TimeUnit.MINUTES);
+        scheduler.schedule(new GenerateDayTimeSheetTask("Day", springContext), 3, TimeUnit.MINUTES);
         scheduler.schedule(new VacationSnapshotTask("Vacation", springContext), 2, TimeUnit.MINUTES);
         scheduler.schedule(new OvertimeSnapshotTask("Overtime", springContext), 2, TimeUnit.MINUTES);
 

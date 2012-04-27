@@ -15,6 +15,7 @@ import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TemporalType;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -175,6 +176,16 @@ public class EmployeeRepositoryTest {
 				.setParameter("key", "xxx")
 				.getResultList();
 		assertTrue(0 == es.size());
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testGetEmployeesByEffectDate() {
+		
+		List<Employee> es= entityManager.createNamedQuery("employee.findAllByEffectDate")
+				.setParameter("effectDate", DateHelper.getDate("2012-04-24"), TemporalType.DATE)
+				.getResultList();
+		assertTrue(0 < es.size());
 	}
 	
 	@Test

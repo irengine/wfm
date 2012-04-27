@@ -40,6 +40,7 @@ import com.kwchina.wfm.domain.model.shift.ShiftType;
 	@NamedQuery(name = "employee.findByCode", query = "SELECT e FROM Employee e WHERE e.employeeId.id = :code"),
 	@NamedQuery(name = "employee.findByUnitId", query = "SELECT e FROM Employee e WHERE e.enable = true and e.job.unit.id = :unitId order by e.employeeId"),
 	@NamedQuery(name = "employee.findAll", query = "SELECT e FROM Employee e WHERE e.enable = true order by e.employeeId"),
+	@NamedQuery(name = "employee.findAllByEffectDate", query = "SELECT e FROM Employee e WHERE e.job.effectDate = :effectDate"),
 	@NamedQuery(name = "employee.findAllByUnitId", query = "SELECT e FROM Employee e, Unit u WHERE e.enable = true and u.id = :unitId AND u.left <= e.job.unit.left AND u.right >= e.job.unit.right order by e.employeeId")
 })
 public class Employee implements com.kwchina.wfm.domain.common.Entity<Employee>, PreferenceGetter {

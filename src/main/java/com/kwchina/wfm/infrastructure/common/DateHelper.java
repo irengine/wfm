@@ -102,12 +102,22 @@ public class DateHelper {
 	// TODO: move begin date and end date into system properties
 	private static int DAY_OF_MONTH = 26;
 	
+	// parameter should already be financial month
 	public static List<Date> getDaysOfMonth(String d) {
 		Date date = getDate(d);
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(date);
 		
 		return getDaysOfMonth(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH));
+	}
+	
+	public static List<Date> getRemainingDaysOfMonth(Date fromDate) {
+		Date financialMonth = getFinancialMonth(fromDate);
+		
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(financialMonth);
+		
+		return getDaysOfMonth(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), fromDate, getEndDateOfMonth(financialMonth));
 	}
 	
 	public static Date getFinancialMonth() {

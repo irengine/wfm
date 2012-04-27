@@ -344,6 +344,17 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 		systemActionRepository.addAction(SystemAction.ScopeType.MONTH_PLAN, month, null, null);
 		timeSheetRepository.generateMonthTimeSheet(month);
 	}
+	
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED)
+	public void generateDayTimeSheet(String day) {
+		
+		if( 0 != systemActionRepository.getActions(SystemAction.ScopeType.DAY_PLAN, day).size())
+			return;
+		
+		systemActionRepository.addAction(SystemAction.ScopeType.DAY_PLAN, day, null, null);
+		timeSheetRepository.generateDayTimeSheet(day);
+	}
 
 	@Override
 	@Transactional(propagation=Propagation.REQUIRED)
