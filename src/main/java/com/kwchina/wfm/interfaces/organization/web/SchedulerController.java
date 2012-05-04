@@ -9,6 +9,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,11 +84,15 @@ public class SchedulerController {
 	}
 	
 	@RequestMapping(value = "/taskGenerateMonthTimeSheet", method = RequestMethod.GET)
-	public void generateMonthTimeSheet() {
+	public void generateMonthTimeSheet(HttpServletRequest request) {
 		logger.info("GenerateMonthTimeSheetTask executed.");
 		
+		String executeDate = request.getParameter("executeDate");
+		if (StringUtils.isEmpty(executeDate))
+			executeDate = DateHelper.getString(DateHelper.getFinancialMonth());
+		
         try {
-			employeeService.generateMonthTimeSheet(DateHelper.getString(DateHelper.getFinancialMonth()));
+			employeeService.generateMonthTimeSheet(executeDate);
 		}
         catch(Exception e) {
         	logger.error(e.getMessage());
@@ -95,11 +102,15 @@ public class SchedulerController {
 	}
 	
 	@RequestMapping(value = "/taskGenerateDayTimeSheet", method = RequestMethod.GET)
-	public void generateDayTimeSheet() {
+	public void generateDayTimeSheet(HttpServletRequest request) {
 		logger.info("GenerateDayTimeSheetTask executed.");
 		
+		String executeDate = request.getParameter("executeDate");
+		if (StringUtils.isEmpty(executeDate))
+			executeDate = DateHelper.getString(new Date());
+		
         try {
-			employeeService.generateDayTimeSheet(DateHelper.getString(new Date()));
+			employeeService.generateDayTimeSheet(executeDate);
 		}
         catch(Exception e) {
         	logger.error(e.getMessage());
@@ -109,21 +120,30 @@ public class SchedulerController {
 	}
 	
 	@RequestMapping(value = "/taskVacationSnapshot", method = RequestMethod.GET)
-	public void vacationSnapshot() {
-		
+	public void vacationSnapshot(HttpServletRequest request) {
 		logger.info("VacationSnapshotTask executed.");
+		
+		String executeDate = request.getParameter("executeDate");
+		if (StringUtils.isEmpty(executeDate))
+			executeDate = DateHelper.getString(DateHelper.getFinancialMonth());
+		
 		try {
-			employeeService.calculateVacation(DateHelper.getFinancialMonth());
+			employeeService.calculateVacation(DateHelper.getDate(executeDate));
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}
 	}
 	
 	@RequestMapping(value = "/taskOvertimeSnapshot", method = RequestMethod.GET)
-	public void overtimeSnapshot() {
+	public void overtimeSnapshot(HttpServletRequest request) {
 		logger.info("OvertimeSnapshotTask executed.");
+		
+		String executeDate = request.getParameter("executeDate");
+		if (StringUtils.isEmpty(executeDate))
+			executeDate = DateHelper.getString(DateHelper.getFinancialMonth());
+		
 		try {
-			employeeService.calculateOvertime(DateHelper.getFinancialMonth());
+			employeeService.calculateOvertime(DateHelper.getDate(executeDate));
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}
