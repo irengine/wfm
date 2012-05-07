@@ -88,7 +88,7 @@ public class EmployeeRepositoryImpl extends BaseRepositoryImpl<Employee> impleme
 				"ifnull(case when month('%s') = 1 then lastBalance + balance - amount when month('%s') > 3 then 0 else lastbalance end, 0), " +
 				"ifnull(case when month('%s') = 1 then getVacationDays(e.beginDateOfWork, '%s') else v.balance end, 0) as balance, " +
 				"0 as amount " +
-				"from t_employees e left join (select * from t_employee_vacations where month = date_sub('%s', INTERVAL 1 MONTH)) v on e.Id = v.employeeId ", 
+				"from t_employees e left join (select * from t_employee_vacations where month = date_sub('%s', INTERVAL 1 MONTH) and type = 'ANNUAL_LEAVE') v on e.Id = v.employeeId ", 
 				DateHelper.getString(currentMonth), 
 				DateHelper.getString(currentMonth), 
 				DateHelper.getString(currentMonth), 
