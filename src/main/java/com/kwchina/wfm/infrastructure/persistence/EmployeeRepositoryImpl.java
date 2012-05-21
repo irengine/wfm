@@ -105,8 +105,8 @@ public class EmployeeRepositoryImpl extends BaseRepositoryImpl<Employee> impleme
 				"set v.amount = ts.cnt " +
 				"where v.month = '%s' ",
 				vacationId, 
-				DateHelper.getBeginDateOfMonth(currentMonth), 
-				DateHelper.getBeginDateOfMonth(currentMonth), 
+				DateHelper.getString(DateHelper.getBeginDateOfMonth(currentMonth)), 
+				DateHelper.getString(DateHelper.getBeginDateOfMonth(currentMonth)), 
 				DateHelper.getString(currentMonth));
 		
 		jdbcTemplate.batchUpdate(new String [] {deleteSql, createSql, updateSql});
