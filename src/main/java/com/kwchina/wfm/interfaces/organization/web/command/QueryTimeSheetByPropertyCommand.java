@@ -50,6 +50,16 @@ public class QueryTimeSheetByPropertyCommand {
 		this.attendanceTypeIds = attendanceTypeIds;
 	}
 	
+	public List<Long> getUnitIdList() {
+		String[] idArray = unitIds.split(",");
+		List<Long> idList = new ArrayList<Long>(); 
+		for(String unitId : idArray) {
+			idList.add(Long.parseLong(unitId));
+		}
+		
+		return idList;
+	}
+	
 	public String toSQL(Long leftId, Long rightId) {
 		List<String> firstConditions = new ArrayList<String>();
 		List<String> secondConditions = new ArrayList<String>();

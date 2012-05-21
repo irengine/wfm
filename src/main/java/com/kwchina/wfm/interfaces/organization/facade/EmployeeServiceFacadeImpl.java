@@ -3,6 +3,7 @@ package com.kwchina.wfm.interfaces.organization.facade;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -458,14 +459,29 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 	@Override
 	@Transactional(propagation=Propagation.REQUIRED)
 	public String queryEmployeesAbsentTimeSheetWithJson(QueryTimeSheetByPropertyCommand command) {
-		List<AttendanceType> ats = attendanceTypeRepository.findByProperty(command.getPropertyName(), "true");
-		List<String> atIds = new ArrayList<String>();
-		for (AttendanceType at : ats) {
-			atIds.add(at.getId().toString());
-		}
-		command.setattendanceTypeIds(StringUtils.join(atIds, ","));
+
+		List<String> holidays = SystemPreferenceFactory.getInstance(systemPreferenceRepository).getHolidays();
+		int months = DateHelper.monthsBetween(DateHelper.getDate(command.getBeginTime()), DateHelper.getDate(command.getEndTime()));
 		
-		return JacksonHelper.getJson(timeSheetRepository.queryTimeSheetByProperty(command));
+		Map<String, MonthTimeSheetReport> results = new HashMap<String, MonthTimeSheetReport>();
+		for (int i = 0; i < months; i++) {
+			String month = DateHelper.getString(DateHelper.addMonth(DateHelper.getDate(command.getBeginTime()), i));
+			
+			List<Date> days = DateHelper.getDaysOfMonth(month);
+			int dailyShiftCount = shiftTypeRepository.getDailyShiftCount(days);
+			MonthTimeSheetReport report = new MonthTimeSheetReport();
+			
+			if (0 != command.getUnitIdList().size()) {
+				Set<TimeSheet> records = new LinkedHashSet<TimeSheet>();
+				List<TimeSheet> recs = timeSheetRepository.getActualMonthTimeSheet(month, command.getUnitIdList());
+				records.addAll(recs);
+				report.fill(records, days, holidays, dailyShiftCount);
+			}
+			
+			results.put(month, report);
+		}
+		
+		return JacksonHelper.getTimeSheetJsonWithFilters(results);
 	}
 	
 //	@Override

@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
+import org.joda.time.Months;
 
 public class DateHelper {
 
@@ -36,6 +37,10 @@ public class DateHelper {
 	
 	public static int daysBetween(Date past, Date today) {
 		return Days.daysBetween(new DateTime(past), new DateTime(today)).getDays();
+	}
+	
+	public static int monthsBetween(Date past, Date today) {
+		return Months.monthsBetween(new DateTime(past), new DateTime(today)).getMonths();
 	}
 	
 	public static List<Date> getDaysOfMonth(int year, int month) {
@@ -83,10 +88,18 @@ public class DateHelper {
 		return days;
 	}
 
-	public static Date addYear(Date day, int amount) {
+	public static Date addYear(Date year, int amount) {
 		Calendar c = Calendar.getInstance();
-		c.setTime(day);
+		c.setTime(year);
 		c.add(Calendar.YEAR, amount);
+		
+		return c.getTime();
+	}
+	
+	public static Date addMonth(Date month, int amount) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(month);
+		c.add(Calendar.MONTH, amount);
 		
 		return c.getTime();
 	}
