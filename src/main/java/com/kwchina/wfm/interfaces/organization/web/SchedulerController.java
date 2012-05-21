@@ -32,9 +32,10 @@ public class SchedulerController {
 	private static final Logger logger = LoggerFactory.getLogger(SchedulerController.class);
 	
 	@RequestMapping(value = "/taskImportData", method = RequestMethod.GET)
-	public void importData() {
+	public void importData(HttpServletRequest request) {
 		logger.info("ImportDataTask executed.");
 		
+		String executeDate = request.getParameter("executeDate");
         Connection conn = null;
 
         try {
@@ -53,7 +54,7 @@ public class SchedulerController {
 			String sql = "SELECT WORK_DATE, STAFF_ID, SHIFT_ID FROM WAG_TASK_INFO WHERE WORK_DATE = ?";
 			PreparedStatement stmt = conn.prepareStatement(sql);
 
-			Date date = DateHelper.addDay(new Date(), -1);
+			Date date = DateHelper.addDay(DateHelper.getDate(executeDate), -1);
 			stmt.setString(1, DateHelper.getString(date));
 
 			// fetch and display the results

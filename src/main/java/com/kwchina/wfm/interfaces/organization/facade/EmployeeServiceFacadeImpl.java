@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -556,17 +557,17 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 	@Transactional(propagation=Propagation.REQUIRED)
 	public void importWorkOrder(Date date, Map<String, String> orders) {
 		
-		if( 0 != systemActionRepository.getActions(SystemAction.ScopeType.IMPORT, DateHelper.getString(date)).size())
-			return;
+//		if( 0 != systemActionRepository.getActions(SystemAction.ScopeType.IMPORT, DateHelper.getString(date)).size())
+//			return;
 		
-		systemActionRepository.addAction(SystemAction.ScopeType.IMPORT, DateHelper.getString(date), null, null);
+		systemActionRepository.addAction(SystemAction.ScopeType.IMPORT, DateHelper.getString(date), null, DateTime.now().toString());
 		
 		List<Employee> list = employeeRepository.findAll();
 		
 		workOrderRepository.removeAll(date);
 		
 		for (Employee employee : list) {
-			if (ReportHelper.isIncludePreference(employee, ReportHelper.REPORT_COLUMN_SHIFT) || ReportHelper.isIncludePreference(employee.getJob().getUnit(), ReportHelper.REPORT_COLUMN_SHIFT)) {
+			if (ReportHelper.isIncludePreference(employee, ReportHelper.REPORT_COLUMN_IMPORT) || ReportHelper.isIncludePreference(employee.getJob().getUnit(), ReportHelper.REPORT_COLUMN_IMPORT)) {
 				
 				if (orders.containsKey(employee.getEmployeeId().toString())) {
 					WorkOrder workOrder = new WorkOrder(DateHelper.getString(date), employee.getEmployeeId().toString(), orders.get(employee.getEmployeeId().toString()));
