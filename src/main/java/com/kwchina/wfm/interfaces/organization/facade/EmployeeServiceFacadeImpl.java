@@ -480,6 +480,8 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 			}
 			
 			results.put(month, report);
+			report.setData(null);
+			report.setDays(null);
 		}
 		
 		return JacksonHelper.getTimeSheetJsonWithFilters(results);

@@ -22,6 +22,7 @@ public class MonthTimeSheetReport {
 	private static final Logger logger = LoggerFactory.getLogger(SystemController.class);
 
 	
+	private Map<String, TimeSheet> info = new HashMap<String, TimeSheet>();
 	private Map<String, Map<String, Set<TimeSheet>>> data = new HashMap<String, Map<String, Set<TimeSheet>>>();
 	private Map<String, Map<String, Float>> summary = new HashMap<String, Map<String, Float>>();
 	private List<Date> days;
@@ -30,6 +31,14 @@ public class MonthTimeSheetReport {
 		
 	}
 	
+	public Map<String, TimeSheet> getInfo() {
+		return info;
+	}
+
+	public void setInfo(Map<String, TimeSheet> info) {
+		this.info = info;
+	}
+
 	public Map<String, Map<String, Set<TimeSheet>>> getData() {
 		return data;
 	}
@@ -75,6 +84,9 @@ public class MonthTimeSheetReport {
 			// Time Sheet detail data
 			if (!getData().containsKey(key)) {
 				getData().put(key, getDataRows(days));
+			}
+			if (!getInfo().containsKey(key)) {
+				getInfo().put(key, ts);
 			}
 			getData().get(key).get(DateHelper.getString(ts.getDate())).add(ts);
 			
