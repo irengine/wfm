@@ -3,12 +3,12 @@ package com.kwchina.wfm.interfaces.organization.facade;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
@@ -464,7 +464,7 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 		List<String> holidays = SystemPreferenceFactory.getInstance(systemPreferenceRepository).getHolidays();
 		int months = DateHelper.monthsBetween(DateHelper.getDate(command.getBeginTime()), DateHelper.getDate(command.getEndTime()));
 		
-		Map<String, MonthTimeSheetReport> results = new HashMap<String, MonthTimeSheetReport>();
+		Map<String, MonthTimeSheetReport> results = new TreeMap<String, MonthTimeSheetReport>();
 		for (int i = 0; i < months; i++) {
 			String month = DateHelper.getString(DateHelper.addMonth(DateHelper.getDate(command.getBeginTime()), i));
 			
@@ -479,9 +479,9 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 				report.fill(records, days, holidays, dailyShiftCount);
 			}
 			
-			results.put(month, report);
 			report.setData(null);
 			report.setDays(null);
+			results.put(month, report);
 		}
 		
 		return JacksonHelper.getTimeSheetJsonWithFilters(results);
