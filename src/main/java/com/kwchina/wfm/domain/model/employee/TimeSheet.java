@@ -17,6 +17,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
@@ -70,11 +71,13 @@ public class TimeSheet implements com.kwchina.wfm.domain.common.Entity<TimeSheet
 	@Column(nullable=false)
 	@Temporal(TemporalType.TIMESTAMP)
 	@DateTimeFormat(iso=ISO.DATE_TIME)
+	@JsonSerialize(using=com.kwchina.wfm.interfaces.common.CustomDateSerializer.class)
 	private Date createdAt;
 	
 	@Column(nullable=false)
 	@Temporal(TemporalType.TIMESTAMP)
 	@DateTimeFormat(iso=ISO.DATE_TIME)
+	@JsonSerialize(using=com.kwchina.wfm.interfaces.common.CustomDateSerializer.class)
 	private Date updatedAt;
 	
 	@Column(nullable=false)
