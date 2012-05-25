@@ -20,9 +20,10 @@ import com.kwchina.wfm.interfaces.organization.web.SystemController;
 public class MonthTimeSheetReport {
 
 	private static final Logger logger = LoggerFactory.getLogger(SystemController.class);
+	
 
 	
-	private Map<String, TimeSheet> info = new HashMap<String, TimeSheet>();
+	private Map<String, EmployeeInfo> info = new HashMap<String, EmployeeInfo>();
 	private Map<String, Map<String, Set<TimeSheet>>> data = new HashMap<String, Map<String, Set<TimeSheet>>>();
 	private Map<String, Map<String, Float>> summary = new HashMap<String, Map<String, Float>>();
 	private List<Date> days;
@@ -31,11 +32,11 @@ public class MonthTimeSheetReport {
 		
 	}
 	
-	public Map<String, TimeSheet> getInfo() {
+	public Map<String, EmployeeInfo> getInfo() {
 		return info;
 	}
 
-	public void setInfo(Map<String, TimeSheet> info) {
+	public void setInfo(Map<String, EmployeeInfo> info) {
 		this.info = info;
 	}
 
@@ -86,7 +87,7 @@ public class MonthTimeSheetReport {
 				getData().put(key, getDataRows(days));
 			}
 			if (!getInfo().containsKey(key)) {
-				getInfo().put(key, ts);
+				getInfo().put(key, new EmployeeInfo(ts));
 			}
 			getData().get(key).get(DateHelper.getString(ts.getDate())).add(ts);
 			
