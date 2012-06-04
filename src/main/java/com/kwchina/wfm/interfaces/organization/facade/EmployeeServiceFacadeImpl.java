@@ -32,6 +32,7 @@ import com.kwchina.wfm.domain.model.employee.Vacation;
 import com.kwchina.wfm.domain.model.organization.Preference;
 import com.kwchina.wfm.domain.model.organization.Unit;
 import com.kwchina.wfm.domain.model.organization.UnitRepository;
+import com.kwchina.wfm.domain.model.organization.User;
 import com.kwchina.wfm.domain.model.shift.AttendanceType;
 import com.kwchina.wfm.domain.model.shift.AttendanceTypeRepository;
 import com.kwchina.wfm.domain.model.shift.ShiftType;
@@ -44,6 +45,7 @@ import com.kwchina.wfm.domain.model.system.SystemAction;
 import com.kwchina.wfm.domain.model.system.SystemActionRepository;
 import com.kwchina.wfm.infrastructure.common.DateHelper;
 import com.kwchina.wfm.infrastructure.common.PropertiesHelper;
+import com.kwchina.wfm.infrastructure.common.SecurityHelper;
 import com.kwchina.wfm.interfaces.common.JacksonHelper;
 import com.kwchina.wfm.interfaces.common.Page;
 import com.kwchina.wfm.interfaces.common.PageHelper;
@@ -101,6 +103,14 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 		List<String> conditions = new ArrayList<String>();
 		if (!StringUtils.isEmpty(command.getUnitId())) {
 			Unit unit = unitRepository.findById(Long.parseLong(command.getUnitId()));
+			String left = String.format("job.unit.left >= %d", unit.getLeft());
+			conditions.add(left);
+			String right = String.format("job.unit.right <= %d", unit.getRight());
+			conditions.add(right);
+		}
+		else {
+			User user = SecurityHelper.getCurrentUser();
+			Unit unit = user.getRootUnit();
 			String left = String.format("job.unit.left >= %d", unit.getLeft());
 			conditions.add(left);
 			String right = String.format("job.unit.right <= %d", unit.getRight());

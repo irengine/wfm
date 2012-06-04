@@ -219,6 +219,20 @@ public class User implements com.kwchina.wfm.domain.common.Entity<User> {
 	public boolean validatePassword(String pwd) {
 		return this.encryptedPassword.equals(SecurityHelper.encrypt(pwd));
 	}
+	
+	public Unit getRootUnit()
+	{
+		Unit root = null;
+		Long rightId = new Long(-1);
+		
+		for(Unit unit : units) {
+			if (unit.getRight() > rightId) {
+				root = unit;
+			}
+		}
+		
+		return root;
+	}
 
 	@Override
 	public boolean sameIdentityAs(final User other) {
