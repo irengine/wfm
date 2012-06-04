@@ -110,11 +110,13 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 		}
 		else {
 			User user = SecurityHelper.getCurrentUser();
-			Unit unit = user.getRootUnit();
-			String left = String.format("job.unit.left >= %d", unit.getLeft());
-			conditions.add(left);
-			String right = String.format("job.unit.right <= %d", unit.getRight());
-			conditions.add(right);
+			List<String> unitConditions = new ArrayList<String>();
+			for(Unit unit : user.getUnits())
+			{
+				String unitCondition = String.format("(job.unit.left >= %d and job.unit.right <= %d)", unit.getLeft(), unit.getRight());
+				unitConditions.add(unitCondition);
+			}
+			conditions.add("(" + StringUtils.join(unitConditions, " or ") + ")");
 		}
 		
 		String whereClause = "";

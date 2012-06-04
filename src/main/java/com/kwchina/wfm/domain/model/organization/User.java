@@ -228,6 +228,7 @@ public class User implements com.kwchina.wfm.domain.common.Entity<User> {
 		for(Unit unit : units) {
 			if (unit.getRight() > rightId) {
 				root = unit;
+				rightId = unit.getRight();
 			}
 		}
 		
