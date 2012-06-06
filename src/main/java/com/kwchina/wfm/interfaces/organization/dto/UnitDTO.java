@@ -1,15 +1,15 @@
 package com.kwchina.wfm.interfaces.organization.dto;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.LinkedHashSet;
 
 import com.kwchina.wfm.domain.model.organization.Unit;
 
 public class UnitDTO {
 	
-	private HashMap<String, String> attr = new HashMap<String, String>();
-	private String data;
+	private String id;
+	private String text;
+	
 	private Collection<UnitDTO> children = new LinkedHashSet<UnitDTO>();
 	
 	public UnitDTO() {
@@ -22,25 +22,25 @@ public class UnitDTO {
 
 	public UnitDTO(Unit root, Collection<Unit> units) {
 		setId(root.getId().toString());
-		setData(root.getName());
+		setText(root.getName());
 		
 		copy(root, null, units);
 	}
+	
+	public String getId() {
+		return id;
+	}
 
 	public void setId(String id) {
-		attr.put("id", id);
+		this.id = id;
 	}
 
-	public HashMap<String, String> getAttr() {
-		return attr;
+	public String getText() {
+		return text;
 	}
 
-	public String getData() {
-		return data;
-	}
-
-	public void setData(String data) {
-		this.data = data;
+	public void setText(String text) {
+		this.text = text;
 	}
 
 	public Collection<UnitDTO> getChildren() {
@@ -72,7 +72,7 @@ public class UnitDTO {
 	public void copy(Unit unit)
 	{
 		setId(unit.getId().toString());
-		setData(unit.getName());
+		setText(unit.getName());
 		for(Unit child : unit.getChildren()) {
 			// TODO: using filter instead
 			if (child.isEnable()) {

@@ -31,7 +31,7 @@ public class UnitDTOTest {
 	public void testSerializeUnitDTO() throws JsonGenerationException, JsonMappingException, IOException {
 		UnitDTO uo = new UnitDTO();
 		uo.setId("1");
-		uo.setData("Shanghai");
+		uo.setText("Shanghai");
 		
 		StringWriter sw = new StringWriter();
 
