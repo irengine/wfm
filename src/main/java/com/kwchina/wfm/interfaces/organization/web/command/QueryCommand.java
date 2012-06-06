@@ -5,8 +5,8 @@ public class QueryCommand {
 	private String unitId;
 	private int page;
 	private int rows;
-	private String sidx;
-	private String sord;
+	private String sort;
+	private String order;
 	private String search;
 	private String filters;
 	
@@ -28,17 +28,17 @@ public class QueryCommand {
 	public void setRows(int rows) {
 		this.rows = rows;
 	}
-	public String getSidx() {
-		return sidx;
+	public String getSort() {
+		return sort;
 	}
-	public void setSidx(String sidx) {
-		this.sidx = sidx;
+	public void setSort(String sort) {
+		this.sort = sort;
 	}
-	public String getSord() {
-		return sord;
+	public String getOrder() {
+		return order;
 	}
-	public void setSord(String sord) {
-		this.sord = sord;
+	public void setOrder(String order) {
+		this.order = order;
 	}
 	public String getSearch() {
 		return search;
@@ -59,8 +59,8 @@ public class QueryCommand {
 	    	.append("Unit: ").append(this.getUnitId()).append("\n")
 	    	.append("Page: ").append(this.getPage()).append("\n")
 	    	.append("Rows: ").append(this.getRows()).append("\n")
-	    	.append("Index: ").append(this.getSidx()).append("\n")
-	    	.append("Sort: ").append(this.getSord()).append("\n")
+	    	.append("Index: ").append(this.getSort()).append("\n")
+	    	.append("Sort: ").append(this.getOrder()).append("\n")
 	    	.append("Search: ").append(this.getSearch()).append("\n")
 	    	.append("Filters: ").append(this.getFilters()).append("\n");
 

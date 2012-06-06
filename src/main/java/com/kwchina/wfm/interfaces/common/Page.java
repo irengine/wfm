@@ -5,16 +5,16 @@ import java.util.List;
 public class Page {
 	
 	private int page;
+	private int totalPages;
 	private int total;
-	private int records;
 	@SuppressWarnings("rawtypes")
 	private List rows;
 	
 	@SuppressWarnings("rawtypes")
-	public Page(int page, int total, int records, List rows) {
+	public Page(int page, int totalPages, int total, List rows) {
 		this.page = page;
+		this.totalPages = totalPages;
 		this.total = total;
-		this.records = records;
 		this.rows = rows;
 	}
 	
@@ -26,20 +26,20 @@ public class Page {
 		this.page = page;
 	}
 	
+	public int getTotalPages() {
+		return totalPages;
+	}
+	
+	public void setTotalPages(int totalPages) {
+		this.totalPages = totalPages;
+	}
+	
 	public int getTotal() {
 		return total;
 	}
 	
 	public void setTotal(int total) {
 		this.total = total;
-	}
-	
-	public int getRecords() {
-		return records;
-	}
-	
-	public void setRecords(int records) {
-		this.records = records;
 	}
 	
 	@SuppressWarnings("rawtypes")

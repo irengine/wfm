@@ -219,7 +219,7 @@ public class SystemServiceFacadeImpl implements SystemServiceFacade {
 	public String queryAttendanceTypesWithJson(QueryCommand command) {
 		List<String> conditions = new ArrayList<String>();
 		String whereClause = "";
-		String orderByClause = String.format(" ORDER BY %s %s ", command.getSidx(), command.getSord());
+		String orderByClause = String.format(" ORDER BY %s %s ", command.getSort(), command.getOrder());
 		
 		if (Boolean.parseBoolean(command.getSearch())) {
 			whereClause = QueryHelper.getWhereClause(command.getFilters(), conditions);
@@ -278,7 +278,7 @@ public class SystemServiceFacadeImpl implements SystemServiceFacade {
 	public String queryShiftTypesWithJson(QueryCommand command) {
 		List<String> conditions = new ArrayList<String>();
 		String whereClause = "";
-		String orderByClause = String.format(" ORDER BY %s %s ", command.getSidx(), command.getSord());
+		String orderByClause = String.format(" ORDER BY %s %s ", command.getSort(), command.getOrder());
 		
 		if (Boolean.parseBoolean(command.getSearch())) {
 			whereClause = QueryHelper.getWhereClause(command.getFilters(), conditions);

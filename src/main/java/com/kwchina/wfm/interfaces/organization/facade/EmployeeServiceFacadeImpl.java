@@ -120,7 +120,7 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 		}
 		
 		String whereClause = "";
-		String orderByClause = String.format(" ORDER BY %s %s ", command.getSidx(), command.getSord());
+		String orderByClause = String.format(" ORDER BY %s %s ", command.getSort(), command.getOrder());
 		
 		if (Boolean.parseBoolean(command.getSearch())) {
 			whereClause = QueryHelper.getWhereClause(command.getFilters(), conditions);
@@ -159,7 +159,7 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 		conditions.add(propertyCondition);
 		
 		String whereClause = "";
-		String orderByClause = String.format(" ORDER BY %s %s ", command.getSidx(), command.getSord());
+		String orderByClause = String.format(" ORDER BY %s %s ", command.getSort(), command.getOrder());
 		
 		if (Boolean.parseBoolean(command.getSearch())) {
 			whereClause = QueryHelper.getWhereClause(command.getFilters(), conditions);
