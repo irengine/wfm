@@ -7,12 +7,16 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.kwchina.wfm.domain.common.BaseRepository;
 import com.kwchina.wfm.infrastructure.common.ReflectHelper;
 
 public abstract class BaseRepositoryImpl<T> implements BaseRepository<T> {
 
+	private static final Logger logger = LoggerFactory.getLogger(BaseRepository.class);
+			
 	@PersistenceContext
 	private EntityManager entityManager;
 
@@ -60,6 +64,9 @@ public abstract class BaseRepositoryImpl<T> implements BaseRepository<T> {
 			else
 				syntax = String.format("FROM %s WHERE enable=true AND %s %s", getEntityName(), whereClause, orderByClause);
 		}
+		
+		logger.debug(syntax);
+		
 		return syntax;
 	}
 	
