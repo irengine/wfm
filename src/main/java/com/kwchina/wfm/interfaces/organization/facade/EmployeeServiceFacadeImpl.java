@@ -116,7 +116,8 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 				String unitCondition = String.format("(job.unit.left >= %d and job.unit.right <= %d)", unit.getLeft(), unit.getRight());
 				unitConditions.add(unitCondition);
 			}
-			conditions.add("(" + StringUtils.join(unitConditions, " or ") + ")");
+			if (!unitConditions.isEmpty())
+				conditions.add("(" + StringUtils.join(unitConditions, " or ") + ")");
 		}
 		
 		String whereClause = "";
