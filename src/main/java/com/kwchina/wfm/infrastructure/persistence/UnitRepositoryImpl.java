@@ -43,6 +43,19 @@ public class UnitRepositoryImpl extends BaseRepositoryImpl<Unit> implements Unit
 		}
 	}
 	
+	@Override
+	public Unit findByUriName(String uriName) {
+		try {
+			Unit unit = (Unit) entityManager.createNamedQuery("unit.findByUriName")
+					.setParameter("uriName", uriName)
+					.getSingleResult();
+			return unit;
+		}
+		catch (NoResultException nre) {
+			return null;
+		}
+	}
+	
 	private Unit createRoot(String name) {
 		Unit unit = new Unit(name);
 		unit.setParent(null);

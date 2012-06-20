@@ -8,6 +8,8 @@ public interface UnitRepository extends BaseRepository<Unit> {
 	Unit getRoot(String name);
 	Unit findRoot();
 	
+	Unit findByUriName(String uriName);
+	
 	List<Unit> findAll();
 	List<Unit> findAllChildren(Unit unit);
 	List<Unit> findAllAncestor(Unit unit);
