@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.kwchina.wfm.domain.model.employee.TimeSheet;
 
-public class QueryTimeSheetCommand {
+public class QueryTimeSheetCommand extends QueryCommand {
 
 //	private Long unitId;
 	private String date;

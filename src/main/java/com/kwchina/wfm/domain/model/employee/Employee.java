@@ -2,6 +2,7 @@ package com.kwchina.wfm.domain.model.employee;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.AttributeOverride;
@@ -24,6 +25,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
@@ -105,6 +107,9 @@ public class Employee implements com.kwchina.wfm.domain.common.Entity<Employee>,
 	@ElementCollection
 	@CollectionTable(name="T_EMPLOYEE_VACATIONS", joinColumns=@JoinColumn(name="employeeId"))
     private Set<Vacation> vacations;
+	
+	@Transient
+	private Map<String, Set<TimeSheet>> dayTimeSheetMap;
 	
 //	@OneToMany
 //	private Collection<LeaveEvent> leaveEvents;
@@ -231,6 +236,14 @@ public class Employee implements com.kwchina.wfm.domain.common.Entity<Employee>,
 //	public void setLeaveEvents(Collection<LeaveEvent> leaveEvents) {
 //		this.leaveEvents = leaveEvents;
 //	}
+
+	public Map<String, Set<TimeSheet>> getDayTimeSheetMap() {
+		return dayTimeSheetMap;
+	}
+
+	public void setDayTimeSheetMap(Map<String, Set<TimeSheet>> dayTimeSheetMap) {
+		this.dayTimeSheetMap = dayTimeSheetMap;
+	}
 
 	public boolean isEnable() {
 		return enable;

@@ -85,5 +85,22 @@ public class PerformanceTest {
 		long endTime=System.currentTimeMillis();
 		System.out.println(endTime - startTime);
 	}
+	
+	@Test
+	@Transactional
+	public void testQueryMonthTimeSheetByEmployeeIds() {
+		QueryTimeSheetCommand command = new QueryTimeSheetCommand();
+		command.setDate("2012-04-01");
+		command.setActionType(ActionType.ACTUAL);
+		command.setUnitIds("58,142,226,310");
+		
+		long startTime=System.currentTimeMillis();
+		
+		List<TimeSheet> tss = timeSheetRepository.getMonthTimeSheetByEmployeeIds(command.getDate(), command.getUnitIdList(), command.getActionType());
+		System.out.println(tss.size());
+		
+		long endTime=System.currentTimeMillis();
+		System.out.println(endTime - startTime);
+	}
 
 }

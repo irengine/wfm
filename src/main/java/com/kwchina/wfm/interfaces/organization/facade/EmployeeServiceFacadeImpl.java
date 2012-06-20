@@ -302,19 +302,63 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 	@Transactional(propagation=Propagation.REQUIRED)
 	public String queryEmployeesMonthTimeSheetWithJson(QueryTimeSheetCommand command) {
 		
+		// 1.get stuffs
+		// lookup unitIds
+		List<String> conditions = new ArrayList<String>();
+		List<String> unitConditions = new ArrayList<String>();
+		for(Long unitId : command.getUnitIdList())
+		{
+			Unit unit = unitRepository.findById(unitId);
+			String unitCondition = String.format("(job.unit.left >= %d and job.unit.right <= %d)", unit.getLeft(), unit.getRight());
+			unitConditions.add(unitCondition);
+		}
+		if (!unitConditions.isEmpty())
+			conditions.add("(" + StringUtils.join(unitConditions, " or ") + ")");
+		
+		String whereClause = "";
+		String orderByClause = String.format(" ORDER BY %s %s ", command.getSort(), command.getOrder());
+		
+		if (Boolean.parseBoolean(command.getSearch())) {
+			whereClause = QueryHelper.getWhereClause(command.getFilters(), conditions);
+		}
+		else {
+			whereClause = QueryHelper.getWhereClause("", conditions);
+		}
+		
+		int rowsCount = employeeRepository.getRowsCount(whereClause).intValue();
+		
+		PageHelper pageHelper = new PageHelper(rowsCount, command.getRows());
+		pageHelper.setCurrentPage(command.getPage());
+		
+		List<Employee> rows = employeeRepository.getRows(whereClause, orderByClause, pageHelper.getStart(), pageHelper.getPageSize());
+		
+		// 2.get time sheets of stuffs
+		List<Long> employeeIds = new ArrayList<Long>();
+		
+		for(Employee e : rows)
+			employeeIds.add(e.getId());
+		
 		String month = command.getDate();
 		TimeSheet.ActionType actionType = command.getActionType();
-
 		List<Date> days = DateHelper.getDaysOfMonth(month);
-		MonthTimeSheetReport report = new MonthTimeSheetReport();
+
+		List<TimeSheet> tss = timeSheetRepository.getMonthTimeSheetByEmployeeIds(month, employeeIds, actionType);
 		
-		if (0 != command.getUnitIdList().size()) {
-			Set<TimeSheet> records = new LinkedHashSet<TimeSheet>();
-			List<TimeSheet> recs = timeSheetRepository.getMonthTimeSheet(month, command.getUnitIdList(), actionType);
-			records.addAll(recs);
-			report.fill(records, days);
+		for (TimeSheet ts : tss) {
+			Employee e = rows.get(rows.indexOf(ts.getEmployee()));
+			if (e.getDayTimeSheetMap() == null || e.getDayTimeSheetMap().isEmpty()) {
+				Map<String, Set<TimeSheet>> map = new TreeMap<String, Set<TimeSheet>>();
+				for (Date day : days) {
+					map.put(DateHelper.getString(day), new LinkedHashSet<TimeSheet>());
+				}
+				e.setDayTimeSheetMap(map);
+			}
+			e.getDayTimeSheetMap().get(DateHelper.getString(ts.getDate())).add(ts);
 		}
-		return JacksonHelper.getTimeSheetJsonWithFilters(report);
+		
+		// 3.render
+		Page page = new Page(pageHelper.getCurrentPage(), pageHelper.getPagesCount(), rowsCount, rows);
+		return JacksonHelper.getTimeSheetJsonWithFilters(page);
 	}
 
 	@Override

@@ -8,6 +8,7 @@ import org.codehaus.jackson.annotate.JsonPropertyOrder;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import com.kwchina.wfm.domain.model.employee.Employee;
+import com.kwchina.wfm.domain.model.employee.TimeSheet;
 import com.kwchina.wfm.domain.model.organization.Unit;
 import com.kwchina.wfm.domain.model.organization.User;
 import com.kwchina.wfm.domain.model.shift.AttendanceType;
@@ -55,6 +56,12 @@ public class JacksonHelper {
 	private interface TAttendanceTypeFilter {
 		
 	}
+    
+    @JsonIgnoreProperties({"unit", "employee"})
+    @JsonPropertyOrder(value={})
+	private interface TTimeSheetFilter {
+		
+	}
 
 
     public static String getUnitJsonWithFilters(Object o) {
@@ -89,6 +96,7 @@ public class JacksonHelper {
     	filters.put(Unit.class, TUnitFilter.class);
     	filters.put(User.class, TUserFilter.class);
     	filters.put(Employee.class, TEmployeeFilter.class);
+    	filters.put(TimeSheet.class, TTimeSheetFilter.class);
     	filters.put(AttendanceType.class, TAttendanceTypeFilter.class);
     	
     	return getJsonWithFilters(o, filters);

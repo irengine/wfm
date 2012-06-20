@@ -191,6 +191,27 @@ public class TimeSheetRepositoryImpl extends BaseRepositoryImpl<TimeSheet> imple
 	
 	@Override
 	@SuppressWarnings("unchecked")
+	public List<TimeSheet> getMonthTimeSheetByEmployeeIds(String month, List<Long> employeeIds, TimeSheet.ActionType actionType) {
+		
+		Date beginDate = DateHelper.getBeginDateOfMonth(month);
+		Date endDate = DateHelper.getEndDateOfMonth(month);
+		
+		List<TimeSheet> ts = entityManager.createQuery("select ts from TimeSheet ts join fetch ts.employee te join fetch ts.unit tu join fetch ts.attendanceType " +
+							"where te.id in (:employeeIds) and " +
+							"ts.date >= :beginDate and ts.date < :endDate and ts.enable = true and " +
+							"ts.actionType <= :actionType and (ts.lastActionType = null or ts.lastActionType > :actionType) " +
+							"order by te.employeeId, ts.date, ts.actionType, ts.updatedAt")
+				.setParameter("employeeIds", employeeIds)
+				.setParameter("beginDate", beginDate)
+				.setParameter("endDate", endDate)
+				.setParameter("actionType", actionType)
+				.getResultList();
+		
+		return ts;
+	}
+	
+	@Override
+	@SuppressWarnings("unchecked")
 	public List<TimeSheet> getActualMonthTimeSheet(String month,  List<Long> unitIds) {
 		
 		Date beginDate = DateHelper.getBeginDateOfMonth(month);
