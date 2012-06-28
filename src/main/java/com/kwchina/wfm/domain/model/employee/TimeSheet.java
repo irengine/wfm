@@ -45,6 +45,7 @@ public class TimeSheet implements com.kwchina.wfm.domain.common.Entity<TimeSheet
 	@Column(nullable=false)
 	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(iso=ISO.DATE)
+	@JsonSerialize(using=com.kwchina.wfm.interfaces.common.CustomDateSerializer.class)
 	private Date date;
 	
 	@Column
