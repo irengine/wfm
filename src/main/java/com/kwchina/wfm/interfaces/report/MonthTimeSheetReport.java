@@ -64,18 +64,18 @@ public class MonthTimeSheetReport {
 		this.days = days;
 	}
 
-	public void fill(Set<TimeSheet> list, List<Date> days) {
-		this.setDays(days);
-		
-		for (TimeSheet ts : list) {
-			String key = ts.getEmployee().getEmployeeId().toString();
-			
-			if (!getData().containsKey(key)) {
-				getData().put(key, getDataRows(days));
-			}
-			getData().get(key).get(DateHelper.getString(ts.getDate())).add(ts);
-		}
-	}
+//	public void fill(Set<TimeSheet> list, List<Date> days) {
+//		this.setDays(days);
+//		
+//		for (TimeSheet ts : list) {
+//			String key = ts.getEmployee().getEmployeeId().toString();
+//			
+//			if (!getData().containsKey(key)) {
+//				getData().put(key, getDataRows(days));
+//			}
+//			getData().get(key).get(DateHelper.getString(ts.getDate())).add(ts);
+//		}
+//	}
 	
 	public void fill(Set<TimeSheet> list, List<Date> days, List<String> holidays, int dailyShiftCount) {
 		this.setDays(days);
