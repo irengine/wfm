@@ -159,7 +159,7 @@ public class EmployeeController {
 		{
 			QueryTimeSheetCommand cmd = new QueryTimeSheetCommand();
 			cmd.setActionType(command.getReportActionType());
-			cmd.setDate(DateHelper.getString(command.getReportDate()));
+			cmd.setDate(command.getReportDate());
 			cmd.setEmployeeId(command.getEmployeeId());
 			HttpHelper.output(response, employeeServiceFacade.queryEmployeesMonthTimeSheetWithJson(cmd));
 		}
