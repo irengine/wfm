@@ -156,8 +156,13 @@ public class EmployeeController {
 		TimeSheet timesheet = employeeServiceFacade.saveTimeSheetRecord(command);
 		
 		if (null != timesheet)
-			HttpHelper.output(response, JacksonHelper.getEmployeeJsonWithFilters(timesheet));
-		
+		{
+			QueryTimeSheetCommand cmd = new QueryTimeSheetCommand();
+			cmd.setActionType(command.getActionType());
+			cmd.setDate(DateHelper.getString(command.getDate()));
+			cmd.setEmployeeId(command.getEmployeeId());
+			HttpHelper.output(response, employeeServiceFacade.queryEmployeesMonthTimeSheetWithJson(cmd));
+		}
 		return timesheet;
 	}
 	

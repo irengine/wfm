@@ -315,6 +315,12 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 		if (!unitConditions.isEmpty())
 			conditions.add("(" + StringUtils.join(unitConditions, " or ") + ")");
 		
+		// lookup employeeId
+		if (null != command.getEmployeeId() && !command.getEmployeeId().equals(0)) {
+			String employeeCondition = String.format("id = %d", command.getEmployeeId());
+			conditions.add(employeeCondition);
+		}
+		
 		String whereClause = "";
 		String orderByClause = String.format(" ORDER BY %s %s ", command.getSort(), command.getOrder());
 		

@@ -11,6 +11,7 @@ public class QueryTimeSheetCommand extends QueryCommand {
 	private String date;
 	private TimeSheet.ActionType actionType;
 	private String unitIds;
+	private Long employeeId;
 	
 //	public Long getUnitId() {
 //		return unitId;
@@ -36,7 +37,12 @@ public class QueryTimeSheetCommand extends QueryCommand {
 	public void setUnitIds(String unitIds) {
 		this.unitIds = unitIds;
 	}
-	
+	public Long getEmployeeId() {
+		return employeeId;
+	}
+	public void setEmployeeId(Long employeeId) {
+		this.employeeId = employeeId;
+	}
 	public List<Long> getUnitIdList() {
 		String[] idArray = unitIds.split(",");
 		List<Long> idList = new ArrayList<Long>(); 
