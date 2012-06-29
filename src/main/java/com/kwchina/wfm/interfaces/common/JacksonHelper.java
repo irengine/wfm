@@ -45,7 +45,7 @@ public class JacksonHelper {
 		
 	}
     
-    @JsonIgnoreProperties({"vacations", "gender", "birthday", "beginDateOfWork", "beginDateOfJob", "shiftType", "job", "preferences", "enable"})
+    @JsonIgnoreProperties({"vacations", "gender", "birthday", "beginDateOfWork", "beginDateOfJob", "shiftType", "preferences", "enable"})
     @JsonPropertyOrder(value={})
     private interface TEmployeeFilter {
     	
