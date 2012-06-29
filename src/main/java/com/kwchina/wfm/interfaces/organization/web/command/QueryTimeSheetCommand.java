@@ -44,10 +44,13 @@ public class QueryTimeSheetCommand extends QueryCommand {
 		this.employeeId = employeeId;
 	}
 	public List<Long> getUnitIdList() {
-		String[] idArray = unitIds.split(",");
 		List<Long> idList = new ArrayList<Long>(); 
-		for(String unitId : idArray) {
-			idList.add(Long.parseLong(unitId));
+
+		if (unitIds != null) {
+			String[] idArray = unitIds.split(",");
+			for(String unitId : idArray) {
+				idList.add(Long.parseLong(unitId));
+			}
 		}
 		
 		return idList;
