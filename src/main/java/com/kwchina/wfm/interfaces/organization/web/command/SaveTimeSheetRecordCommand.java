@@ -19,6 +19,9 @@ public class SaveTimeSheetRecordCommand extends ActionCommand {
 	private String attendanceTypeName;
 	private ActionType actionType;
 	
+	private Date reportDate;
+	private ActionType reportActionType;
+	
 	public Long getId() {
 		return id;
 	}
@@ -66,5 +69,17 @@ public class SaveTimeSheetRecordCommand extends ActionCommand {
 	}
 	public void setActionType(ActionType actionType) {
 		this.actionType = actionType;
+	}
+	public Date getReportDate() {
+		return reportDate;
+	}
+	public void setReportDate(Date reportDate) {
+		this.reportDate = reportDate;
+	}
+	public ActionType getReportActionType() {
+		return reportActionType;
+	}
+	public void setReportActionType(ActionType reportActionType) {
+		this.reportActionType = reportActionType;
 	}
 }
