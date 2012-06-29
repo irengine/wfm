@@ -10,6 +10,13 @@ public class QueryCommand {
 	private String search;
 	private String filters;
 	
+	public QueryCommand() {
+		this.sort = "id";
+		this.order = "asc";
+		this.page = 1;
+		this.rows = 1;
+	}
+	
 	public String getUnitId() {
 		return unitId;
 	}
