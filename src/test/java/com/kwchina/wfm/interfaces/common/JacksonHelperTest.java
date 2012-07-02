@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 import org.apache.commons.lang.time.DateUtils;
 import org.codehaus.jackson.JsonGenerationException;
@@ -89,4 +92,18 @@ public class JacksonHelperTest {
 		System.out.println(json);
 	}
 
+	@Test
+	public void testMapSort() throws JsonGenerationException, JsonMappingException, IOException
+	{
+		TreeMap<String,String> maps = new TreeMap<String, String>();
+		maps.put("1", "1");
+		maps.put("5", "5");
+		maps.put("3", "3");
+		ObjectMapper mapper = new ObjectMapper();
+		String json = mapper.writeValueAsString(maps);
+		System.out.println(json);
+	
+		
+		
+	}
 }

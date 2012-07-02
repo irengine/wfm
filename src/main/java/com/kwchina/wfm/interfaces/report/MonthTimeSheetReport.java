@@ -25,6 +25,7 @@ public class MonthTimeSheetReport {
 	
 	private Map<String, EmployeeInfo> info = new HashMap<String, EmployeeInfo>();
 	private Map<String, Map<String, Set<TimeSheet>>> data = new HashMap<String, Map<String, Set<TimeSheet>>>();
+	private TreeMap<Long, Map<String, Set<TimeSheet>>> baseData = new TreeMap<Long, Map<String, Set<TimeSheet>>>();
 	private Map<String, Map<String, Float>> summary = new HashMap<String, Map<String, Float>>();
 	private List<Date> days;
 
@@ -48,6 +49,14 @@ public class MonthTimeSheetReport {
 		this.data = data;
 	}
 
+	public TreeMap<Long, Map<String, Set<TimeSheet>>> getBaseData() {
+		return baseData;
+	}
+
+	public void setBaseData(TreeMap<Long, Map<String, Set<TimeSheet>>> baseData) {
+		this.baseData = baseData;
+	}
+
 	public Map<String, Map<String, Float>> getSummary() {
 		return summary;
 	}
@@ -68,12 +77,12 @@ public class MonthTimeSheetReport {
 		this.setDays(days);
 		
 		for (TimeSheet ts : list) {
-			String key = ts.getEmployee().getEmployeeId().toString();
+			Long key = ts.getEmployee().getId();
 			
-			if (!getData().containsKey(key)) {
-				getData().put(key, getDataRows(days));
+			if (!getBaseData().containsKey(key)) {
+				getBaseData().put(key, getDataRows(days));
 			}
-			getData().get(key).get(DateHelper.getString(ts.getDate())).add(ts);
+			getBaseData().get(key).get(DateHelper.getString(ts.getDate())).add(ts);
 		}
 	}
 	
