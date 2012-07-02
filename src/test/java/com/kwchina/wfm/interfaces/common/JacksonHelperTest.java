@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.TreeMap;
 
 import org.apache.commons.lang.time.DateUtils;
@@ -22,8 +20,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.kwchina.wfm.domain.model.employee.Employee;
-import com.kwchina.wfm.domain.model.employee.EmployeeId;
 import com.kwchina.wfm.domain.model.employee.Employee.Gender;
+import com.kwchina.wfm.domain.model.employee.EmployeeId;
 import com.kwchina.wfm.domain.model.organization.Unit;
 
 public class JacksonHelperTest {
