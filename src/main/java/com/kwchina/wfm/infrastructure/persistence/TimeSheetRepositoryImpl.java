@@ -149,9 +149,9 @@ public class TimeSheetRepositoryImpl extends BaseRepositoryImpl<TimeSheet> imple
 		Map<String, AttendanceType> attendanceTypes = new HashMap<String, AttendanceType>();
 		
 		attendanceTypes.put("0", attendanceTypeRepository.findByName(ReportHelper.REPORT_COLUMN_IMPORT_0));
-		attendanceTypes.put("1", attendanceTypeRepository.findByName(ReportHelper.REPORT_COLUMN_IMPORT_1));
-		attendanceTypes.put("2", attendanceTypeRepository.findByName(ReportHelper.REPORT_COLUMN_IMPORT_2));
-		attendanceTypes.put("3", attendanceTypeRepository.findByName(ReportHelper.REPORT_COLUMN_IMPORT_3));
+		attendanceTypes.put("1", attendanceTypeRepository.findByName(ReportHelper.REPORT_COLUMN_IMPORT_3));
+		attendanceTypes.put("2", attendanceTypeRepository.findByName(ReportHelper.REPORT_COLUMN_IMPORT_1));
+		attendanceTypes.put("3", attendanceTypeRepository.findByName(ReportHelper.REPORT_COLUMN_IMPORT_2));
 		
 		Employee employee = employeeRepository.findByCode(order.getEmployeeCode());
 		AttendanceType attendanceType = attendanceTypes.get(order.getShiftCode());
