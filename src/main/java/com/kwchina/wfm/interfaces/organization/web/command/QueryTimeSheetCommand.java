@@ -46,7 +46,7 @@ public class QueryTimeSheetCommand extends QueryCommand {
 	public List<Long> getUnitIdList() {
 		List<Long> idList = new ArrayList<Long>(); 
 
-		if (unitIds != null) {
+		if (unitIds != null && !unitIds.isEmpty()) {
 			String[] idArray = unitIds.split(",");
 			for(String unitId : idArray) {
 				idList.add(Long.parseLong(unitId));
