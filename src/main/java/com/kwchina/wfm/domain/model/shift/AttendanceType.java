@@ -24,7 +24,8 @@ import com.kwchina.wfm.domain.model.organization.PreferenceGetter;
 @Entity
 @Table(name="T_ATTENDANCE_TYPES")
 @NamedQueries({
-	@NamedQuery(name = "attendanceType.findByName", query = "SELECT t FROM AttendanceType t WHERE t.name = :name")
+	@NamedQuery(name = "attendanceType.findByName", query = "SELECT t FROM AttendanceType t WHERE t.name = :name"),
+	@NamedQuery(name = "attendanceType.findByDisplayName", query = "SELECT t FROM AttendanceType t WHERE t.displayName = :displayName")
 })
 public class AttendanceType implements com.kwchina.wfm.domain.common.Entity<AttendanceType>, PreferenceGetter {
 	

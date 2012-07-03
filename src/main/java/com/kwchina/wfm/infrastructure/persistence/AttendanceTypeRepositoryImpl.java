@@ -19,10 +19,24 @@ public class AttendanceTypeRepositoryImpl extends BaseRepositoryImpl<AttendanceT
 	@PersistenceContext
 	private EntityManager entityManager;
 	
+	@Override
 	public AttendanceType findByName(String name) {
 		try {
 			AttendanceType t = (AttendanceType) entityManager.createNamedQuery("attendanceType.findByName")
 										.setParameter("name", name)
+										.getSingleResult();
+			return t;
+		}
+		catch (NoResultException nre) {
+			return null;
+		}
+	}
+	
+	@Override
+	public AttendanceType findByDisplayName(String displayName) {
+		try {
+			AttendanceType t = (AttendanceType) entityManager.createNamedQuery("attendanceType.findByDisplayName")
+										.setParameter("displayName", displayName)
 										.getSingleResult();
 			return t;
 		}
