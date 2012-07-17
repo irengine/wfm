@@ -307,7 +307,12 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 		List<Date> days = DateHelper.getDaysOfMonth(month);
 		MonthTimeSheetReport report = new MonthTimeSheetReport();
 		
-		if (0 != command.getUnitIdList().size()) {
+		if (command.getEmployeeName() != null && !command.getEmployeeName().isEmpty()){
+			Set<TimeSheet> records = new LinkedHashSet<TimeSheet>();
+			List<TimeSheet> recs = timeSheetRepository.getMonthTimeSheet(month, command.getEmployeeName(), actionType);
+			records.addAll(recs);
+			report.fill(records, days);
+		} else if (0 != command.getUnitIdList().size()) {
 			Set<TimeSheet> records = new LinkedHashSet<TimeSheet>();
 			List<TimeSheet> recs = timeSheetRepository.getMonthTimeSheet(month, command.getUnitIdList(), actionType);
 			records.addAll(recs);
