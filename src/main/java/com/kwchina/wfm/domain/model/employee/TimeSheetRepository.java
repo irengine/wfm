@@ -23,6 +23,7 @@ public interface TimeSheetRepository extends BaseRepository<TimeSheet> {
 	List<TimeSheet> getDayTimeSheet(String day, List<Long> unitIds, ActionType actionType);
 	
 	List<TimeSheet> getActualMonthTimeSheet(String month,  List<Long> unitIds);
+	List<TimeSheet> getActualMonthTimeSheet(String month, String employeeName);
 
 	List<Map<String, Object>> queryActualTimeSheet(QueryActualTimeSheetCommand command);
 	List<Map<String, Object>> queryTimeSheetByProperty(QueryTimeSheetByPropertyCommand command);
