@@ -18,6 +18,7 @@ public class QueryTimeSheetByPropertyCommand {
 	private String propertyName;
 	private String attendanceTypeIds;	// internal user
 	private String unitIds;
+	private String employeeName;
 	
 	public Long getUnitId() {
 		return unitId;
@@ -111,5 +112,11 @@ public class QueryTimeSheetByPropertyCommand {
 	}
 	public void setUnitIds(String unitIds) {
 		this.unitIds = unitIds;
+	}
+	public String getEmployeeName() {
+		return employeeName;
+	}
+	public void setEmployeeName(String employeeName) {
+		this.employeeName = employeeName;
 	}
 }
