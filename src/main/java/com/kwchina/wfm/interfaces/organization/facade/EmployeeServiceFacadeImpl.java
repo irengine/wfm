@@ -469,7 +469,7 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 			Set<TimeSheet> records = new LinkedHashSet<TimeSheet>();
 			List<TimeSheet> recs = timeSheetRepository.getActualMonthTimeSheet(month, command.getEmployeeName());
 			records.addAll(recs);
-			report.fill(records, days);
+			report.fill(records, days, holidays, dailyShiftCount);
 		} else if (0 != command.getUnitIdList().size()) {
 			Set<TimeSheet> records = new LinkedHashSet<TimeSheet>();
 			List<TimeSheet> recs = timeSheetRepository.getActualMonthTimeSheet(month, command.getUnitIdList());
