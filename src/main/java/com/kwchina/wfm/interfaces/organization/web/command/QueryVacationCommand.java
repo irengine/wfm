@@ -18,6 +18,7 @@ public class QueryVacationCommand {
 	private Long employeeId;
 	private String date;
 	private String unitIds;
+	private String employeeName;
 	
 	public Vacation.Type getType() {
 		return type;
@@ -57,13 +58,19 @@ public class QueryVacationCommand {
 		this.beginTime = date;
 		this.endTime = DateHelper.getString(DateHelper.addYear(DateHelper.getDate(date), 1));
 	}
-	
 	public String getUnitIds() {
 		return unitIds;
 	}
 	public void setUnitIds(String unitIds) {
 		this.unitIds = unitIds;
 	}
+	public String getEmployeeName() {
+		return employeeName;
+	}
+	public void setEmployeeName(String employeeName) {
+		this.employeeName = employeeName;
+	}
+
 	public String toSQL(Long leftId, Long rightId) {
 		List<String> firstConditions = new ArrayList<String>();
 		List<String> secondConditions = new ArrayList<String>();
@@ -75,6 +82,11 @@ public class QueryVacationCommand {
 		}
 		
 		if (!(null == this.getEmployeeId() || this.getEmployeeId().equals(0))) {
+			firstConditions.add(String.format("e.name = %s", this.employeeName));
+			secondConditions.add(String.format("x.employeeName = %s", this.employeeName));
+		}
+
+		if (!(null == this.employeeName || this.employeeName.isEmpty())) {
 			firstConditions.add(String.format("e.id = %d", this.getEmployeeId()));
 			secondConditions.add(String.format("v.employeeId = %d", this.getEmployeeId()));
 		}

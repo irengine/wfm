@@ -17,6 +17,7 @@ public class QueryActualTimeSheetCommand {
 	private String endTime;
 	private String attendanceTypeIds;
 	private String unitIds;
+	private String employeeName;
 	
 	public Long getUnitId() {
 		return unitId;
@@ -48,13 +49,19 @@ public class QueryActualTimeSheetCommand {
 	public void setattendanceTypeIds(String attendanceTypeIds) {
 		this.attendanceTypeIds = attendanceTypeIds;
 	}
-	
 	public String getUnitIds() {
 		return unitIds;
 	}
 	public void setUnitIds(String unitIds) {
 		this.unitIds = unitIds;
 	}
+	public String getEmployeeName() {
+		return employeeName;
+	}
+	public void setEmployeeName(String employeeName) {
+		this.employeeName = employeeName;
+	}
+	
 	public String toSQL(Long leftId, Long rightId) {
 		List<String> firstConditions = new ArrayList<String>();
 		List<String> secondConditions = new ArrayList<String>();
@@ -67,6 +74,11 @@ public class QueryActualTimeSheetCommand {
 		if (!(null == this.employeeId || this.employeeId.equals(0))) {
 			firstConditions.add(String.format("e.id = %d", this.employeeId));
 			secondConditions.add(String.format("ts.employeeId = %d", this.employeeId));
+		}
+		
+		if (!(null == this.employeeName || this.employeeName.isEmpty())) {
+			firstConditions.add(String.format("e.name = %s", this.employeeName));
+			secondConditions.add(String.format("x.employeeName = %s", this.employeeName));
 		}
 		
 		if (!StringUtils.isEmpty(this.beginTime)) {
