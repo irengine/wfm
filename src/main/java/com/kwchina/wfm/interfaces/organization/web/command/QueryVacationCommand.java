@@ -82,13 +82,13 @@ public class QueryVacationCommand {
 		}
 		
 		if (!(null == this.getEmployeeId() || this.getEmployeeId().equals(0))) {
-			firstConditions.add(String.format("e.name = %s", this.employeeName));
-			secondConditions.add(String.format("x.employeeName = %s", this.employeeName));
+			firstConditions.add(String.format("e.id = %d", this.getEmployeeId()));
+			secondConditions.add(String.format("v.employeeId = %d", this.getEmployeeId()));
 		}
 
 		if (!(null == this.employeeName || this.employeeName.isEmpty())) {
-			firstConditions.add(String.format("e.id = %d", this.getEmployeeId()));
-			secondConditions.add(String.format("v.employeeId = %d", this.getEmployeeId()));
+			firstConditions.add(String.format("e.name = '%s'", this.employeeName));
+			//secondConditions.add(String.format("x.employeeName = '%s'", this.employeeName));
 		}
 		
 		if (!StringUtils.isEmpty(this.beginTime)) {

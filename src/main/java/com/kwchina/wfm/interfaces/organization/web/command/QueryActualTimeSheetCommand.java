@@ -77,8 +77,8 @@ public class QueryActualTimeSheetCommand {
 		}
 		
 		if (!(null == this.employeeName || this.employeeName.isEmpty())) {
-			firstConditions.add(String.format("e.name = %s", this.employeeName));
-			secondConditions.add(String.format("x.employeeName = %s", this.employeeName));
+			firstConditions.add(String.format("e.name = '%s'", this.employeeName));
+			//secondConditions.add(String.format("x.employeeName = %s", this.employeeName));
 		}
 		
 		if (!StringUtils.isEmpty(this.beginTime)) {
