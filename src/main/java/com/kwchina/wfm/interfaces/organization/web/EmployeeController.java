@@ -36,6 +36,7 @@ import com.kwchina.wfm.interfaces.organization.web.command.SaveEmployeeCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveJobEventCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveLeaveEventCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SavePreferenceCommand;
+import com.kwchina.wfm.interfaces.organization.web.command.SavePreferencesCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveTimeSheetRecordCommand;
 
 /**
@@ -101,6 +102,12 @@ public class EmployeeController {
 	public void saveEmployeePreference(HttpServletResponse response, @ModelAttribute SavePreferenceCommand command) {
 		
 		employeeServiceFacade.saveEmployeePreference(command);
+	}
+	
+	@RequestMapping(value = "/saveEmployeePreferences", method = RequestMethod.POST)
+	public void saveEmployeePreferences(HttpServletResponse response, @ModelAttribute SavePreferencesCommand command) {
+		
+		employeeServiceFacade.saveEmployeePreferences(command);
 	}
 	
 	@RequestMapping(value = "/queryEmployeesDayTimeSheet", method = RequestMethod.GET)

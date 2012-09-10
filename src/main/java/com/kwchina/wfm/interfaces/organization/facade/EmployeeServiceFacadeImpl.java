@@ -64,6 +64,7 @@ import com.kwchina.wfm.interfaces.organization.web.command.SaveEmployeeCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveJobEventCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveLeaveEventCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SavePreferenceCommand;
+import com.kwchina.wfm.interfaces.organization.web.command.SavePreferencesCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveTimeSheetRecordCommand;
 import com.kwchina.wfm.interfaces.report.MonthTimeSheetReport;
 
@@ -289,6 +290,27 @@ public class EmployeeServiceFacadeImpl implements EmployeeServiceFacade {
 		preferences.add(new Preference(command.getKey(), command.getValue()));
 		employee.setPreferences(preferences);
 		employeeRepository.save(employee);
+	}
+	
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED)
+	public void saveEmployeePreferences(SavePreferencesCommand command) {
+		
+		for(SavePreferenceCommand cmd : command.getCommands()) {
+			if (null == cmd.getId() || cmd.getId().equals(0))
+				return;
+			Employee employee = employeeRepository.findById(cmd.getId());
+	
+			Set<Preference> preferences = null == employee.getPreferences() ? new HashSet<Preference>()
+					: employee.getPreferences();
+	
+			Preference p = employee.getPreference(cmd.getKey());
+			if (null != p)
+				preferences.remove(p);
+			preferences.add(new Preference(cmd.getKey(), cmd.getValue()));
+			employee.setPreferences(preferences);
+			employeeRepository.save(employee);
+		}
 	}
 	
 	@Override

@@ -16,6 +16,7 @@ import com.kwchina.wfm.interfaces.organization.web.command.SaveEmployeeCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveJobEventCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveLeaveEventCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SavePreferenceCommand;
+import com.kwchina.wfm.interfaces.organization.web.command.SavePreferencesCommand;
 import com.kwchina.wfm.interfaces.organization.web.command.SaveTimeSheetRecordCommand;
 
 public interface EmployeeServiceFacade {
@@ -49,5 +50,6 @@ public interface EmployeeServiceFacade {
 	void archiveTimeSheet(ArchiveTimeSheetCommand command);
 	void importWorkOrder(Date date, Map<String, String> orders);
 	void saveEmployeePreference(SavePreferenceCommand command);
+	void saveEmployeePreferences(SavePreferencesCommand command);
 	void saveJobEvent(SaveJobEventCommand command);
 }
